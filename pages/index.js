@@ -315,7 +315,7 @@ export default function Home() {
         </div>
 
         <div style={{ marginTop: 28, padding: 14, background: "#1f2937", borderRadius: 12 }}>
-          <div style={{ fontWeight: 700, marginBottom: 10 }}>Quick tools</div>
+          <div style={{ fontWeight: 700, marginBottom: 10 }}>Quick TOOLS</div>
           {TOOLS.map((tool) => (
             <div key={tool.name} style={{ marginTop: 8 }}>
               <a href={tool.url} target="_blank" rel="noreferrer" style={{ color: "#dbeafe", textDecoration: "underline" }}>
