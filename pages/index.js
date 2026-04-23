@@ -17,6 +17,12 @@ const BRANDS = [
     name: "Theo Grace",
     description:
       "Premium personalized products with an elegant, emotional and family-oriented positioning. Nicky Hilton should remain part of the brand narrative whenever relevant.",
+    notes: [
+      "Elegant tone of voice",
+      "Family-oriented emotion",
+      "Stylish and premium positioning",
+      "Nicky Hilton is part of the story",
+    ],
     links: [
       ["US", "https://www.theograce.com/"],
       ["UK", "https://www.theograce.co.uk/"],
@@ -26,6 +32,12 @@ const BRANDS = [
     name: "Oak & Luna",
     description:
       "Modern, refined and fashion-forward personalized jewelry with a polished and trend-led tone of voice.",
+    notes: [
+      "Modern",
+      "Refined",
+      "Fashion-forward",
+      "Mainly women-oriented positioning",
+    ],
     links: [
       ["Main", "https://www.oakandluna.com/"],
       ["FR", "https://www.oakandluna.com/fr"],
@@ -35,18 +47,33 @@ const BRANDS = [
     name: "Israel Blessing",
     description:
       "Jewish identity-focused personalized products, culturally sensitive and symbol-driven.",
+    notes: [
+      "Magen David, Chai, Israel map",
+      "Hebrew and English personalization",
+      "Respectful and culturally aware tone",
+    ],
     links: [["Main", "https://www.israelblessing.com/"]],
   },
   {
     name: "Lime & Lou",
     description:
       "Personalized home and lifestyle products with a warm, aesthetic and modern positioning.",
+    notes: [
+      "Blankets, canvas, hoodies, home gifts",
+      "Home and lifestyle orientation",
+      "Local production logic matters",
+    ],
     links: [["Main", "https://www.limeandlou.com/"]],
   },
   {
     name: "MYKA",
     description:
       "European brand family close to Theo Grace in assortment style, but without any Nicky Hilton association.",
+    notes: [
+      "European markets",
+      "Close to Theo Grace in style",
+      "No Nicky Hilton association",
+    ],
     links: [
       ["FR", "https://www.myka.com/fr/"],
       ["DE", "https://www.myka.com/de/"],
@@ -58,7 +85,14 @@ const BRANDS = [
   },
 ];
 
-const POLICY_NAMES = ["WISMO", "Damaged", "Not Satisfied", "Resizing"];
+const CASES = [
+  "Pre-sales",
+  "Change Order",
+  "WISMO",
+  "Item Received",
+  "Account Issues",
+  "Other",
+];
 
 const POLICIES = {
   WISMO: {
@@ -94,6 +128,14 @@ const POLICIES = {
           "Late above 3 business days: compensation may apply depending on the brand and scenario.",
           "Always check whether the case is actually Late Supplier before using regular late logic.",
           "If paid shipping is involved and the customer insists, shipping refund may be escalated instead of the standard compensation link.",
+        ],
+      },
+      {
+        title: "Late Supplier logic",
+        bullets: [
+          "Late Supplier applies when production itself is delayed.",
+          "If the case was not actually handled as a Late Supplier internally, it should be treated as regular late.",
+          "Check whether proactive communication was already sent before offering anything else.",
         ],
       },
       {
@@ -294,6 +336,33 @@ const EVENTS = {
   },
 };
 
+const CRM_BLOCKS = [
+  {
+    title: "Kustomer",
+    text: "Main CRM for conversations, queues, tags, dispositions and categories.",
+  },
+  {
+    title: "Categories",
+    text: "Auto-filled based on webform or source used by the customer.",
+  },
+  {
+    title: "Dispositions",
+    text: "Manual classification by agents to define the business case more precisely.",
+  },
+  {
+    title: "Queues",
+    text: "Used either by site or by team ownership.",
+  },
+  {
+    title: "Tags",
+    text: "Operational layer. Z-tags are archived. Tags may be manual, automatic or event-specific.",
+  },
+  {
+    title: "Notch",
+    text: "Existing automation and AI layer used in part of the support flow and partially paused in some event scenarios.",
+  },
+];
+
 const QA_ITEMS = [
   {
     q: "My order is late by 2 business days. What should I do?",
@@ -357,10 +426,7 @@ export default function Home() {
     if (!query.trim()) return QA_ITEMS;
     const q = query.toLowerCase();
     return QA_ITEMS.filter(function (item) {
-      return (
-        item.q.toLowerCase().includes(q) ||
-        item.a.toLowerCase().includes(q)
-      );
+      return item.q.toLowerCase().includes(q) || item.a.toLowerCase().includes(q);
     });
   }, [query]);
 
@@ -430,22 +496,11 @@ export default function Home() {
               </Box>
               <Box>
                 <div style={{ fontSize: 20, fontWeight: 700 }}>Current event references</div>
-                <Bullets items={[
-                  "Mother's Day 2026",
-                  "Valentine's Day 2026",
-                  "Christmas 2025",
-                ]} />
+                <Bullets items={EVENT_NAMES} />
               </Box>
               <Box>
                 <div style={{ fontSize: 20, fontWeight: 700 }}>Main case taxonomy</div>
-                <Bullets items={[
-                  "Pre-sales",
-                  "Change Order",
-                  "WISMO",
-                  "Item Received",
-                  "Account Issues",
-                  "Other",
-                ]} />
+                <Bullets items={CASES} />
               </Box>
             </div>
           </div>
@@ -460,6 +515,7 @@ export default function Home() {
                   <Box key={brand.name}>
                     <div style={{ fontSize: 24, fontWeight: 700 }}>{brand.name}</div>
                     <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.8 }}>{brand.description}</p>
+                    <Bullets items={brand.notes} />
                     <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 12 }}>
                       {brand.links.map(function (entry) {
                         return (
@@ -572,18 +628,11 @@ export default function Home() {
           <div>
             <h1>CRM</h1>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
-              {[
-                ["Kustomer", "Main CRM for conversations, queues, tags, dispositions and categories."],
-                ["Categories", "Auto-filled based on webform or source used by the customer."],
-                ["Dispositions", "Manual classification by agents to define the business case more precisely."],
-                ["Queues", "Used either by site or by team ownership."],
-                ["Tags", "Operational layer. Z-tags are archived. Tags may be manual, automatic or event-specific."],
-                ["Notch", "Existing automation / AI layer used in part of the support flow and partially paused in some event scenarios."],
-              ].map(function (entry) {
+              {CRM_BLOCKS.map(function (entry) {
                 return (
-                  <Box key={entry[0]}>
-                    <div style={{ fontSize: 22, fontWeight: 700 }}>{entry[0]}</div>
-                    <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.8 }}>{entry[1]}</p>
+                  <Box key={entry.title}>
+                    <div style={{ fontSize: 22, fontWeight: 700 }}>{entry.title}</div>
+                    <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.8 }}>{entry.text}</p>
                   </Box>
                 );
               })}
