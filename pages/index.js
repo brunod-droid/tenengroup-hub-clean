@@ -2,6 +2,16 @@ import { useMemo, useState } from "react";
 
 const MENU = ["Dashboard", "Policies", "Events", "CRM", "Cases", "Q&A"];
 
+const QUICK_TOOLS = [
+  { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
+  { name: "OM", url: "https://bo.tenengroup.com/" },
+  { name: "OCS", url: "https://bo.tenengroup.com/" },
+  { name: "Notch", url: "https://tenengroup.app.getnotch.com/" },
+  { name: "AfterShip", url: "https://www.aftership.com/" },
+  { name: "Matrix", url: "http://matrix.tenengroup.com:100/Login.aspx" },
+  { name: "17Track", url: "https://www.17track.net/en" },
+];
+
 const CASES = [
   {
     name: "Pre-sales",
@@ -32,7 +42,6 @@ const CASES = [
 const POLICIES = [
   {
     name: "Late / WISMO",
-    section: "Policies",
     desc: "Handling delays, tracking issues and delivery problems.",
     rules: [
       "Always check ETA before saying late.",
@@ -46,7 +55,6 @@ const POLICIES = [
   },
   {
     name: "Late Supplier",
-    section: "Policies",
     desc: "Production delay before shipment.",
     rules: [
       "Check internal Late Supplier handling first.",
@@ -59,7 +67,6 @@ const POLICIES = [
   },
   {
     name: "Damaged",
-    section: "Policies",
     desc: "Item defective or broken.",
     rules: [
       "Ask for picture.",
@@ -72,7 +79,6 @@ const POLICIES = [
   },
   {
     name: "Not Satisfied",
-    section: "Policies",
     desc: "Customer does not like the item although it was produced correctly.",
     rules: [
       "Check it is not actually damaged.",
@@ -85,7 +91,6 @@ const POLICIES = [
   },
   {
     name: "Resizing",
-    section: "Policies",
     desc: "Size-related requests.",
     rules: [
       "Not a Not Satisfied case.",
@@ -100,7 +105,6 @@ const POLICIES = [
 const EVENTS = [
   {
     name: "Mother's Day 2026",
-    section: "Events",
     desc: "Main event playbook for jewelry and Lime & Lou.",
     steps: [
       "Green Event = last day to order on time.",
@@ -119,7 +123,6 @@ const EVENTS = [
   },
   {
     name: "Valentine's Day 2026",
-    section: "Events",
     desc: "Same backbone as Mother's Day with event timing and expectation management.",
     steps: [
       "Green Event.",
@@ -135,7 +138,6 @@ const EVENTS = [
   },
   {
     name: "Christmas 2025",
-    section: "Events",
     desc: "Holiday flow with event logic and fallback alternatives.",
     steps: [
       "Red Event.",
@@ -152,7 +154,6 @@ const EVENTS = [
 const CRM = [
   {
     title: "Kustomer",
-    section: "CRM",
     content: [
       "Main CRM for customer conversations.",
       "Handles queues, tags, categories and dispositions.",
@@ -160,7 +161,6 @@ const CRM = [
   },
   {
     title: "Categories",
-    section: "CRM",
     content: [
       "Auto-filled by the system.",
       "Based on source or webform.",
@@ -169,7 +169,6 @@ const CRM = [
   },
   {
     title: "Dispositions",
-    section: "CRM",
     content: [
       "Selected manually by agents.",
       "Reflect the real business case.",
@@ -178,7 +177,6 @@ const CRM = [
   },
   {
     title: "Tags",
-    section: "CRM",
     content: [
       "Tags beginning with Z are archived.",
       "Tags may be manual, automatic, event-driven or AI-driven.",
@@ -187,7 +185,6 @@ const CRM = [
   },
   {
     title: "Queues",
-    section: "CRM",
     content: [
       "Queues can represent site ownership or team ownership.",
       "On Hold queues are especially important during events.",
@@ -196,7 +193,6 @@ const CRM = [
   },
   {
     title: "Notch",
-    section: "CRM",
     content: [
       "Current automation and AI layer.",
       "Handles part of the standard flow.",
