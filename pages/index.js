@@ -303,6 +303,16 @@ function assistantAnswer(input) {
   };
 }
 
+function Bullets({ items }) {
+  return (
+    <ul style={{ lineHeight: 1.8, color: "#4b5563", paddingLeft: 18 }}>
+      {items.map((i) => (
+        <li key={i}>{i}</li>
+      ))}
+    </ul>
+  );
+}
+
 function SectionCard({ title, subtitle, icon, onClick, bg }) {
   return (
     <div
@@ -358,6 +368,22 @@ function TagChip({ text }) {
     >
       {text}
     </span>
+  );
+}
+
+function Box({ children }) {
+  return (
+    <div
+      style={{
+        background: "#fff",
+        padding: 20,
+        borderRadius: 12,
+        marginBottom: 20,
+        border: "1px solid #e5e7eb",
+      }}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -801,10 +827,7 @@ export default function Home() {
               {CRM_BLOCKS.map((b) => (
                 <Box key={b.title}>
                   <h3 style={{ fontSize: 28, marginTop: 0 }}>{b.title}</h3>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>
-                    {b.level}
-                  </div>
-                  <Bullets items={b.content} />
+                  <p style={{ color: "#374151", lineHeight: 1.8 }}>{b.text}</p>
                 </Box>
               ))}
             </>
