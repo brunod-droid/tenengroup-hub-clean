@@ -1,11 +1,22 @@
 import { useMemo, useState } from "react";
 
-const menu = ["Home", "Brands", "Policies", "Events", "CRM", "Q&A"];
+const TOOLS = [
+  { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
+  { name: "OM", url: "https://bo.tenengroup.com/" },
+  { name: "OCS", url: "https://bo.tenengroup.com/" },
+  { name: "Notch", url: "https://tenengroup.app.getnotch.com/" },
+  { name: "AfterShip", url: "https://www.aftership.com/" },
+  { name: "Matrix", url: "http://matrix.tenengroup.com:100/Login.aspx" },
+  { name: "17Track", url: "https://www.17track.net/en" },
+];
 
-const brands = [
+const MENU = ["Home", "Brands", "Policies", "Events", "CRM", "Q&A"];
+
+const BRANDS = [
   {
     name: "Theo Grace",
-    text: "Premium personalized products with an elegant, emotional and family-oriented positioning. Nicky Hilton must remain part of the brand narrative whenever relevant.",
+    description:
+      "Premium personalized products with an elegant, emotional and family-oriented positioning. Nicky Hilton should remain part of the brand narrative whenever relevant.",
     links: [
       ["US", "https://www.theograce.com/"],
       ["UK", "https://www.theograce.co.uk/"],
@@ -13,7 +24,8 @@ const brands = [
   },
   {
     name: "Oak & Luna",
-    text: "Modern, refined and fashion-forward personalized jewelry with a polished and trend-led tone of voice.",
+    description:
+      "Modern, refined and fashion-forward personalized jewelry with a polished and trend-led tone of voice.",
     links: [
       ["Main", "https://www.oakandluna.com/"],
       ["FR", "https://www.oakandluna.com/fr"],
@@ -21,32 +33,33 @@ const brands = [
   },
   {
     name: "Israel Blessing",
-    text: "Jewish identity-focused personalized products, culturally sensitive and symbol-driven.",
+    description:
+      "Jewish identity-focused personalized products, culturally sensitive and symbol-driven.",
     links: [["Main", "https://www.israelblessing.com/"]],
   },
   {
     name: "Lime & Lou",
-    text: "Personalized home and lifestyle products with a warm, aesthetic and modern positioning.",
+    description:
+      "Personalized home and lifestyle products with a warm, aesthetic and modern positioning.",
     links: [["Main", "https://www.limeandlou.com/"]],
   },
   {
     name: "MYKA",
-    text: "European brand family close to Theo Grace in assortment style, but without any Nicky Hilton association.",
+    description:
+      "European brand family close to Theo Grace in assortment style, but without any Nicky Hilton association.",
     links: [
       ["FR", "https://www.myka.com/fr/"],
       ["DE", "https://www.myka.com/de/"],
       ["ES", "https://www.myka.com/es/"],
       ["IT", "https://www.myka.com/it/"],
-      ["NL", "https://www.myka.com/nl/"],
-      ["MX", "https://www.myka.com/mx/"],
     ],
   },
 ];
 
-const policies = {
+const POLICIES = {
   WISMO: {
-    intro:
-      "WISMO covers all order-tracking and shipping-progress cases between order validation and customer delivery.",
+    subtitle:
+      "How to handle on-time, late, lost, DNR, RTS and supplier-delay cases.",
     sections: [
       {
         title: "Main scope",
@@ -64,14 +77,14 @@ const policies = {
       {
         title: "Late logic",
         bullets: [
-          "If the order is less than 3 business days late, apologize and provide the most accurate updated ETA.",
-          "If the order is more than 3 business days late, compensation may apply depending on the brand and scenario.",
-          "Always check whether the case is actually a Late Supplier case before applying the standard late flow.",
+          "Late under 3 business days: apologize and provide updated ETA.",
+          "Late above 3 business days: compensation may apply depending on the brand and scenario.",
+          "Always check whether the case is actually Late Supplier before using regular late logic.",
           "Never answer complex ETA questions using only a generic lead time.",
         ],
       },
       {
-        title: "DNR / Lost",
+        title: "DNR and Lost",
         bullets: [
           "DNR: if less than 3 business days since marked delivery, ask the customer to wait.",
           "After that period, reorder or refund can be considered according to policy.",
@@ -82,8 +95,7 @@ const policies = {
     ],
   },
   Damaged: {
-    intro:
-      "Damaged cases are handled through a warranty-first logic. Refund is not the starting point.",
+    subtitle: "Warranty-first handling of damaged or defective items.",
     sections: [
       {
         title: "Coverage",
@@ -102,69 +114,49 @@ const policies = {
           "Refund only under policy conditions",
         ],
       },
-      {
-        title: "Special notes",
-        bullets: [
-          "Premium items may require return before reorder.",
-          "Repeat damage cases follow stricter logic.",
-          "Not every damaged case becomes refundable.",
-        ],
-      },
     ],
   },
   "Not Satisfied": {
-    intro:
-      "Not Satisfied applies when the item was produced correctly but the customer does not like it.",
+    subtitle:
+      "When the item was produced correctly but the customer does not like it.",
     sections: [
       {
         title: "Main principles",
         bullets: [
           "This is not a damaged case.",
-          "Typical reasons include design, font, thickness or style expectations.",
-          "TG / MYKA generally use a 100-day window from ETA.",
-          "OAL generally uses a 60-day window.",
-        ],
-      },
-      {
-        title: "Resolution order",
-        bullets: [
-          "Exchange first",
-          "Then store credit",
-          "No refund for personalized items under the NS policy",
-          "Only non-personalized or stock items may become refundable within the allowed window",
+          "Exchange first.",
+          "Then store credit.",
+          "Personalized items are not refundable under the NS policy.",
         ],
       },
     ],
   },
   Resizing: {
-    intro:
-      "Resizing is a dedicated policy and should not be mixed with Not Satisfied handling.",
+    subtitle:
+      "Separate policy from Not Satisfied, with item-type-specific rules.",
     sections: [
       {
         title: "Main principles",
         bullets: [
-          "Ring resizing is free within the standard window.",
-          "Chains and bracelets follow separate rules.",
-          "DIY / non-DIY and premium / non-premium matter.",
-          "If the issue is size or fit, do not classify it as Not Satisfied.",
+          "Ring resizing is free within the standard resizing window.",
+          "Chains and bracelets follow separate logic.",
+          "Resizing is not a Not Satisfied case.",
         ],
       },
     ],
   },
 };
 
-const eventMenu = ["Mother's Day 2026", "Valentine's Day 2026", "Christmas 2025"];
-
-const eventDetails = {
+const EVENTS = {
   "Mother's Day 2026": {
     intro:
-      "Mother's Day 2026 is a detailed event playbook used to manage WISMO during a major peak period. It applies to jewelry and also includes Lime & Lou logic.",
+      "This event prompt is used to manage WISMO during the Mother's Day peak. It applies to jewelry and also includes Lime & Lou logic.",
     sections: [
       {
         title: "Core concepts",
         bullets: [
-          "Green Event = last day to order on time based on country, product, factory, shipping method and production days.",
-          "Red Event = last day a factory/shipping combination can still ship on time.",
+          "Green Event = the last day to order on time based on country, product, factory, shipping method and production days.",
+          "Red Event = the last day a factory and shipping combination can still ship on time.",
           "Last Day of Delivery = shipped orders still at risk of not arriving in time.",
           "ETA-1 = proactive delay monitoring before ETA, paused near the final event days if needed.",
         ],
@@ -179,47 +171,20 @@ const eventDetails = {
         ],
       },
       {
-        title: "Last Chance logic",
+        title: "Last Chance and MBL",
         bullets: [
           "If shipping and factory teams agree on a one-day Last Chance option, orders stay on Hold one more day.",
-          "Those orders are tagged Last Chance MDAY2026.",
-          "If the order ships the next day, it is released with a 'might still be on time' message.",
-          "If it does not ship, standard red event proactive logic applies.",
-        ],
-      },
-      {
-        title: "Last Day of Delivery / MBL",
-        bullets: [
-          "At 7:00 AM IL time on the last delivery day, Notch pauses shipped-but-not-delivered WISMO messages and moves them to On Hold.",
+          "On the last delivery day, shipped-but-not-delivered WISMO messages move to On Hold and may receive an MBL proactive message.",
           "Shipping provides a risk list of orders that may be late despite shipping on time.",
-          "Tenengroup tags these orders MBL MDAY2026 and sends a proactive 'might be late' communication.",
-          "Messages are later either closed as duplicate or released back to Notch with the proactive context.",
         ],
       },
       {
-        title: "Thought Guaranteed",
+        title: "Thought Guaranteed and special operations",
         bullets: [
           "Some customers believe the order is guaranteed on time because they selected the wrong shipping method, misunderstood the cart or saw a bug.",
-          "If the order is already on the fastest shipping method, no further upgrade is possible.",
           "If a slower shipping method was chosen and a Green Event still exists, a shipping upgrade can be proposed.",
-          "If the cart promised on-time delivery but OM shows a later ETA, route for manual review as a possible cart bug.",
-        ],
-      },
-      {
-        title: "ETA-1 and special event operations",
-        bullets: [
-          "ETA-1 shipped and ETA-1 not shipped proactive messages continue during the event except near the final days where they are paused to avoid conflicting with Red Event logic.",
+          "ETA-1 flows continue during the event except near the final days where they are paused.",
           "Special operations may also be triggered for customs issues, missed flights, shipping bottlenecks and production incidents.",
-          "These cases use dedicated tags such as Shipping update_XXX_Action / No action or Production update_XXX_Action / No action.",
-        ],
-      },
-      {
-        title: "Lime & Lou event notes",
-        bullets: [
-          "Lime & Lou uses the same Green / Red / MBL backbone but with local production-facility logic.",
-          "Production times are fixed and cannot be shortened by selecting a faster shipping method.",
-          "Customer-facing wording should avoid 'supplier' and instead use production facilities, factories or warehouses.",
-          "Domestic production incidents may trigger proactive communication and dedicated production tags.",
         ],
       },
     ],
@@ -234,14 +199,6 @@ const eventDetails = {
           "Notch pauses non-shipped WISMO event messages on Red Event dates and moves them to On Hold.",
           "Late Red Event VDAY2026 tags drive proactive messaging and later queue handling.",
           "MBL VDAY2026 tags drive last-day-delivery proactive messaging for shipped orders still at risk.",
-        ],
-      },
-      {
-        title: "Decision areas",
-        bullets: [
-          "Thought Guaranteed cases are handled by checking the shipping method, Green Event availability and possible cart bugs.",
-          "Some customers can still be upgraded if a Green Event remains.",
-          "If the order is already on the fastest method, use expectation-setting and alternative solutions instead.",
         ],
       },
     ],
@@ -270,7 +227,7 @@ const eventDetails = {
   },
 };
 
-const qaItems = [
+const QA_ITEMS = [
   {
     q: "My order is late by 2 business days. What should I do?",
     a: "Treat it as a slight delay. Apologize, provide the most accurate updated ETA based on OM and tracking, and do not offer compensation yet unless another specific flow applies.",
@@ -288,12 +245,8 @@ const qaItems = [
     a: "No. Under the Not Satisfied policy, personalized items are not refundable. Offer exchange first, then store credit if exchange is refused.",
   },
   {
-    q: "Tracking shows delivered but the customer says it was not received. What do I do?",
-    a: "Treat it as DNR. If it has been less than 3 business days since the delivery scan, ask the customer to wait. After that, offer reorder or refund according to DNR policy.",
-  },
-  {
     q: "What is the logic of Mother's Day event monitoring?",
-    a: "The structure is Green Event → Red Event → On Hold → proactive delay communication → Last Day of Delivery / MBL → queue release and reprocessing. Some orders can also go through a Last Chance one-day extension.",
+    a: "The structure is Green Event to Red Event to On Hold to proactive delay communication to Last Day of Delivery or MBL, then queue release and reprocessing. Some orders can also go through a Last Chance one-day extension.",
   },
 ];
 
@@ -330,12 +283,10 @@ export default function Home() {
   const [query, setQuery] = useState("");
 
   const filteredQa = useMemo(() => {
-    if (!query.trim()) return qaItems;
+    if (!query.trim()) return QA_ITEMS;
     const q = query.toLowerCase();
-    return qaItems.filter(
-      (item) =>
-        item.q.toLowerCase().includes(q) ||
-        item.a.toLowerCase().includes(q)
+    return QA_ITEMS.filter(
+      (item) => item.q.toLowerCase().includes(q) || item.a.toLowerCase().includes(q)
     );
   }, [query]);
 
@@ -346,7 +297,7 @@ export default function Home() {
         <div style={{ marginTop: 6, opacity: 0.8 }}>Customer Care Hub</div>
 
         <div style={{ marginTop: 24 }}>
-          {menu.map((item) => (
+          {MENU.map((item) => (
             <div
               key={item}
               onClick={() => setPage(item)}
@@ -365,7 +316,7 @@ export default function Home() {
 
         <div style={{ marginTop: 28, padding: 14, background: "#1f2937", borderRadius: 12 }}>
           <div style={{ fontWeight: 700, marginBottom: 10 }}>Quick tools</div>
-          {tools.map((tool) => (
+          {TOOLS.map((tool) => (
             <div key={tool.name} style={{ marginTop: 8 }}>
               <a href={tool.url} target="_blank" rel="noreferrer" style={{ color: "#dbeafe", textDecoration: "underline" }}>
                 {tool.name}
@@ -426,20 +377,13 @@ export default function Home() {
           <>
             <h1>Brands</h1>
             <div style={{ display: "grid", gap: 18 }}>
-              {brands.map((brand) => (
+              {BRANDS.map((brand) => (
                 <Box key={brand.name}>
                   <div style={{ fontSize: 24, fontWeight: 700 }}>{brand.name}</div>
-                  <div style={{ marginTop: 8, color: "#6b7280", fontWeight: 600 }}>{brand.subtitle}</div>
-                  <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.8 }}>{brand.text}</p>
+                  <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.8 }}>{brand.description}</p>
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 12 }}>
                     {brand.links.map(([label, url]) => (
-                      <a
-                        key={label}
-                        href={url}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{ background: "#f3f4f6", padding: "8px 12px", borderRadius: 10 }}
-                      >
+                      <a key={label} href={url} target="_blank" rel="noreferrer" style={{ background: "#f3f4f6", padding: "8px 12px", borderRadius: 10 }}>
                         {label}
                       </a>
                     ))}
@@ -454,7 +398,7 @@ export default function Home() {
           <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 20 }}>
             <Box>
               <div style={{ fontWeight: 700, marginBottom: 12 }}>Policy menu</div>
-              {Object.keys(policies).map((name) => (
+              {Object.keys(POLICIES).map((name) => (
                 <div
                   key={name}
                   onClick={() => setPolicy(name)}
@@ -474,14 +418,14 @@ export default function Home() {
 
             <div>
               <Box>
-                <div style={{ fontSize: 36, fontWeight: 700 }}>{policies[policy].intro ? policy : "Policy"}</div>
+                <div style={{ fontSize: 36, fontWeight: 700 }}>{policy}</div>
                 <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.8, fontSize: 17 }}>
-                  {policies[policy].intro}
+                  {POLICIES[policy].subtitle}
                 </p>
               </Box>
 
               <div style={{ display: "grid", gap: 16, marginTop: 20 }}>
-                {policies[policy].sections.map((section) => (
+                {POLICIES[policy].sections.map((section) => (
                   <Box key={section.title}>
                     <div style={{ fontSize: 22, fontWeight: 700 }}>{section.title}</div>
                     <Bullets items={section.bullets} />
@@ -496,7 +440,7 @@ export default function Home() {
           <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 20 }}>
             <Box>
               <div style={{ fontWeight: 700, marginBottom: 12 }}>Event menu</div>
-              {eventMenu.map((name) => (
+              {Object.keys(EVENTS).map((name) => (
                 <div
                   key={name}
                   onClick={() => setEventName(name)}
@@ -518,12 +462,12 @@ export default function Home() {
               <Box>
                 <div style={{ fontSize: 36, fontWeight: 700 }}>{eventName}</div>
                 <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.8, fontSize: 17 }}>
-                  {eventDetails[eventName].intro}
+                  {EVENTS[eventName].intro}
                 </p>
               </Box>
 
               <div style={{ display: "grid", gap: 16, marginTop: 20 }}>
-                {eventDetails[eventName].sections.map((section) => (
+                {EVENTS[eventName].sections.map((section) => (
                   <Box key={section.title}>
                     <div style={{ fontSize: 22, fontWeight: 700 }}>{section.title}</div>
                     <Bullets items={section.bullets} />
