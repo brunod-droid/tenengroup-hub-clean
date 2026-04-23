@@ -344,7 +344,7 @@ export default function Home() {
                     }}
                   >
                     <div style={{ fontWeight: 700 }}>{policy.title}</div>
-                    <div style={{ marginTop: 4, fontSize: 12, opacity: 0.8 }}>{policy.summary}</div>
+                    <div style={{ marginTop: 4, fontSize: 12, opacity: 0.8 }}>{policy.intro}</div>
                   </button>
                 ))}
               </div>
