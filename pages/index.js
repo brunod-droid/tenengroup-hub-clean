@@ -17,12 +17,6 @@ const BRANDS = [
     name: "Theo Grace",
     description:
       "Premium personalized products with an elegant, emotional and family-oriented positioning. Nicky Hilton should remain part of the brand narrative whenever relevant.",
-    notes: [
-      "Elegant tone of voice",
-      "Family-oriented emotion",
-      "Stylish and premium positioning",
-      "Nicky Hilton is part of the story",
-    ],
     links: [
       ["US", "https://www.theograce.com/"],
       ["UK", "https://www.theograce.co.uk/"],
@@ -32,12 +26,6 @@ const BRANDS = [
     name: "Oak & Luna",
     description:
       "Modern, refined and fashion-forward personalized jewelry with a polished and trend-led tone of voice.",
-    notes: [
-      "Modern",
-      "Refined",
-      "Fashion-forward",
-      "Mainly women-oriented positioning",
-    ],
     links: [
       ["Main", "https://www.oakandluna.com/"],
       ["FR", "https://www.oakandluna.com/fr"],
@@ -47,33 +35,18 @@ const BRANDS = [
     name: "Israel Blessing",
     description:
       "Jewish identity-focused personalized products, culturally sensitive and symbol-driven.",
-    notes: [
-      "Magen David, Chai, Israel map",
-      "Hebrew and English personalization",
-      "Respectful and culturally aware tone",
-    ],
     links: [["Main", "https://www.israelblessing.com/"]],
   },
   {
     name: "Lime & Lou",
     description:
       "Personalized home and lifestyle products with a warm, aesthetic and modern positioning.",
-    notes: [
-      "Blankets, canvas, hoodies, home gifts",
-      "Home and lifestyle orientation",
-      "Local production logic matters",
-    ],
     links: [["Main", "https://www.limeandlou.com/"]],
   },
   {
     name: "MYKA",
     description:
       "European brand family close to Theo Grace in assortment style, but without any Nicky Hilton association.",
-    notes: [
-      "European markets",
-      "Close to Theo Grace in style",
-      "No Nicky Hilton association",
-    ],
     links: [
       ["FR", "https://www.myka.com/fr/"],
       ["DE", "https://www.myka.com/de/"],
@@ -85,14 +58,7 @@ const BRANDS = [
   },
 ];
 
-const CASES = [
-  "Pre-sales",
-  "Change Order",
-  "WISMO",
-  "Item Received",
-  "Account Issues",
-  "Other",
-];
+const POLICY_NAMES = ["WISMO", "Damaged", "Not Satisfied", "Resizing"];
 
 const POLICIES = {
   WISMO: {
@@ -113,29 +79,12 @@ const POLICIES = {
         ],
       },
       {
-        title: "On-time and ETA logic",
-        bullets: [
-          "If today is still before ETA, the order is considered on time.",
-          "For trackable shipments, check the courier website before replying.",
-          "For non-trackable shipments, rely on OM shipping date and ETA logic.",
-          "Never answer complex ETA questions using only a generic lead time.",
-        ],
-      },
-      {
         title: "Late logic",
         bullets: [
           "Late under 3 business days: apologize and provide updated ETA.",
           "Late above 3 business days: compensation may apply depending on the brand and scenario.",
           "Always check whether the case is actually Late Supplier before using regular late logic.",
-          "If paid shipping is involved and the customer insists, shipping refund may be escalated instead of the standard compensation link.",
-        ],
-      },
-      {
-        title: "Late Supplier logic",
-        bullets: [
-          "Late Supplier applies when production itself is delayed.",
-          "If the case was not actually handled as a Late Supplier internally, it should be treated as regular late.",
-          "Check whether proactive communication was already sent before offering anything else.",
+          "Never answer complex ETA questions using only a generic lead time.",
         ],
       },
       {
@@ -169,14 +118,6 @@ const POLICIES = {
           "Refund only under policy conditions.",
         ],
       },
-      {
-        title: "Operational notes",
-        bullets: [
-          "Premium items may require return before reorder.",
-          "Repeat damage cases follow stricter logic.",
-          "Not every damaged case becomes refundable.",
-        ],
-      },
     ],
   },
   "Not Satisfied": {
@@ -187,18 +128,9 @@ const POLICIES = {
         title: "Main principles",
         bullets: [
           "This is not a damaged case.",
-          "TG and MYKA generally use a 100-day window from ETA.",
-          "OAL generally uses a 60-day window.",
-          "Ask for enough context to understand the dissatisfaction.",
-        ],
-      },
-      {
-        title: "Resolution order",
-        bullets: [
           "Exchange first.",
           "Then store credit.",
           "Personalized items are not refundable under the NS policy.",
-          "Only stock or non-personalized items may become refundable within the allowed window.",
         ],
       },
     ],
@@ -212,16 +144,7 @@ const POLICIES = {
         bullets: [
           "Ring resizing is free within the standard resizing window.",
           "Chains and bracelets follow separate logic.",
-          "DIY and non-DIY may follow different rules.",
           "Resizing is not a Not Satisfied case.",
-        ],
-      },
-      {
-        title: "Operational notes",
-        bullets: [
-          "Confirm the correct size with the customer.",
-          "Check whether the item must be returned first.",
-          "If the requested size does not exist, move to the appropriate alternative flow.",
         ],
       },
     ],
@@ -254,45 +177,18 @@ const EVENTS = {
         ],
       },
       {
-        title: "Last Chance logic",
+        title: "Last Chance and MBL",
         bullets: [
           "If shipping and factory teams agree on a one-day Last Chance option, orders stay on Hold one more day.",
-          "Those orders are tagged Last Chance MDAY2026.",
-          "If the order ships the next day, it is released with a 'might still be on time' message.",
-          "If it does not ship, standard Red Event proactive logic applies.",
-        ],
-      },
-      {
-        title: "Last Day of Delivery / MBL",
-        bullets: [
-          "On the last delivery day, shipped-but-not-delivered WISMO messages move to On Hold.",
+          "On the last delivery day, shipped-but-not-delivered WISMO messages move to On Hold and may receive an MBL proactive message.",
           "Shipping provides a risk list of orders that may be late despite shipping on time.",
-          "Those orders can receive MBL communication and dedicated event tags.",
-          "Messages are later either closed as duplicate or released back into the normal flow.",
-        ],
-      },
-      {
-        title: "Thought Guaranteed and special operations",
-        bullets: [
-          "Some customers believe the order is guaranteed on time because they selected the wrong shipping method, misunderstood the cart or saw a bug.",
-          "If a slower shipping method was chosen and a Green Event still exists, a shipping upgrade can be proposed.",
-          "ETA-1 flows continue during the event except near the final days where they are paused.",
-          "Special operations may also be triggered for customs issues, missed flights, shipping bottlenecks and production incidents.",
-        ],
-      },
-      {
-        title: "Lime & Lou notes",
-        bullets: [
-          "Lime & Lou uses the same Green / Red / MBL backbone but with local production-facility logic.",
-          "Production times are fixed and cannot be shortened by selecting a faster shipping method.",
-          "Customer-facing wording should avoid 'supplier' and instead use production facilities, factories or warehouses.",
         ],
       },
     ],
   },
   "Valentine's Day 2026": {
     intro:
-      "Valentine's Day follows the same operational structure as Mother's Day, with a strong focus on Red Event timing, proactive communication and expectation management.",
+      "Valentine's Day follows the same operational structure as Mother's Day, with a strong focus on red event timing, proactive communication and expectation management.",
     sections: [
       {
         title: "Main structure",
@@ -300,14 +196,6 @@ const EVENTS = {
           "Notch pauses non-shipped WISMO event messages on Red Event dates and moves them to On Hold.",
           "Late Red Event VDAY2026 tags drive proactive messaging and later queue handling.",
           "MBL VDAY2026 tags drive last-day-delivery proactive messaging for shipped orders still at risk.",
-        ],
-      },
-      {
-        title: "Decision areas",
-        bullets: [
-          "Thought Guaranteed cases are handled by checking the shipping method, Green Event availability and possible cart bugs.",
-          "Some customers can still be upgraded if a Green Event remains.",
-          "If the order is already on the fastest method, use expectation-setting and alternative solutions instead.",
         ],
       },
     ],
@@ -336,32 +224,41 @@ const EVENTS = {
   },
 };
 
-const CRM_BLOCKS = [
-  {
-    title: "Kustomer",
-    text: "Main CRM for conversations, queues, tags, dispositions and categories.",
-  },
-  {
-    title: "Categories",
-    text: "Auto-filled based on webform or source used by the customer.",
-  },
-  {
-    title: "Dispositions",
-    text: "Manual classification by agents to define the business case more precisely.",
-  },
-  {
-    title: "Queues",
-    text: "Used either by site or by team ownership.",
-  },
-  {
-    title: "Tags",
-    text: "Operational layer. Z-tags are archived. Tags may be manual, automatic or event-specific.",
-  },
-  {
-    title: "Notch",
-    text: "Existing automation and AI layer used in part of the support flow and partially paused in some event scenarios.",
-  },
-];
+const CRM_SECTIONS = {
+  Overview: [
+    "Kustomer is the main CRM for conversations, queues, tags, dispositions and categories.",
+    "Categories are auto-filled by the system based on the webform or source used by the customer.",
+    "Dispositions are set manually by agents.",
+    "Queues can represent a site or the team in charge.",
+  ],
+  Tags: [
+    "Tags beginning with Z are archived.",
+    "Tags do not all have the same importance.",
+    "Tags can be manual, automatic, operational or event-related.",
+    "Examples already identified: AI-reply, auto change address, auto change inscription, auto free gift, admin testing.",
+    "Future goal: mapping tag → action, tag → owner, tag → Notch behavior.",
+  ],
+  Dispositions: [
+    "Dispositions reflect the typology of the request.",
+    "They are filled manually by agents.",
+    "They help classify the business case more precisely than the category alone.",
+  ],
+  Categories: [
+    "Categories are filled automatically based on the webform used.",
+    "They are useful for routing and reporting.",
+    "They should not be confused with agent-selected dispositions.",
+  ],
+  Queues: [
+    "Queues are used either by site or by team ownership.",
+    "Some queues can become event-specific holding areas.",
+    "On Hold queues are especially important during peak event management.",
+  ],
+  Notch: [
+    "Notch is the current automation and AI layer.",
+    "It handles part of the standard flow.",
+    "It is paused or redirected in some event scenarios, especially during Red Event and MBL handling.",
+  ],
+};
 
 const QA_ITEMS = [
   {
@@ -383,6 +280,10 @@ const QA_ITEMS = [
   {
     q: "What is the logic of Mother's Day event monitoring?",
     a: "The structure is Green Event to Red Event to On Hold to proactive delay communication to Last Day of Delivery or MBL, then queue release and reprocessing. Some orders can also go through a Last Chance one-day extension.",
+  },
+  {
+    q: "What is the difference between category and disposition?",
+    a: "Category is auto-filled by the system based on the webform or source. Disposition is manually chosen by the agent to classify the request more precisely.",
   },
 ];
 
@@ -490,7 +391,7 @@ export default function Home() {
                   "Brand directory and links",
                   "Detailed policy navigation",
                   "Event-by-event playbooks",
-                  "CRM and Notch notes",
+                  "CRM, tags, categories, dispositions and queues",
                   "Quick support Q&A",
                 ]} />
               </Box>
@@ -627,12 +528,12 @@ export default function Home() {
         {page === "CRM" && (
           <div>
             <h1>CRM</h1>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
-              {CRM_BLOCKS.map(function (entry) {
+            <div style={{ display: "grid", gap: 16 }}>
+              {Object.keys(CRM_SECTIONS).map(function (name) {
                 return (
-                  <Box key={entry.title}>
-                    <div style={{ fontSize: 22, fontWeight: 700 }}>{entry.title}</div>
-                    <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.8 }}>{entry.text}</p>
+                  <Box key={name}>
+                    <div style={{ fontSize: 24, fontWeight: 700 }}>{name}</div>
+                    <Bullets items={CRM_SECTIONS[name]} />
                   </Box>
                 );
               })}
@@ -647,7 +548,7 @@ export default function Home() {
               <input
                 value={query}
                 onChange={function (e) { setQuery(e.target.value); }}
-                placeholder="Try: late by 2 days, damaged within 6 months, DNR, Mother's Day..."
+                placeholder="Try: late by 2 days, damaged within 6 months, DNR, Mother's Day, category vs disposition..."
                 style={{
                   width: "100%",
                   padding: "14px 16px",
