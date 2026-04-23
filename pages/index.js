@@ -46,9 +46,10 @@ const POLICIES = [
     rules: [
       "Always check ETA before saying late.",
       "Under 3 business days late: apologize and provide updated ETA.",
-      "Over 3 business days late: compensation may apply.",
+      "Over 3 business days late: compensation may apply depending on the scenario.",
       "Check Late Supplier before applying standard late flow.",
       "DNR: wait 3 business days after delivery scan before acting.",
+      "Always verify carrier tracking before replying.",
     ],
     wording:
       "I'm really sorry for the delay. I've checked your order and here is the latest update: [ETA]. We are closely monitoring it for you.",
@@ -105,25 +106,50 @@ const POLICIES = [
 const EVENTS = [
   {
     name: "Mother's Day 2026",
-    desc: "Main event playbook for jewelry and Lime & Lou.",
+    desc: "Main event playbook for jewelry and Lime & Lou. This is the most important event reference currently built in the hub.",
     steps: [
       "Green Event = last day to order on time.",
       "Red Event = last day to ship on time.",
-      "After Red Event, relevant messages move to On Hold.",
-      "MBL communication is used for shipped orders still at risk.",
-      "Last Chance may keep some orders on Hold one extra day.",
-      "ETA-1 logic is adjusted around final event days.",
+      "Last Day of Delivery = shipped orders still at risk of arriving late.",
+      "ETA-1 = proactive delay monitoring before ETA.",
     ],
     decisions: [
-      "Order before Green → safe.",
-      "Between Green and Red → risk zone.",
-      "After Red → proactive communication and On Hold logic.",
+      "Order before Green Event → normally safe.",
+      "Order between Green and Red → higher risk, close monitoring required.",
+      "After Red Event → proactive communication and On Hold logic become critical.",
       "Thought Guaranteed = expectation mismatch case.",
     ],
+    operations: [
+      "At 7:00 AM IL time on relevant Red Event dates, Notch stops answering relevant non-shipped WISMO cases.",
+      "Those messages move to On Hold for manual review and event handling.",
+      "Orders that miss the final shipment window can be tagged Late Red Event.",
+      "A proactive message is sent to explain the delay and set expectations.",
+      "Later, messages are either closed as duplicates or released back into the normal flow.",
+    ],
+    specialCases: [
+      "Last Chance = one more day attempt if shipping and factory teams agree.",
+      "MBL = may be late logic for shipped orders still at risk.",
+      "ETA-1 may continue, but can be paused near the final event days to avoid conflict with Red Event logic.",
+      "Thought Guaranteed cases must be reviewed carefully: customer selected wrong shipping, misunderstood promise, or saw a cart bug.",
+    ],
+    limeAndLou: [
+      "Lime & Lou follows the same Green / Red / MBL structure.",
+      "Production speed is fixed and cannot be improved just by faster shipping.",
+      "Customer wording should avoid 'supplier' and prefer production facility, warehouse or factory wording.",
+    ],
+    agentActions: [
+      "Check if the order is before or after Green Event.",
+      "Check if it missed Red Event shipment.",
+      "Check whether proactive communication was already sent.",
+      "Check whether the case belongs to MBL, Last Chance or Thought Guaranteed.",
+      "Use the correct queue and tag logic before replying.",
+    ],
+    wording:
+      "I’m very sorry that your order may not arrive in time for Mother’s Day. We are monitoring it closely and we want to be fully transparent with you about the current delivery outlook.",
   },
   {
     name: "Valentine's Day 2026",
-    desc: "Same backbone as Mother's Day with event timing and expectation management.",
+    desc: "Same backbone as Mother's Day with strong focus on event timing and expectation management.",
     steps: [
       "Green Event.",
       "Red Event.",
@@ -135,6 +161,23 @@ const EVENTS = [
       "Use expectation management heavily.",
       "Check if customer believed order was guaranteed on time.",
     ],
+    operations: [
+      "Notch pauses relevant non-shipped WISMO during Red Event windows.",
+      "Messages are held and processed with proactive communication where needed.",
+    ],
+    specialCases: [
+      "Thought Guaranteed remains a critical pattern.",
+      "Shipping upgrades may still help before final cutoff if a Green Event remains.",
+    ],
+    limeAndLou: [
+      "Use the same event backbone when relevant.",
+    ],
+    agentActions: [
+      "Verify Green vs Red timing.",
+      "Check whether the order still has a realistic on-time path.",
+    ],
+    wording:
+      "I completely understand how important timing is for this occasion. I’ve reviewed the current status and here is the most accurate update we can share with you right now.",
   },
   {
     name: "Christmas 2025",
@@ -148,6 +191,21 @@ const EVENTS = [
     decisions: [
       "Use fallback alternatives when standard on-time promise is no longer possible.",
     ],
+    operations: [
+      "Peak proactive communication becomes critical.",
+      "On Hold and event routing work similarly to other major events.",
+    ],
+    specialCases: [
+      "Last Minute Pack can provide an alternative holiday solution.",
+    ],
+    limeAndLou: [
+      "Local production logic still matters for home and lifestyle products.",
+    ],
+    agentActions: [
+      "Check whether fallback alternatives are available.",
+    ],
+    wording:
+      "I’m sorry for the inconvenience. We’re checking the best available option for your order and will guide you toward the fastest or most suitable solution.",
   },
 ];
 
@@ -188,7 +246,7 @@ const CRM = [
     content: [
       "Queues can represent site ownership or team ownership.",
       "On Hold queues are especially important during events.",
-      "Queues are key for operational workload management.",
+      "Queues are key for workload management and escalation.",
     ],
   },
   {
@@ -399,6 +457,7 @@ export default function Home() {
   const [page, setPage] = useState("Dashboard");
   const [question, setQuestion] = useState("");
   const [search, setSearch] = useState("");
+  const [logoOk, setLogoOk] = useState(true);
 
   const answer = useMemo(() => assistantAnswer(question), [question]);
 
@@ -413,7 +472,7 @@ export default function Home() {
     const eventItems = EVENTS.map((e) => ({
       type: "Event",
       title: e.name,
-      text: [e.desc].concat(e.steps).concat(e.decisions).join(" "),
+      text: [e.desc].concat(e.steps).concat(e.decisions).concat(e.operations).concat(e.specialCases).concat(e.agentActions).join(" "),
       openPage: "Events",
     }));
 
@@ -512,18 +571,69 @@ export default function Home() {
           <>
             <div
               style={{
-                background: "linear-gradient(135deg, #0f172a 0%, #111827 100%)",
-                color: "#fff",
-                borderRadius: 24,
-                padding: 28,
+                background: "#fff",
+                border: "1px solid #e5e7eb",
+                borderRadius: 26,
+                overflow: "hidden",
+                display: "grid",
+                gridTemplateColumns: "1.15fr 1fr",
                 marginBottom: 22,
               }}
             >
-              <div style={{ fontSize: 18, color: "#60a5fa", fontWeight: 700 }}>Welcome to</div>
-              <div style={{ fontSize: 54, fontWeight: 900, marginTop: 6 }}>TENENGROUP</div>
-              <div style={{ fontSize: 32, color: "#93c5fd", marginTop: 6 }}>Customer Care Hub</div>
-              <div style={{ marginTop: 18, maxWidth: 820, lineHeight: 1.7, fontSize: 18, color: "#e5e7eb" }}>
-                Your central place for policies, event playbooks, CRM guidance and customer service best practices.
+              <div
+                style={{
+                  background: "linear-gradient(135deg, #0f172a 0%, #111827 100%)",
+                  minHeight: 340,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 24,
+                }}
+              >
+                {logoOk ? (
+                  <img
+                    src="/logo-hub.png"
+                    alt="Tenengroup hub logo"
+                    onError={() => setLogoOk(false)}
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: 280,
+                      objectFit: "contain",
+                      borderRadius: 18,
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "90%",
+                      height: 250,
+                      borderRadius: 24,
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#fff",
+                      textAlign: "center",
+                      padding: 20,
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontSize: 18, opacity: 0.8 }}>Add your logo as</div>
+                      <div style={{ marginTop: 8, fontSize: 28, fontWeight: 800 }}>
+                        public/logo-hub.png
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div style={{ padding: 34, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <div style={{ color: "#2563eb", fontWeight: 700, fontSize: 18 }}>Welcome to</div>
+                <div style={{ fontSize: 54, fontWeight: 900, marginTop: 6 }}>TENENGROUP</div>
+                <div style={{ fontSize: 32, color: "#2563eb", marginTop: 6 }}>Customer Care Hub</div>
+                <div style={{ marginTop: 18, lineHeight: 1.7, fontSize: 18, color: "#374151" }}>
+                  Your central place for policies, event playbooks, CRM guidance and customer service best practices.
+                </div>
               </div>
             </div>
 
@@ -625,10 +735,8 @@ export default function Home() {
               <Box key={p.name}>
                 <div style={{ fontSize: 28, fontWeight: 800 }}>{p.name}</div>
                 <div style={{ marginTop: 10, color: "#4b5563", lineHeight: 1.7 }}>{p.desc}</div>
-
                 <div style={{ marginTop: 18, fontWeight: 800 }}>Rules</div>
                 <Bullets items={p.rules} />
-
                 <div style={{ marginTop: 18, fontWeight: 800 }}>Agent wording</div>
                 <div style={{ marginTop: 8, fontStyle: "italic", color: "#374151", lineHeight: 1.7 }}>
                   {p.wording}
@@ -646,11 +754,25 @@ export default function Home() {
                 <div style={{ fontSize: 28, fontWeight: 800 }}>{e.name}</div>
                 <div style={{ marginTop: 10, color: "#4b5563", lineHeight: 1.7 }}>{e.desc}</div>
 
-                <div style={{ marginTop: 18, fontWeight: 800 }}>Steps</div>
+                <div style={{ marginTop: 18, fontWeight: 800 }}>Core steps</div>
                 <Bullets items={e.steps} />
 
-                <div style={{ marginTop: 18, fontWeight: 800 }}>Decisions</div>
+                <div style={{ marginTop: 18, fontWeight: 800 }}>Decision points</div>
                 <Bullets items={e.decisions} />
+
+                <div style={{ marginTop: 18, fontWeight: 800 }}>Operational flow</div>
+                <Bullets items={e.operations} />
+
+                <div style={{ marginTop: 18, fontWeight: 800 }}>Special cases</div>
+                <Bullets items={e.specialCases} />
+
+                <div style={{ marginTop: 18, fontWeight: 800 }}>Agent actions</div>
+                <Bullets items={e.agentActions} />
+
+                <div style={{ marginTop: 18, fontWeight: 800 }}>Agent wording</div>
+                <div style={{ marginTop: 8, fontStyle: "italic", color: "#374151", lineHeight: 1.7 }}>
+                  {e.wording}
+                </div>
               </Box>
             ))}
           </>
