@@ -1,0 +1,9 @@
+export const CASES = [
+  { id: 'pre-sales', name: 'Pre-sales', short: 'Questions before purchase.', full: ['Product questions', 'Material questions', 'Personalization possibilities', 'Maximum characters or special requests', 'Delivery promise before purchase', 'Countries served', 'After-sales questions before buying'] },
+  { id: 'change-order', name: 'Change Order', short: 'Changes after order placement.', full: ['Change product', 'Change material', 'Change inscription', 'Change address', 'Change shipping method', 'Check whether the order can still be modified before promising anything'] },
+  { id: 'wismo', name: 'WISMO', short: 'Where is my order.', full: ['Tracking unclear or not updating', 'Late delivery', 'Late supplier', 'DNR: Delivered Not Received', 'Lost parcel', 'Label created only', 'Return to sender', 'Everything between production, shipment and delivery'] },
+  { id: 'item-received', name: 'Item Received', short: 'Problems after delivery.', full: ['Damaged product', 'Wrong product', 'Wrong material', 'Wrong inscription', 'Production error', 'Warranty case', 'Not satisfied', 'Gift recipient does not like it', 'Resizing or fit issue'] },
+  { id: 'account', name: 'Account Issues', short: 'Account, login, GDPR and loyalty support.', full: ['Customer cannot log in', 'GDPR request', 'Delete data request', 'Customer cannot find loyalty points', 'Account information issue'] },
+  { id: 'social', name: 'Social', short: 'Facebook / Instagram comments, DMs and public criticism.', full: ['Public comments', 'Instagram and Facebook DMs', 'Critical comments', 'Hidden comments', 'Duplicate email and social contacts', 'Social reporting and documentation'] },
+  { id: 'other', name: 'Other', short: 'Miscellaneous or external requests.', full: ['Newsletter unsubscribe', 'Collaboration request', 'Supplier or partnership request', 'Unclassified contact'] }
+];
