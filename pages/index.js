@@ -92,7 +92,5 @@ return (
 
   </main>
 </div>
-```
-
 );
 }
