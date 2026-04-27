@@ -1,10 +1,69 @@
-export const CRM = [
-  { id: 'kustomer', title: 'Kustomer', short: 'Main CRM for conversations and case handling.', full: ['Kustomer is the main CRM used for customer conversations.', 'It handles queues, tags, categories and dispositions.', 'It is the operational center for routing, classification and visibility.'] },
-  { id: 'categories', title: 'Categories', short: 'System-filled classification from source or webform.', full: ['Categories are auto-filled by the system.', 'They are based on the webform or source used by the customer.', 'They support routing and reporting.', 'They are not manually chosen by agents.'] },
-  { id: 'dispositions', title: 'Dispositions', short: 'Manual case typing by the agent.', full: ['Dispositions are selected manually by agents.', 'They define the real business case more precisely than categories.', 'They are central for reporting accuracy and quality analysis.', 'They should reflect the actual issue handled by the agent.', 'Examples to define later: pre-sales, change order, WISMO, damaged, not satisfied, account issue.'] },
-  { id: 'tags', title: 'Tags', short: 'Operational labels with multiple levels of importance.', full: ['Tags beginning with Z are archived.', 'Tags do not all have the same importance.', 'Tags can be manual, automatic, event-driven or AI-driven.', 'Tags should map to actions, owners and Notch behavior.', 'Examples already identified: AI reply, auto change address, auto change inscription, auto free gift, admin testing.', 'Event examples: Late Red Event, Last Chance, MBL.'] },
-  { id: 'queues', title: 'Queues', short: 'Routing by site or team ownership.', full: ['Queues can represent site ownership.', 'Queues can represent team ownership.', 'On Hold queues are critical during events.', 'Queues support workload distribution and escalation.'] },
-  { id: 'notch', title: 'Notch', short: 'Current automation and AI layer.', full: ['Notch handles part of the standard automated flow.', 'It can answer simple or standard cases.', 'It is paused or redirected during complex event scenarios.', 'Red Event and MBL cases may require pausing or holding messages.', 'Future goal: map Notch behavior to tags, queues and case type.'] },
-  { id: 'gorgias', title: 'Gorgias', short: 'Yves Rocher support CRM.', full: ['Gorgias is used for Yves Rocher support tickets.', 'Tickets can be found in folders such as social, chat and tasks.', 'Internal notes, close, snooze, timelines and notifications are key actions.', 'Notch appears as Taylor in this workflow.'] },
-  { id: 'shopify', title: 'Shopify', short: 'Yves Rocher order management platform.', full: ['Search by order ID, customer name or email.', 'Shopify tags explain returns, refund type, DNR, reship and other operational actions.', 'Order history shows tracking, customer data, address and status.'] }
+const data = [
+  {
+    "id": "kustomer",
+    "name": "Kustomer",
+    "type": "CRM",
+    "short": "Main CRM for Tenengroup conversations and case handling.",
+    "full": [
+      "Main CRM for customer conversations.",
+      "Handles queues, tags, categories and dispositions."
+    ]
+  },
+  {
+    "id": "categories",
+    "name": "Categories",
+    "type": "CRM",
+    "short": "System-filled classification from source or webform.",
+    "full": [
+      "Auto-filled by system.",
+      "Based on webform or source.",
+      "Supports routing and reporting."
+    ]
+  },
+  {
+    "id": "dispositions",
+    "name": "Dispositions",
+    "type": "CRM",
+    "short": "Manual case typing by agent.",
+    "full": [
+      "Selected manually by agents.",
+      "Define real business case more precisely than categories.",
+      "Central for reporting and quality analysis."
+    ]
+  },
+  {
+    "id": "tags",
+    "name": "Tags",
+    "type": "CRM",
+    "short": "Operational labels with multiple levels of importance.",
+    "full": [
+      "Tags beginning with Z are archived.",
+      "Can be manual, automatic, event-driven or AI-driven.",
+      "Should map to actions, owners and Notch behavior.",
+      "Examples: AI reply, auto change address, auto change inscription, auto free gift, admin testing, Late Red Event, Last Chance, MBL."
+    ]
+  },
+  {
+    "id": "queues",
+    "name": "Queues",
+    "type": "CRM",
+    "short": "Routing by site or team ownership.",
+    "full": [
+      "Can represent site or team ownership.",
+      "On Hold queues are critical during events.",
+      "Support workload distribution and escalation."
+    ]
+  },
+  {
+    "id": "notch",
+    "name": "Notch",
+    "type": "CRM",
+    "short": "Current automation and AI layer for Tenengroup.",
+    "full": [
+      "Handles part of automated flow.",
+      "Can answer simple cases.",
+      "Paused or redirected during complex event scenarios such as Red Event and MBL."
+    ]
+  }
 ];
+export default data;
