@@ -1,3 +1,6 @@
+import qaTeam from "../data/qaTeam";
+import ocyTeam from "../data/ocyTeam";
+import shineonProducts from "../data/shineonProducts";
 import { useMemo, useState } from 'react';
 import { BRANDS } from '../data/brands';
 import { CASES } from '../data/cases';
@@ -9,7 +12,7 @@ import { AI_AGENTS } from '../data/aiAgents';
 import { YVES_ROCHER } from '../data/yvesRocher';
 import { SOCIAL_POLICY } from '../data/socialPolicy';
 
-const MENU = ['Dashboard', 'Brands', 'Cases', 'Policies', 'Events', 'CRM', 'Logistics', 'Yves Rocher', 'Social Policy', 'AI Agents', 'Q&A'];
+const MENU = ['Dashboard', 'Brands', 'Cases', 'Policies', 'Events', 'CRM', 'Logistics', 'Yves Rocher', 'Social Policy', 'AI Agents', 'QA Team', 'OCy', 'Q&A'];
 
 const QUICK_TOOLS = [
   { name: 'Kustomer', url: 'https://tenengroup.kustomerapp.com/' },
