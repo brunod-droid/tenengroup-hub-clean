@@ -2,15 +2,16 @@ import qaTeam from "../data/qaTeam";
 import ocyTeam from "../data/ocyTeam";
 import shineonProducts from "../data/shineonProducts";
 import { useMemo, useState } from "react";
-import { BRANDS } from "../data/brands";
-import { CASES } from "../data/cases";
-import { POLICIES } from "../data/policies";
-import { EVENTS } from "../data/events";
-import { CRM } from "../data/crm";
-import { LOGISTICS } from "../data/logistics";
-import { AI_AGENTS } from "../data/aiAgents";
-import { YVES_ROCHER } from "../data/yvesRocher";
-import { SOCIAL_POLICY } from "../data/socialPolicy";
+
+import BRANDS from "../data/brands";
+import CASES from "../data/cases";
+import POLICIES from "../data/policies";
+import EVENTS from "../data/events";
+import CRM from "../data/crm";
+import LOGISTICS from "../data/logistics";
+import AI_AGENTS from "../data/aiAgents";
+import YVES_ROCHER from "../data/yvesRocher";
+import SOCIAL_POLICY from "../data/socialPolicy";
 
 const MENU = [
   "Home",
