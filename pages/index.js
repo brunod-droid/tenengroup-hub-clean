@@ -15,6 +15,7 @@ import SOCIAL_POLICY from "../data/socialPolicy";
 
 const MENU = [
   "Home",
+  "Training",
   "Brands",
   "Cases",
   "Policies",
@@ -36,6 +37,131 @@ const QUICK_TOOLS = [
   { name: "AfterShip", url: "https://www.aftership.com/" },
   { name: "Matrix", url: "http://matrix.tenengroup.com:100/Login.aspx" },
   { name: "17Track", url: "https://www.17track.net/en" },
+];
+
+const TRAINING = [
+  {
+    id: "intro",
+    name: "Customer Care in 20 minutes",
+    short: "A quick orientation for new Tenengroup employees.",
+    full: [
+      "Customer Care is one of the main bridges between customers and the company.",
+      "The team protects customer experience, brand reputation and business performance.",
+      "The goal of this session is not to train people as agents, but to help every new employee understand what Customer Care does and why it matters.",
+    ],
+  },
+  {
+    id: "team",
+    name: "Who we are",
+    short: "A global customer team with multiple expert functions.",
+    full: [
+      "Customer Care includes 50–100 agents around the world.",
+      "The team works with leadership, QA, Order Cycle, Operations, Project Management and team leaders.",
+      "Main countries represented include Israel, Italy, Hungary, Ukraine, Philippines, Mexico, Thailand, Spain and Austria.",
+    ],
+  },
+  {
+    id: "mission",
+    name: "Our mission",
+    short: "Customer experience, retention and company insight.",
+    full: [
+      "Optimize the customer experience through tone of voice, policies and service quality.",
+      "Maximize lifetime value and reduce customer churn.",
+      "Identify and implement new channels to improve satisfaction.",
+      "Coordinate with Shipping, Factory and Brands to bring customer insights back to the company.",
+    ],
+  },
+  {
+    id: "channels",
+    name: "Where customers reach us",
+    short: "Customers contact us through many channels.",
+    full: [
+      "Webform and emails.",
+      "Social media such as Facebook and Instagram.",
+      "Trustpilot reviews.",
+      "Other public platforms such as Reddit, BBB and complaint websites.",
+    ],
+  },
+  {
+    id: "kpis",
+    name: "Our KPIs",
+    short: "How Customer Care performance is measured.",
+    full: [
+      "CSAT: customer satisfaction after interaction.",
+      "SLA: speed and respect of response-time commitments.",
+      "NPS: customer loyalty and likelihood to recommend.",
+      "Order cost: operational efficiency and cost of resolving issues.",
+    ],
+  },
+  {
+    id: "wheel",
+    name: "Customer Service Wheel",
+    short: "The main families of customer questions.",
+    full: [
+      "Pre-sales: products, shipping, warranty, special requests, payment, technical issues and coupons.",
+      "Change Order: address, item, inscription or shipping method changes.",
+      "WISMO: Where Is My Order, late supplier, late, on time, lost, DNR and return to sender.",
+      "Item Received: damaged, not satisfied, production mistake or customer mistake.",
+      "Other cases: account issues, collaboration requests and spam.",
+    ],
+  },
+  {
+    id: "responsibilities",
+    name: "Responsibilities",
+    short: "Different teams support different parts of the customer journey.",
+    full: [
+      "CS handles direct customer conversations.",
+      "OCy supports order cycle topics and partner-specific order rules.",
+      "QA supports product quality, complex item received cases and escalations.",
+      "AI / Notch supports automation and monitoring for standard flows.",
+      "Customer Care also handles proactive monitoring: OOS, payment issues, late supplier, upgrade, shipping issues and ETA-1.",
+    ],
+  },
+  {
+    id: "trustpilot",
+    name: "Trustpilot examples",
+    short: "How public reviews should be understood.",
+    full: [
+      "A good Trustpilot response is personal, empathetic and solution-oriented.",
+      "A good response shows ownership and gives a next step: ETA, reorder, refund, escalation or direct contact.",
+      "A weak response is generic, defensive, too long, or does not show a clear solution.",
+      "Trustpilot is not only a complaint channel; it is also a public signal of trust and brand credibility.",
+      "Examples to discuss in session: late delivery review, damaged item review, excellent service review, and frustrated customer who received no update.",
+    ],
+  },
+  {
+    id: "final",
+    name: "Final message",
+    short: "Customer Care success depends on cooperation.",
+    full: [
+      "High-quality service depends on cooperation between departments.",
+      "Customer Care is not only a support function; it is also a source of customer insight.",
+      "The Customer Care Hub is the reference point for policies, teams, tools and customer handling logic.",
+    ],
+  },
+];
+
+const QUIZ = [
+  {
+    question: "What is WISMO?",
+    answer: "Where Is My Order: tracking, late, DNR, lost, return to sender and delivery questions.",
+  },
+  {
+    question: "Why does Customer Care matter for the company?",
+    answer: "It protects customer experience, retention, brand reputation and brings insights back to the business.",
+  },
+  {
+    question: "Name two public channels where customers can leave feedback.",
+    answer: "Trustpilot, Facebook, Instagram, Reddit, BBB or complaint websites.",
+  },
+  {
+    question: "What is the role of QA?",
+    answer: "QA supports complex quality cases, product issues, damaged/wrong item validation and escalations.",
+  },
+  {
+    question: "What is one thing a good Trustpilot reply should include?",
+    answer: "Empathy, ownership and a clear next step.",
+  },
 ];
 
 const SUGGESTED_QUESTIONS = [
@@ -70,6 +196,22 @@ function assistantAnswer(input) {
       title: "Ask the assistant",
       body: "Ask about late orders, damaged items, DNR, Red Event, Social, Yves Rocher, QA, OCy, ShineOn, tags or dispositions.",
       tags: [],
+    };
+  }
+
+  if (q.includes("training") || q.includes("new employee") || q.includes("orientation")) {
+    return {
+      title: "Training guidance",
+      body: "Open the Training page. It gives a 20-minute overview of Customer Care: mission, team, channels, KPIs, responsibilities and a short quiz.",
+      tags: ["Training"],
+    };
+  }
+
+  if (q.includes("trustpilot") || q.includes("review")) {
+    return {
+      title: "Trustpilot guidance",
+      body: "A good public review response should be empathetic, personal and solution-oriented. It should show ownership and provide a clear next step.",
+      tags: ["Trustpilot", "Public Reviews"],
     };
   }
 
@@ -310,6 +452,13 @@ export default function Home() {
       openPage: "Events",
     }));
 
+    const trainingItems = TRAINING.map((x) => ({
+      type: "Training",
+      title: x.name,
+      text: [x.short].concat(x.full || []).join(" "),
+      openPage: "Training",
+    }));
+
     const generic = Object.keys(pageData).flatMap((key) =>
       pageData[key].map((x) => ({
         type: key,
@@ -326,7 +475,7 @@ export default function Home() {
       openPage: "OCy",
     }));
 
-    return generic.concat(eventItems).concat(shineonSearch);
+    return generic.concat(eventItems).concat(trainingItems).concat(shineonSearch);
   }, [shineonItems]);
 
   const filteredResults = useMemo(() => {
@@ -438,15 +587,15 @@ export default function Home() {
                 <div style={{ fontSize: 54, fontWeight: 900, marginTop: 6 }}>TENENGROUP</div>
                 <div style={{ fontSize: 32, color: "#2563eb", marginTop: 6 }}>Customer Care Hub</div>
                 <div style={{ marginTop: 18, lineHeight: 1.7, fontSize: 18, color: "#374151" }}>
-                  Policies, event playbooks, CRM definitions, brand tone of voice, logistics, social handling, Yves Rocher training, QA, OCy / ShineOn and AI agent structure.
+                  Policies, event playbooks, CRM definitions, brand tone of voice, logistics, social handling, Yves Rocher training, QA, OCy / ShineOn and new employee orientation.
                 </div>
               </div>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 16, marginBottom: 22 }}>
+              <SmallCard title="Training" text="20-minute CS overview" onClick={() => setPage("Training")} />
               <SmallCard title="QA Team" text="Escalations and quality checks" onClick={() => setPage("QA Team")} />
               <SmallCard title="OCy" text="Order Cycle and ShineOn rules" onClick={() => setPage("OCy")} />
-              <SmallCard title="Policies" text="Rules and wording" onClick={() => setPage("Policies")} />
               <SmallCard title="Yves Rocher" text="Shopify and Gorgias" onClick={() => setPage("Yves Rocher")} />
               <SmallCard title="Social Policy" text="Facebook / Instagram" onClick={() => setPage("Social Policy")} />
             </div>
@@ -502,6 +651,44 @@ export default function Home() {
                 </div>
               </Box>
             </div>
+          </>
+        )}
+
+        {page === "Training" && (
+          <>
+            <h1 style={{ fontSize: 40 }}>New Employee Training — Customer Care Overview</h1>
+            <Box>
+              <div style={{ fontSize: 26, fontWeight: 800 }}>20-minute session flow</div>
+              <Bullets items={[
+                "0–3 min: who we are",
+                "3–7 min: mission and channels",
+                "7–12 min: service wheel and case types",
+                "12–16 min: responsibilities and cooperation",
+                "16–18 min: Trustpilot examples",
+                "18–20 min: quick quiz"
+              ]} />
+            </Box>
+
+            {TRAINING.map((x) => (
+              <ExpandableCard
+                key={x.id}
+                title={x.name}
+                shortText={x.short}
+                bullets={x.full}
+              />
+            ))}
+
+            <Box>
+              <div style={{ fontSize: 28, fontWeight: 800 }}>Quick quiz</div>
+              {QUIZ.map((q, index) => (
+                <ExpandableCard
+                  key={q.question}
+                  title={(index + 1) + ". " + q.question}
+                  shortText="Click to reveal the answer."
+                  bullets={[q.answer]}
+                />
+              ))}
+            </Box>
           </>
         )}
 
