@@ -57,7 +57,13 @@ const data = [
         ]
       }
     ],
-    "wording": "I am very sorry that your order may not arrive in time for Mother’s Day. We are monitoring it closely and want to be fully transparent about the current delivery outlook."
+    "wording": "I am very sorry that your order may not arrive in time for Mother’s Day. We are monitoring it closely and want to be fully transparent about the current delivery outlook.",
+    "documents": [
+      {
+        "label": "Open full Mother’s Day event policy",
+        "url": "/docs/event-prompt-md2026.docx"
+      }
+    ]
   },
   {
     "id": "vday",
@@ -77,7 +83,13 @@ const data = [
         ]
       }
     ],
-    "wording": "I understand how important timing is for this occasion. I reviewed the status and here is the most accurate update."
+    "wording": "I understand how important timing is for this occasion. I reviewed the status and here is the most accurate update.",
+    "documents": [
+      {
+        "label": "Open full Valentine’s Day event policy",
+        "url": "/docs/event-prompt-vd2026.docx"
+      }
+    ]
   },
   {
     "id": "xmas",
@@ -103,7 +115,13 @@ const data = [
         ]
       }
     ],
-    "wording": "We are checking the best available option for your order and will guide you toward the fastest or most suitable solution."
+    "wording": "We are checking the best available option for your order and will guide you toward the fastest or most suitable solution.",
+    "documents": [
+      {
+        "label": "Open full Christmas event policy",
+        "url": "/docs/event-prompt-xmas2025.docx"
+      }
+    ]
   }
 ];
 export default data;

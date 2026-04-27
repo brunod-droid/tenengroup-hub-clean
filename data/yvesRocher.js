@@ -8,6 +8,12 @@ const data = [
       "Official U.S. online store.",
       "Core categories: skincare, haircare, body care and fragrance.",
       "Operational stack: Shopify, Gorgias, Notch/Taylor and Staci."
+    ],
+    "documents": [
+      {
+        "label": "Open full Yves Rocher training",
+        "url": "/docs/yves-rocher-training.pdf"
+      }
     ]
   },
   {
@@ -20,6 +26,12 @@ const data = [
       "Tags explain why order was returned or what needs refund.",
       "Before BC number some edits may still be possible.",
       "After BC number or packing stage, edits/cancellation usually not possible."
+    ],
+    "documents": [
+      {
+        "label": "Open full Yves Rocher training",
+        "url": "/docs/yves-rocher-training.pdf"
+      }
     ]
   },
   {
@@ -33,6 +45,12 @@ const data = [
       "Close or snooze conversations.",
       "Use timeline to see order history and conversations.",
       "Notch is referred to as Taylor."
+    ],
+    "documents": [
+      {
+        "label": "Open full Yves Rocher training",
+        "url": "/docs/yves-rocher-training.pdf"
+      }
     ]
   },
   {
@@ -47,6 +65,12 @@ const data = [
       "Orders over $89 free shipping; under $89 have $11.95 fee.",
       "Recurring subscription returns deduct $7 and use tag RETURN REFUND -7$.",
       "Cancellation handled in Ordergroove."
+    ],
+    "documents": [
+      {
+        "label": "Open full Yves Rocher training",
+        "url": "/docs/yves-rocher-training.pdf"
+      }
     ]
   },
   {
@@ -61,6 +85,12 @@ const data = [
       "Allergic reaction: collect reaction date, usage details, symptoms, duration, doctor/hospitalization details.",
       "NS: first offer 100% coupon valid 6 months.",
       "If coupon refused, issue return label and refund after warehouse confirmation."
+    ],
+    "documents": [
+      {
+        "label": "Open full Yves Rocher training",
+        "url": "/docs/yves-rocher-training.pdf"
+      }
     ]
   },
   {
@@ -74,6 +104,12 @@ const data = [
       "Ask customer to sign Non-Receipt form.",
       "Returned to sender: free reship and ask for different address.",
       "Tags: Reship - DNR, Reship - Wrong address, Reship - Returned to sender."
+    ],
+    "documents": [
+      {
+        "label": "Open full Yves Rocher training",
+        "url": "/docs/yves-rocher-training.pdf"
+      }
     ]
   },
   {
@@ -93,6 +129,12 @@ const data = [
       "Return Label Sent - Subscription",
       "Returned by customer",
       "Reship - Missing item"
+    ],
+    "documents": [
+      {
+        "label": "Open full Yves Rocher training",
+        "url": "/docs/yves-rocher-training.pdf"
+      }
     ]
   }
 ];

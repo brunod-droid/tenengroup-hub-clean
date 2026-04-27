@@ -7,6 +7,12 @@ const data = [
     "full": [
       "Select account first, such as Theo Grace or Oak & Luna.",
       "Navigate to Facebook comments; Instagram follows same process."
+    ],
+    "documents": [
+      {
+        "label": "Open full Social policy",
+        "url": "/docs/social-policy-facebook-instagram.docx"
+      }
     ]
   },
   {
@@ -20,6 +26,12 @@ const data = [
       "Like positive comments and supportive remarks.",
       "Click Reply directly below customer comment.",
       "Keep public responses friendly, polite, professional, short and natural."
+    ],
+    "documents": [
+      {
+        "label": "Open full Social policy",
+        "url": "/docs/social-policy-facebook-instagram.docx"
+      }
     ]
   },
   {
@@ -32,6 +44,12 @@ const data = [
       "Find customer in Kustomer or OM.",
       "Check tickets, previous replies, shipping and delivery updates.",
       "Public response should acknowledge issue, show empathy and move to DM."
+    ],
+    "documents": [
+      {
+        "label": "Open full Social policy",
+        "url": "/docs/social-policy-facebook-instagram.docx"
+      }
     ]
   },
   {
@@ -45,6 +63,12 @@ const data = [
       "Merge tickets with main account.",
       "Fill disposition and email carefully.",
       "If giftee reaches out, merge and tag giftee."
+    ],
+    "documents": [
+      {
+        "label": "Open full Social policy",
+        "url": "/docs/social-policy-facebook-instagram.docx"
+      }
     ]
   },
   {
@@ -57,6 +81,12 @@ const data = [
       "Genuine concerns may appear there.",
       "Unhide and respond when transparency is better.",
       "Hide only offensive, irrelevant or repetitive comments."
+    ],
+    "documents": [
+      {
+        "label": "Open full Social policy",
+        "url": "/docs/social-policy-facebook-instagram.docx"
+      }
     ]
   },
   {
@@ -70,6 +100,12 @@ const data = [
       "Do not explain issue publicly, ask questions publicly or reference internal processes.",
       "After approved reply, hide the negative comment.",
       "Further communication only via private message."
+    ],
+    "documents": [
+      {
+        "label": "Open full Social policy",
+        "url": "/docs/social-policy-facebook-instagram.docx"
+      }
     ]
   }
 ];

@@ -11,7 +11,13 @@ const data = [
       "Check Late Supplier before regular late flow.",
       "DNR: wait 3 business days after delivery scan before acting."
     ],
-    "wording": "I am sorry for the delay. I checked your order and here is the latest update: [ETA]. We are closely monitoring it for you."
+    "wording": "I am sorry for the delay. I checked your order and here is the latest update: [ETA]. We are closely monitoring it for you.",
+    "documents": [
+      {
+        "label": "Open full Shipping & WISMO policy",
+        "url": "/docs/policy-shipping-wismo.docx"
+      }
+    ]
   },
   {
     "id": "late-supplier",
@@ -36,7 +42,13 @@ const data = [
       "Reorder is first solution.",
       "Refund is not first option."
     ],
-    "wording": "I am sorry about this. Please share a picture so I can resolve this right away. We will prioritize sending a replacement."
+    "wording": "I am sorry about this. Please share a picture so I can resolve this right away. We will prioritize sending a replacement.",
+    "documents": [
+      {
+        "label": "Open full Damaged policy",
+        "url": "/docs/policy-damaged.docx"
+      }
+    ]
   },
   {
     "id": "not-satisfied",
@@ -49,7 +61,13 @@ const data = [
       "Store credit second.",
       "No refund for personalized items."
     ],
-    "wording": "I understand this is not exactly what you expected. We can offer an exchange or store credit so you can choose something you love."
+    "wording": "I understand this is not exactly what you expected. We can offer an exchange or store credit so you can choose something you love.",
+    "documents": [
+      {
+        "label": "Open full Not Satisfied policy",
+        "url": "/docs/policy-not-satisfied.docx"
+      }
+    ]
   },
   {
     "id": "resizing",
@@ -61,7 +79,13 @@ const data = [
       "Ring resizing usually free within valid window.",
       "Chains and bracelets follow separate rules."
     ],
-    "wording": "We can help with resizing. Let me guide you through the available options based on your item."
+    "wording": "We can help with resizing. Let me guide you through the available options based on your item.",
+    "documents": [
+      {
+        "label": "Open full Resizing policy",
+        "url": "/docs/policy-resizing.docx"
+      }
+    ]
   }
 ];
 export default data;
