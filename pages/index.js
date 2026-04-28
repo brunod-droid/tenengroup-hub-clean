@@ -333,7 +333,7 @@ function getText(item) {
 function assistantAnswer(input) {
   const q = input.toLowerCase().trim();
   if (!q) return { title:"Ask the assistant", body:"Ask about late orders, damaged items, DNR, Red Event, Social, Yves Rocher, QA, OCy, ShineOn, tags or dispositions.", tags:[] };
-  if (q.includes("late") || q.includes("delay") || q.includes("coupon") || q.includes("refund")) return { title:"WISMO Late guidance", body:"Open WISMO Late Zoom. Logic: verify ETA and root cause first, classify the delay, then choose the action. Under 3 business days late: apology + ETA, usually no compensation. Over 3 business days late: gesture can be reviewed. Major delay: escalate; replacement/refund may apply depending on policy.", tags:["WISMO","Late"] };
+  if (q.includes("late") || q.includes("delay") || q.includes("coupon") || q.includes("refund")) return { title:"WISMO Late guidance", body:"Use WISMO Late Zoom → Agent decision tool. Verify ETA first. Under 3 business days late: apology + ETA, usually no compensation. Over 3 business days late: review gesture. No ETA / major delay: escalate.", tags:["WISMO","Late"] };
   if (q.includes("training") || q.includes("orientation")) return { title:"Training guidance", body:"Open Training for the 20-minute presentation.", tags:["Training"] };
   if (q.includes("trustpilot") || q.includes("review")) return { title:"Trustpilot guidance", body:"A good public review response should be empathetic, personal and solution-oriented. It should show ownership and provide a clear next step.", tags:["Trustpilot"] };
   if (q.includes("shineon") || q.includes("ocy") || q.includes("product")) return { title:"OCy / ShineOn guidance", body:"Go to OCy and search the ShineOn product. Always check product-specific notes before confirming personalization.", tags:["OCy","ShineOn"] };
@@ -396,12 +396,135 @@ function ExpandableCard({ title, shortText, bullets, extraTitle, extraItems, wor
     {open && <div style={{ marginTop:18 }}>
       {bullets && <Bullets items={bullets} />}
       {extraItems && <><div style={{ fontWeight:800, marginTop:14 }}>{extraTitle}</div><Bullets items={extraItems} /></>}
-      {wording && <><div style={{ fontWeight:800, marginTop:14 }}>Suggested wording</div><div style={{ marginTop:8, fontStyle:"italic", color:"#374151", lineHeight:1.7 }}>{wording}</div></>}
+      {wording && <><div style={{ fontWeight:800, marginTop:14 }}>Suggested wording</div><div style={{ marginTop:8, fontStyle:"italic", color:"#374151", lineHeight:1.7 }}>{wording}</div><CopyButton text={wording} /></>}
     </div>}
   </Box>;
 }
 
 
+
+
+function CopyButton({ text, label = "Copy answer" }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text || "");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch (e) {
+      setCopied(false);
+    }
+  };
+  return (
+    <button
+      onClick={copy}
+      style={{ marginTop: 12, background:"#2563eb", color:"#fff", border:"none", borderRadius:12, padding:"10px 14px", cursor:"pointer", fontWeight:800 }}
+    >
+      {copied ? "Copied ✓" : "📋 " + label}
+    </button>
+  );
+}
+
+
+function AgentDecisionTool() {
+  const [isLate, setIsLate] = useState("");
+  const [delay, setDelay] = useState("");
+
+  let result = null;
+
+  if (isLate === "no") {
+    result = {
+      title: "Not late yet",
+      action: "Reassure the customer and share the current ETA. No compensation.",
+      gesture: "No coupon / refund / free product.",
+      wording: "I checked your order and it is still within the estimated delivery window. The current ETA is [ETA]. We’ll continue monitoring it and update you if anything changes."
+    };
+  }
+
+  if (isLate === "yes" && delay === "under3") {
+    result = {
+      title: "Less than 3 business days late",
+      action: "Apologize, share latest tracking/ETA, monitor.",
+      gesture: "Usually no compensation.",
+      wording: "I’m really sorry for the delay. I checked your order and the latest update is [tracking / ETA]. It is taking slightly longer than expected, but we are monitoring it closely and will keep you updated."
+    };
+  }
+
+  if (isLate === "yes" && delay === "over3") {
+    result = {
+      title: "More than 3 business days late",
+      action: "Apologize, take ownership, review gesture if impact is meaningful.",
+      gesture: "Coupon/store credit possible. Shipping refund possible if expedited shipping promise was missed. Partial refund/free product only by policy or escalation.",
+      wording: "I’m very sorry for the delay and I understand how frustrating this is. I checked the latest status and we are following it closely. Since the order is now beyond the expected window, we can review the best gesture according to our policy while we continue monitoring the delivery."
+    };
+  }
+
+  if (isLate === "yes" && delay === "noeta") {
+    result = {
+      title: "No reliable ETA / major delay",
+      action: "Escalate to the right owner and decide between replacement, refund or stronger gesture.",
+      gesture: "Replacement or refund may apply depending on root cause, severity and policy.",
+      wording: "I’m very sorry. At this point, the delay is no longer within the normal window, so I’m escalating this to make sure we choose the right solution. Depending on the final status, we may be able to arrange a replacement or another resolution according to our policy."
+    };
+  }
+
+  const Button = ({ active, onClick, children }) => (
+    <button onClick={onClick} style={{
+      background: active ? "#2563eb" : "#eef2ff",
+      color: active ? "#fff" : "#3730a3",
+      border:"none",
+      borderRadius:14,
+      padding:"12px 16px",
+      cursor:"pointer",
+      fontWeight:900,
+      marginRight:10,
+      marginBottom:10
+    }}>
+      {children}
+    </button>
+  );
+
+  return (
+    <Box>
+      <div style={{ fontSize:28, fontWeight:900 }}>⚡ Agent decision tool</div>
+      <div style={{ marginTop:8, color:"#4b5563", lineHeight:1.7 }}>
+        Answer 2 questions and get the recommended action + copy-ready wording.
+      </div>
+
+      <div style={{ marginTop:20 }}>
+        <div style={{ fontWeight:900, marginBottom:10 }}>1. Is the order late compared to ETA?</div>
+        <Button active={isLate === "yes"} onClick={() => { setIsLate("yes"); setDelay(""); }}>Yes</Button>
+        <Button active={isLate === "no"} onClick={() => { setIsLate("no"); setDelay(""); }}>No</Button>
+      </div>
+
+      {isLate === "yes" && (
+        <div style={{ marginTop:16 }}>
+          <div style={{ fontWeight:900, marginBottom:10 }}>2. How late?</div>
+          <Button active={delay === "under3"} onClick={() => setDelay("under3")}>Less than 3 business days</Button>
+          <Button active={delay === "over3"} onClick={() => setDelay("over3")}>More than 3 business days</Button>
+          <Button active={delay === "noeta"} onClick={() => setDelay("noeta")}>No reliable ETA / major delay</Button>
+        </div>
+      )}
+
+      {result && (
+        <div style={{ marginTop:22, display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+          <div style={{ background:"#f8fafc", borderRadius:18, padding:18 }}>
+            <div style={{ fontSize:22, fontWeight:900 }}>{result.title}</div>
+            <div style={{ marginTop:12, fontWeight:900 }}>Agent action</div>
+            <div style={{ marginTop:6, color:"#374151", lineHeight:1.7 }}>{result.action}</div>
+            <div style={{ marginTop:12, fontWeight:900 }}>Gesture / compensation</div>
+            <div style={{ marginTop:6, color:"#374151", lineHeight:1.7 }}>{result.gesture}</div>
+          </div>
+          <div style={{ background:"#fefce8", border:"1px solid #fde68a", borderRadius:18, padding:18 }}>
+            <div style={{ fontWeight:900 }}>Customer wording</div>
+            <div style={{ marginTop:8, color:"#374151", lineHeight:1.7, fontStyle:"italic" }}>{result.wording}</div>
+            <CopyButton text={result.wording} />
+          </div>
+        </div>
+      )}
+    </Box>
+  );
+}
 
 function WismoDecisionCard({ item }) {
   const [open, setOpen] = useState(true);
@@ -421,7 +544,7 @@ function WismoDecisionCard({ item }) {
         </div>
         <div style={{ background:"#fefce8", border:"1px solid #fde68a", borderRadius:18, padding:18 }}>
           <div style={{ fontWeight:900, marginBottom:8 }}>Customer wording</div>
-          <div style={{ color:"#374151", lineHeight:1.7, fontStyle:"italic" }}>{item.customerWording}</div>
+          <div style={{ color:"#374151", lineHeight:1.7, fontStyle:"italic" }}>{item.customerWording}</div><CopyButton text={item.customerWording} />
         </div>
       </div>
       <DocumentButtons documents={item.documents} />
@@ -651,6 +774,18 @@ export default function Home() {
           </div>
         </div>
 
+
+        <Box>
+          <div style={{ fontSize:24, fontWeight:900 }}>⚡ Agent quick actions</div>
+          <div style={{ marginTop:14, display:"flex", gap:10, flexWrap:"wrap" }}>
+            <button onClick={() => setPage("WISMO Late Zoom")} style={{ background:"#2563eb", color:"#fff", border:"none", borderRadius:12, padding:"10px 14px", fontWeight:800, cursor:"pointer" }}>WISMO Late</button>
+            <button onClick={() => { setPage("Policies"); setSearch("damaged"); }} style={{ background:"#eef2ff", color:"#3730a3", border:"none", borderRadius:12, padding:"10px 14px", fontWeight:800, cursor:"pointer" }}>Damaged</button>
+            <button onClick={() => { setPage("Policies"); setSearch("not satisfied"); }} style={{ background:"#eef2ff", color:"#3730a3", border:"none", borderRadius:12, padding:"10px 14px", fontWeight:800, cursor:"pointer" }}>Not Satisfied</button>
+            <button onClick={() => { setPage("Policies"); setSearch("DNR"); }} style={{ background:"#eef2ff", color:"#3730a3", border:"none", borderRadius:12, padding:"10px 14px", fontWeight:800, cursor:"pointer" }}>DNR</button>
+            <button onClick={() => setPage("Social Policy")} style={{ background:"#eef2ff", color:"#3730a3", border:"none", borderRadius:12, padding:"10px 14px", fontWeight:800, cursor:"pointer" }}>Social</button>
+          </div>
+        </Box>
+
         <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:16, marginBottom:22 }}>
           <SmallCard title="Training" text="20-minute CS overview" onClick={() => setPage("Training")} />
           <SmallCard title="Brands" text="Logos, colors and tone of voice" onClick={() => setPage("Brands")} />
@@ -693,6 +828,7 @@ export default function Home() {
 
       {page === "WISMO Late Zoom" && <>
         <h1 style={{ fontSize:40 }}>WISMO Late Zoom — What do we do when an order is late?</h1>
+        <AgentDecisionTool />
 
         <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, marginBottom:22 }}>
           <Box><div style={{ fontSize:22, fontWeight:900 }}>1. Verify</div><div style={{ marginTop:8, color:"#4b5563" }}>ETA, order status, tracking, root cause.</div></Box>
