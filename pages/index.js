@@ -22,12 +22,99 @@ const CHANNELS = [
 ];
 
 const BRANDS = [
-  { id:"tg", name:"Theo Grace", short:"Premium personalized products, elegant and emotional, with Nicky Hilton as part of the brand story.", full:["Premium personalized product brand.","Elegant, stylish, refined, emotional and family-oriented.","Connects personalization with family joy, gifting and meaningful relationships."], tone:["Elegant","Premium","Emotional","Family-oriented","Stylish","Nicky Hilton association"] },
-  { id:"ol", name:"Oak & Luna", short:"Modern, refined and fashion-forward personalized jewelry.", full:["Modern and refined jewelry.","Less sentimental-first and more fashion-led.","Polished, trendy, stylish and elevated."], tone:["Modern","Chic","Polished","Fashion-forward","Refined"] },
-  { id:"ib", name:"Israel Blessing", short:"Jewish identity-focused personalized products.", full:["Jewish identity and symbolism.","Magen David, Chai, Israel map and Hebrew personalization.","Respectful, culturally aware and meaningful."], tone:["Respectful","Identity-driven","Symbolic","Culturally aware"] },
-  { id:"ll", name:"Lime & Lou", short:"Personalized home and lifestyle products.", full:["Personalized home and lifestyle items.","Blankets, canvas, hoodies and decor-related gifts.","Warm, modern, cozy and gift-friendly."], tone:["Warm","Modern","Home-oriented","Aesthetic"] },
-  { id:"myka", name:"MYKA", short:"European brand family similar to Theo Grace but without Nicky Hilton.", full:["European brand family.","Close to Theo Grace in assortment style, without Nicky Hilton association.","Elegant, accessible, commercial and localized."], tone:["Elegant","Accessible","European","Localized"] },
-  { id:"yr", name:"Yves Rocher", short:"U.S. Shopify store for plant-based beauty products.", full:["Official U.S. online store for Yves Rocher.","Core categories: skincare, haircare, body care and fragrance.","Operational stack: Shopify, Gorgias, Notch/Taylor and Staci."], tone:["Botanical","Helpful","Accessible","Beauty-focused"] }
+  {
+    id:"theo-grace",
+    name:"Theo Grace",
+    logo:"/brand/theograce.jpg",
+    color:"#7c3aed",
+    accent:"#f3e8ff",
+    short:"Premium personalized products, elegant and emotional, with Nicky Hilton as part of the brand story.",
+    full:[
+      "Theo Grace is a premium personalized product brand.",
+      "Nicky Hilton is part of the brand story and should remain visible when relevant.",
+      "The tone should feel elegant, stylish, refined, emotional and family-oriented.",
+      "The brand connects personalization with family joy, gifting and meaningful relationships."
+    ],
+    tone:["Elegant","Premium","Emotional","Family-oriented","Stylish","Nicky Hilton association"],
+    documents:[{label:"Open brand full source", url:"/docs/theograce-brand.pdf"}]
+  },
+  {
+    id:"oak-luna",
+    name:"Oak & Luna",
+    logo:"/brand/oak-luna.jpg",
+    color:"#111827",
+    accent:"#f3f4f6",
+    short:"Modern, refined and fashion-forward personalized jewelry.",
+    full:[
+      "Oak & Luna speaks to customers looking for modern and refined jewelry.",
+      "The tone is less sentimental-first and more fashion-led.",
+      "Products should feel polished, trendy, stylish and elevated.",
+      "For public criticism, Oak & Luna has a stricter social protocol: approved public wording, then move to DM and hide the negative comment after reply."
+    ],
+    tone:["Modern","Chic","Polished","Fashion-forward","Refined"],
+    documents:[{label:"Open Oak & Luna social source", url:"/docs/oak-luna-social-policy.pdf"}]
+  },
+  {
+    id:"israel-blessing",
+    name:"Israel Blessing",
+    logo:"/brand/israel-blessing.jpg",
+    color:"#0f766e",
+    accent:"#ccfbf1",
+    short:"Jewish identity-focused personalized products.",
+    full:[
+      "Israel Blessing focuses on Jewish identity and symbolism.",
+      "Typical product universe includes Magen David, Chai, Israel map and Hebrew personalization.",
+      "Tone must remain respectful, culturally aware and meaningful.",
+      "Customer communication should be warm and sensitive to the symbolic value of the product."
+    ],
+    tone:["Respectful","Identity-driven","Symbolic","Culturally aware","Meaningful"]
+  },
+  {
+    id:"lime-lou",
+    name:"Lime & Lou",
+    logo:"/brand/lime-lou.jpg",
+    color:"#65a30d",
+    accent:"#ecfccb",
+    short:"Personalized home and lifestyle products.",
+    full:[
+      "Lime & Lou focuses on personalized home and lifestyle items.",
+      "Examples include blankets, canvas, hoodies and decor-related gifts.",
+      "Tone should be warm, modern, cozy, aesthetic and gift-friendly.",
+      "Many issues are linked to production quality, personalization, fulfillment and gifting expectations."
+    ],
+    tone:["Warm","Modern","Home-oriented","Aesthetic","Gift-friendly"]
+  },
+  {
+    id:"myka",
+    name:"MYKA",
+    logo:"/brand/myka.jpg",
+    color:"#db2777",
+    accent:"#fce7f3",
+    short:"European brand family similar to Theo Grace but without Nicky Hilton.",
+    full:[
+      "MYKA is the European brand family.",
+      "It is close to Theo Grace in assortment style but has no Nicky Hilton association.",
+      "The tone should remain elegant, accessible, commercial and localized.",
+      "Communication should adapt to local expectations and shipping context."
+    ],
+    tone:["Elegant","Accessible","European","Localized","No Nicky Hilton association"]
+  },
+  {
+    id:"yves-rocher",
+    name:"Yves Rocher",
+    logo:"/brand/yves-rocher.jpg",
+    color:"#15803d",
+    accent:"#dcfce7",
+    short:"U.S. Shopify store for plant-based beauty products.",
+    full:[
+      "Yves Rocher USA is the official U.S. online store for Yves Rocher.",
+      "Core product categories: skincare, haircare, body care and fragrance.",
+      "Operational stack: Shopify, Gorgias, Notch/Taylor and Staci.",
+      "Tone should be botanical, helpful, accessible and beauty-focused."
+    ],
+    tone:["Botanical","Helpful","Accessible","Beauty-focused","Clear and practical"],
+    documents:[{label:"Open Yves Rocher full source", url:"/docs/yves-rocher-training.pdf"}]
+  }
 ];
 
 const CASES = [
@@ -288,6 +375,34 @@ function ExpandableCard({ title, shortText, bullets, extraTitle, extraItems, wor
   </Box>;
 }
 
+
+function BrandCard({ brand }) {
+  const [open, setOpen] = useState(false);
+  return <div style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:24, overflow:"hidden", marginBottom:22, boxShadow:"0 8px 24px rgba(15,23,42,0.06)" }}>
+    <div style={{ height:10, background:brand.color }} />
+    <div style={{ padding:24 }}>
+      <div style={{ display:"grid", gridTemplateColumns:"110px 1fr", gap:20, alignItems:"center" }}>
+        <div style={{ width:100, height:100, borderRadius:22, background:brand.accent, display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", border:"1px solid #e5e7eb" }}>
+          <img src={brand.logo} alt={brand.name} onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ maxWidth:"92%", maxHeight:"92%", objectFit:"contain" }} />
+        </div>
+        <div>
+          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+            <div style={{ fontSize:30, fontWeight:900 }}>{brand.name}</div>
+            <span style={{ width:16, height:16, borderRadius:"50%", background:brand.color, display:"inline-block" }} />
+          </div>
+          <div style={{ marginTop:8, color:"#4b5563", lineHeight:1.7 }}>{brand.short}</div>
+          <DocumentButtons documents={brand.documents} />
+        </div>
+      </div>
+      <div style={{ marginTop:18 }}>
+        {(brand.tone || []).map((x) => <span key={x} style={{ display:"inline-block", padding:"8px 12px", borderRadius:999, background:brand.accent, color:brand.color, fontWeight:800, fontSize:13, marginRight:8, marginBottom:8 }}>{x}</span>)}
+      </div>
+      <button onClick={() => setOpen(!open)} style={{ marginTop:12, background:brand.color, color:"#fff", border:"none", borderRadius:12, padding:"10px 14px", cursor:"pointer", fontWeight:800 }}>{open ? "Hide full details" : "Show full details"}</button>
+      {open && <div style={{ marginTop:16 }}><Bullets items={brand.full} /></div>}
+    </div>
+  </div>;
+}
+
 function TrainingSlides() {
   const slides = ["intro","bruno","org","mission","wheel","cart","trustpilot","final","quiz"];
   const scrollToSlide = (id) => {
@@ -422,7 +537,6 @@ export default function Home() {
   const shineonItems = useMemo(() => SHINEON_PRODUCTS.map(normalizeProduct), []);
 
   const pageData = {
-    Brands: BRANDS,
     Cases: CASES,
     Policies: POLICIES,
     CRM,
@@ -434,11 +548,12 @@ export default function Home() {
   };
 
   const searchableItems = useMemo(() => {
+    const brandItems = BRANDS.map((x) => ({ type:"Brands", title:x.name, text:getText(x), openPage:"Brands" }));
     const eventItems = EVENTS.map((e) => ({ type:"Event", title:e.name, text:getText(e), openPage:"Events" }));
     const wismoLateSearch = WISMO_LATE.map((x) => ({ type:"WISMO Late Zoom", title:x.name, text:getText(x), openPage:"WISMO Late Zoom" }));
     const generic = Object.keys(pageData).flatMap((key) => pageData[key].map((x) => ({ type:key, title:x.name || x.title, text:getText(x), openPage:key })));
     const shineonSearch = shineonItems.map((x) => ({ type:"ShineOn Product", title:x.name, text:getText(x), openPage:"OCy" }));
-    return generic.concat(eventItems).concat(wismoLateSearch).concat(shineonSearch);
+    return brandItems.concat(generic).concat(eventItems).concat(wismoLateSearch).concat(shineonSearch);
   }, [shineonItems]);
 
   const filteredResults = useMemo(() => {
@@ -481,6 +596,7 @@ export default function Home() {
 
         <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:16, marginBottom:22 }}>
           <SmallCard title="Training" text="20-minute CS overview" onClick={() => setPage("Training")} />
+          <SmallCard title="Brands" text="Logos, colors and tone of voice" onClick={() => setPage("Brands")} />
           <SmallCard title="WISMO Late Zoom" text="Late policy and compensation logic" onClick={() => setPage("WISMO Late Zoom")} />
           <SmallCard title="QA Team" text="Escalations and quality checks" onClick={() => setPage("QA Team")} />
           <SmallCard title="OCy" text="Order Cycle and ShineOn rules" onClick={() => setPage("OCy")} />
@@ -507,6 +623,16 @@ export default function Home() {
       </>}
 
       {page === "Training" && <TrainingSlides />}
+
+
+      {page === "Brands" && <>
+        <h1 style={{ fontSize:40 }}>Brands</h1>
+        <Box>
+          <div style={{ fontSize:24, fontWeight:900 }}>Brand tone, colors and customer expectations</div>
+          <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>Each brand has its own positioning, tone of voice and service expectations. Use this page before replying in sensitive or brand-specific cases.</div>
+        </Box>
+        {BRANDS.map((brand) => <BrandCard key={brand.id} brand={brand} />)}
+      </>}
 
       {page === "WISMO Late Zoom" && <>
         <h1 style={{ fontSize:40 }}>WISMO Late Zoom — What do we do when an order is late?</h1>
