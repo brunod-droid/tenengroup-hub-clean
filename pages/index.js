@@ -136,78 +136,104 @@ const POLICIES = [
 
 const WISMO_LATE = [
   {
-    id: "check-first",
-    name: "1. Check before answering",
-    short: "Do not offer compensation before checking the real status.",
+    id: "step-1",
+    name: "Step 1 — Is the order really late?",
+    short: "Before talking about compensation, confirm whether the order is actually late.",
     full: [
-      "Check the customer ETA first: if we are still before ETA, the order is not late.",
-      "Check whether the root cause is regular late, Late Supplier, carrier issue, lost parcel, DNR or event-related delay.",
-      "Check OM / Kustomer / tracking before answering.",
-      "Check whether proactive communication was already sent.",
-      "Never promise a new delivery date if it is not confirmed."
+      "Check the promised ETA first.",
+      "If today is before the ETA, the order is not late yet.",
+      "Check order status in OM / Kustomer.",
+      "Check carrier tracking: shipped, label created, in transit, delivered, returned, lost risk.",
+      "Check if this is Late Supplier, regular shipping delay, DNR, lost package, carrier issue or event-related delay.",
+      "Check whether the customer already received a proactive message."
     ],
+    action: "If not late yet: reassure + share ETA. Do not offer compensation.",
+    customerWording: "I checked your order and it is still within the estimated delivery window. The current ETA is [ETA]. We’ll continue monitoring it and we’ll update you if anything changes.",
     documents: [{ label: "Open WISMO full source", url: "/docs/wismo-late-policy.pdf" }]
   },
   {
-    id: "under-3",
-    name: "2. Less than 3 business days late",
-    short: "Apology + updated ETA. Usually no compensation.",
+    id: "step-2",
+    name: "Step 2 — Less than 3 business days late",
+    short: "Small delay: apologize, give ETA, monitor. Usually no compensation.",
     full: [
       "Acknowledge the delay and apologize.",
-      "Give the most accurate ETA or tracking update available.",
-      "Do not automatically offer coupon, refund or free product.",
-      "Reassure the customer that we are monitoring the order.",
-      "Escalate only if there is a clear operational issue or VIP/sensitive context."
+      "Give the best available ETA / tracking update.",
+      "Do not offer coupon, refund or free product by default.",
+      "Do not promise a new delivery date unless confirmed.",
+      "Tell the customer we are monitoring the order.",
+      "Escalate only if there is a sensitive context, VIP case, event case or suspicious tracking."
     ],
-    wording: "I'm really sorry for the delay. I checked your order and it is currently in transit / being processed. The latest ETA is [ETA]. We are monitoring it closely and will keep you updated if anything changes.",
+    action: "Customer gets empathy + clear update. No standard gesture.",
+    customerWording: "I’m really sorry for the delay. I checked your order and the latest update is [tracking / ETA]. It is taking slightly longer than expected, but we are monitoring it closely and will keep you updated.",
     documents: [{ label: "Open WISMO full source", url: "/docs/wismo-late-policy.pdf" }]
   },
   {
-    id: "over-3",
-    name: "3. More than 3 business days late",
-    short: "Apology + ownership. Compensation may apply depending on context.",
+    id: "step-3",
+    name: "Step 3 — More than 3 business days late",
+    short: "Confirmed delay: apology + ownership + review possible gesture.",
     full: [
       "Apologize and take ownership.",
-      "Give the latest confirmed status and next step.",
-      "Compensation can be considered if the delay is confirmed and customer impact is meaningful.",
-      "Possible commercial gesture: coupon / store credit, depending on brand and case.",
-      "Shipping refund can be considered if the customer paid for expedited shipping and the promise was not met.",
-      "Partial refund is rare and should follow policy / escalation logic.",
-      "Free product is not a default solution. Use only if policy, retention or management approval supports it.",
-      "Continue monitoring until shipment/delivery is resolved."
+      "Give the latest confirmed status.",
+      "Explain the next step clearly: monitor, escalate, contact carrier, check production, or review solution.",
+      "A coupon / store credit can be considered when the delay is confirmed and customer impact is meaningful.",
+      "Shipping refund can be considered if the customer paid for expedited shipping and the delivery promise was missed.",
+      "Partial refund is not the default; use only if policy or escalation supports it.",
+      "Free product is not a default solution; use only for retention, severe impact, or manager-approved scenarios."
     ],
-    wording: "I'm very sorry for the delay and I completely understand your frustration. I checked the latest status and we are following this closely. Because the delay is now beyond the expected window, we can review the best gesture for you according to our policy while we continue monitoring the delivery.",
+    action: "Customer may receive a gesture depending on context. The agent must not offer blindly.",
+    customerWording: "I’m very sorry for the delay and I understand how frustrating this is. I checked the latest status and we are following it closely. Since the order is now beyond the expected window, we can review the best gesture according to our policy while we continue monitoring the delivery.",
     documents: [{ label: "Open WISMO full source", url: "/docs/wismo-late-policy.pdf" }]
   },
   {
-    id: "major-delay",
-    name: "4. Major delay / no reliable ETA",
-    short: "Escalate. Replacement, refund or stronger gesture may be needed.",
+    id: "step-4",
+    name: "Step 4 — No reliable ETA / major delay",
+    short: "Escalate and decide between replacement, refund or stronger gesture.",
     full: [
-      "Use this when there is a major delay, no reliable ETA, lost package risk, repeated failed updates, or event promise failure.",
-      "Escalate to Shipping / OCy / QA / manager depending on root cause.",
+      "Use this when there is no reliable ETA, a major delay, a lost package risk, repeated failed updates, or an event promise failure.",
+      "Escalate to the right owner: Shipping, OCy, QA, or manager depending on the root cause.",
       "Replacement can be considered when the original order is unlikely to arrive or is lost.",
-      "Refund can be considered when the customer cannot wait, the issue is severe, or policy allows it.",
-      "Full refund is not automatic. It should follow severity, brand policy and escalation logic.",
-      "If event-related, check Red Event / MBL / proactive communication rules before answering."
+      "Refund can be considered when the customer cannot wait, issue is severe, or policy allows it.",
+      "Full refund is not automatic. It depends on severity, brand policy, customer history and escalation logic.",
+      "If it is event-related, check Red Event / MBL / proactive communication rules before replying."
     ],
-    wording: "I’m very sorry. At this point, the delay is no longer within the normal window, so I’m escalating this to make sure we choose the right solution. Depending on the final status, we may be able to arrange a replacement or another resolution according to our policy.",
+    action: "Escalation required. The solution can be replacement, refund, shipping refund, coupon or case-specific gesture.",
+    customerWording: "I’m very sorry. At this point, the delay is no longer within the normal window, so I’m escalating this to make sure we choose the right solution. Depending on the final status, we may be able to arrange a replacement or another resolution according to our policy.",
+    documents: [{ label: "Open WISMO full source", url: "/docs/wismo-late-policy.pdf" }]
+  },
+  {
+    id: "compensation",
+    name: "Compensation logic",
+    short: "What can we offer, and when?",
+    full: [
+      "No compensation by default when the order is still within ETA.",
+      "No automatic compensation for delays under 3 business days.",
+      "Coupon / store credit: possible for confirmed delay with meaningful customer impact.",
+      "Shipping refund: possible if paid expedited shipping missed the promise.",
+      "Replacement: possible if the parcel is lost, no reliable ETA exists, or delivery is unlikely.",
+      "Partial refund: rare, case-by-case, usually after escalation.",
+      "Full refund: severe cases only, not automatic.",
+      "Free product: not standard. Use only for retention, special approval or very specific brand logic."
+    ],
+    action: "Always choose the lowest appropriate gesture that solves the customer issue and protects the brand.",
+    customerWording: "I understand this delay is disappointing. Based on the current status, I’ll check what gesture or solution is available for your case and make sure we follow up with the most appropriate option.",
     documents: [{ label: "Open WISMO full source", url: "/docs/wismo-late-policy.pdf" }]
   },
   {
     id: "communication",
-    name: "5. Communication rules",
-    short: "Empathy, ownership, clarity, next step.",
+    name: "Communication rules",
+    short: "How we communicate late orders.",
     full: [
-      "Always acknowledge the customer’s frustration.",
+      "Start with empathy.",
+      "Show ownership: say you checked the order.",
+      "Give the latest verified status.",
+      "Give one clear next step.",
       "Avoid defensive wording.",
-      "Be transparent but do not overpromise.",
-      "Give one clear next step: wait until X date, monitor, escalate, replacement review, refund review.",
-      "If no compensation is offered, explain with empathy and focus on the next update.",
-      "Use brand tone: Theo Grace should feel premium, warm, elegant and reassuring.",
-      "Do not use internal terms like Red Event or MBL with customers."
+      "Do not overpromise.",
+      "Do not use internal terms such as Red Event, MBL, ETA-1 or Late Supplier unless the customer already knows the concept.",
+      "For Theo Grace, keep the tone premium, warm, elegant and reassuring."
     ],
-    wording: "I completely understand this is disappointing, especially for a personalized order. I’ve checked the latest information and here is what we can do next: [next step].",
+    action: "Every answer should include: empathy + verified update + next step.",
+    customerWording: "I completely understand this is disappointing, especially for a personalized order. I’ve checked the latest information and here is what we can do next: [next step].",
     documents: [{ label: "Open WISMO full source", url: "/docs/wismo-late-policy.pdf" }]
   }
 ];
@@ -307,7 +333,7 @@ function getText(item) {
 function assistantAnswer(input) {
   const q = input.toLowerCase().trim();
   if (!q) return { title:"Ask the assistant", body:"Ask about late orders, damaged items, DNR, Red Event, Social, Yves Rocher, QA, OCy, ShineOn, tags or dispositions.", tags:[] };
-  if (q.includes("late") || q.includes("delay") || q.includes("coupon") || q.includes("refund")) return { title:"WISMO Late guidance", body:"Check ETA first. Under 3 business days late: apology + ETA, usually no compensation. Over 3 business days late: compensation can be reviewed. Major delay: escalate; replacement/refund may apply depending on policy.", tags:["WISMO","Late"] };
+  if (q.includes("late") || q.includes("delay") || q.includes("coupon") || q.includes("refund")) return { title:"WISMO Late guidance", body:"Open WISMO Late Zoom. Logic: verify ETA and root cause first, classify the delay, then choose the action. Under 3 business days late: apology + ETA, usually no compensation. Over 3 business days late: gesture can be reviewed. Major delay: escalate; replacement/refund may apply depending on policy.", tags:["WISMO","Late"] };
   if (q.includes("training") || q.includes("orientation")) return { title:"Training guidance", body:"Open Training for the 20-minute presentation.", tags:["Training"] };
   if (q.includes("trustpilot") || q.includes("review")) return { title:"Trustpilot guidance", body:"A good public review response should be empathetic, personal and solution-oriented. It should show ownership and provide a clear next step.", tags:["Trustpilot"] };
   if (q.includes("shineon") || q.includes("ocy") || q.includes("product")) return { title:"OCy / ShineOn guidance", body:"Go to OCy and search the ShineOn product. Always check product-specific notes before confirming personalization.", tags:["OCy","ShineOn"] };
@@ -375,6 +401,37 @@ function ExpandableCard({ title, shortText, bullets, extraTitle, extraItems, wor
   </Box>;
 }
 
+
+
+function WismoDecisionCard({ item }) {
+  const [open, setOpen] = useState(true);
+  return <div style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:24, overflow:"hidden", marginBottom:22, boxShadow:"0 8px 24px rgba(15,23,42,0.06)" }}>
+    <div style={{ padding:24, borderLeft:"10px solid #2563eb" }}>
+      <div style={{ display:"flex", justifyContent:"space-between", gap:16, alignItems:"flex-start" }}>
+        <div>
+          <div style={{ fontSize:28, fontWeight:900 }}>{item.name}</div>
+          <div style={{ marginTop:8, color:"#4b5563", lineHeight:1.7, fontSize:17 }}>{item.short}</div>
+        </div>
+        <button onClick={() => setOpen(!open)} style={{ background:"#eef2ff", color:"#3730a3", border:"none", borderRadius:12, padding:"10px 14px", cursor:"pointer", fontWeight:800 }}>{open ? "Hide" : "Show"}</button>
+      </div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:18, marginTop:18 }}>
+        <div style={{ background:"#f8fafc", borderRadius:18, padding:18 }}>
+          <div style={{ fontWeight:900, marginBottom:8 }}>Agent action</div>
+          <div style={{ color:"#374151", lineHeight:1.7 }}>{item.action}</div>
+        </div>
+        <div style={{ background:"#fefce8", border:"1px solid #fde68a", borderRadius:18, padding:18 }}>
+          <div style={{ fontWeight:900, marginBottom:8 }}>Customer wording</div>
+          <div style={{ color:"#374151", lineHeight:1.7, fontStyle:"italic" }}>{item.customerWording}</div>
+        </div>
+      </div>
+      <DocumentButtons documents={item.documents} />
+      {open && <div style={{ marginTop:18 }}>
+        <div style={{ fontWeight:900, marginBottom:8 }}>Checklist</div>
+        <Bullets items={item.full} />
+      </div>}
+    </div>
+  </div>;
+}
 
 function BrandCard({ brand }) {
   const [open, setOpen] = useState(false);
@@ -636,12 +693,27 @@ export default function Home() {
 
       {page === "WISMO Late Zoom" && <>
         <h1 style={{ fontSize:40 }}>WISMO Late Zoom — What do we do when an order is late?</h1>
+
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, marginBottom:22 }}>
+          <Box><div style={{ fontSize:22, fontWeight:900 }}>1. Verify</div><div style={{ marginTop:8, color:"#4b5563" }}>ETA, order status, tracking, root cause.</div></Box>
+          <Box><div style={{ fontSize:22, fontWeight:900 }}>2. Classify</div><div style={{ marginTop:8, color:"#4b5563" }}>Within ETA, under 3 days, over 3 days, major delay.</div></Box>
+          <Box><div style={{ fontSize:22, fontWeight:900 }}>3. Decide</div><div style={{ marginTop:8, color:"#4b5563" }}>No gesture, coupon, shipping refund, replacement, refund.</div></Box>
+          <Box><div style={{ fontSize:22, fontWeight:900 }}>4. Communicate</div><div style={{ marginTop:8, color:"#4b5563" }}>Empathy, ownership, verified update, next step.</div></Box>
+        </div>
+
         <Box>
           <div style={{ fontSize:26, fontWeight:800 }}>Decision logic</div>
-          <Bullets items={["First: check ETA, order status, tracking and whether the delay is regular late, Late Supplier, carrier issue, lost parcel, DNR or event-related.","Compensation is not automatic. It depends on delay length, customer impact, shipping promise, brand policy and escalation logic.","Coupons, free products and refunds are not default answers. They require the right context, retention logic or approval.","Always communicate with empathy, ownership, clarity and a next step."]} />
-          <DocumentButtons documents={[{ label: "Open WISMO full source", url: "/docs/wismo-late-policy.pdf" },{ label: "Open Policies source folder", url: "/docs/" }]} />
+          <Bullets items={[
+            "A late order is not automatically a compensation case.",
+            "First identify whether the order is actually late compared to ETA.",
+            "Then classify the delay and choose the appropriate action.",
+            "The customer should always receive a clear update and a next step.",
+            "The old 'Open Policies source folder' link was removed because it pointed to a folder and caused a 404."
+          ]} />
+          <DocumentButtons documents={[{ label: "Open WISMO full source", url: "/docs/wismo-late-policy.pdf" }]} />
         </Box>
-        {WISMO_LATE.map((x) => <ExpandableCard key={x.id} title={x.name} shortText={x.short} bullets={x.full} wording={x.wording || null} documents={x.documents || null} />)}
+
+        {WISMO_LATE.map((x) => <WismoDecisionCard key={x.id} item={x} />)}
       </>}
 
       {Object.keys(pageData).includes(page) && <>
