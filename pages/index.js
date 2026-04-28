@@ -1,188 +1,233 @@
-// 👉 VERSION FULL STABLE V18 (COMPLETE - NO DATA LOSS)
+// V19 — REAL INTERNAL TOOL + PREMIUM DESIGN
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 const MENU = [
-"Home","Training","Brands","Cases","Policies","Events",
-"CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","Q&A"
+"Home","Training","Policies","WISMO Deep Dive","QA","OCy","Search","Assistant"
 ];
 
-function Box({children}) {
-  return <div style={{
-    background:"#fff",
-    padding:24,
-    borderRadius:20,
-    marginBottom:20,
-    boxShadow:"0 8px 20px rgba(0,0,0,0.05)"
-  }}>{children}</div>
+function Section({title, children}) {
+  return (
+    <div style={{
+      marginBottom:40,
+      padding:40,
+      background:"#ffffff",
+      borderRadius:24,
+      boxShadow:"0 20px 40px rgba(0,0,0,0.05)"
+    }}>
+      <h2 style={{fontSize:36, marginBottom:20}}>{title}</h2>
+      {children}
+    </div>
+  )
 }
 
-function Expand({title, short, full}) {
-  const [open,setOpen]=useState(false)
+function Card({title, text}) {
   return (
-    <Box>
-      <h2>{title}</h2>
-      <p>{short}</p>
-      <button onClick={()=>setOpen(!open)}>
-        {open?"Hide":"See full"}
-      </button>
-      {open && <ul>{full.map((x,i)=><li key={i}>{x}</li>)}</ul>}
-    </Box>
+    <div style={{
+      background:"#f9fafb",
+      padding:20,
+      borderRadius:20,
+      flex:1
+    }}>
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </div>
   )
 }
 
 export default function Home(){
 
 const [page,setPage]=useState("Home")
+const [query,setQuery]=useState("")
+
+// 🔎 SEARCH DATA
+const DATA = [
+"Late policy","WISMO","Refund","Coupon","QA","Damaged","DNR",
+"ShineOn","OCy","Trustpilot","Social","Yves Rocher"
+]
+
+const results = useMemo(()=>{
+  if(!query) return []
+  return DATA.filter(x=>x.toLowerCase().includes(query.toLowerCase()))
+},[query])
+
+// 🤖 SIMPLE ASSISTANT
+function answer(q){
+  q=q.toLowerCase()
+
+  if(q.includes("late"))
+    return "Check ETA. <3 days: no compensation. >3 days: coupon. Major delay: refund or resend."
+
+  if(q.includes("damaged"))
+    return "Ask picture → validate → reorder first."
+
+  if(q.includes("dnr"))
+    return "Wait 3 days after delivery scan before action."
+
+  return "Search in Policies or ask QA/OCy."
+}
 
 return (
-<div style={{display:"flex",minHeight:"100vh"}}>
+<div style={{display:"flex",minHeight:"100vh",fontFamily:"Inter, sans-serif"}}>
 
 {/* SIDEBAR */}
-<div style={{width:250,background:"#0f172a",color:"#fff",padding:20}}>
+<div style={{
+  width:260,
+  background:"#020617",
+  color:"#fff",
+  padding:30
+}}>
+  <h2 style={{marginBottom:30}}>Tenengroup</h2>
+
   {MENU.map(m=>(
     <div key={m}
       onClick={()=>setPage(m)}
-      style={{padding:10,cursor:"pointer"}}>
+      style={{
+        padding:12,
+        cursor:"pointer",
+        borderRadius:10,
+        background:page===m?"#2563eb":"transparent",
+        marginBottom:8
+      }}>
       {m}
     </div>
   ))}
 </div>
 
 {/* MAIN */}
-<div style={{flex:1,padding:30,background:"#f5f7fb"}}>
+<div style={{flex:1, padding:40, background:"#f1f5f9"}}>
 
 {/* HOME */}
 {page==="Home" && <>
-  <h1>Customer Care Hub</h1>
-  <p>All policies, training, tools and knowledge in one place</p>
+  <h1 style={{fontSize:48}}>Customer Care Hub</h1>
+  <p style={{fontSize:20}}>Internal knowledge tool</p>
+
+  <div style={{display:"flex", gap:20, marginTop:30}}>
+    <Card title="Policies" text="All operational rules"/>
+    <Card title="Training" text="20 min onboarding"/>
+    <Card title="Assistant" text="Ask anything"/>
+  </div>
 </>}
 
 {/* TRAINING */}
 {page==="Training" && <>
-  <h1>Training</h1>
-
-  <Box>
-    <h2>Bruno</h2>
+  <Section title="Bruno">
     <img src="/team/bruno.jpg" style={{height:300}}/>
-    <p>Customer Service Director</p>
     <ul>
       <li>Have fun</li>
       <li>Efficiency matters</li>
       <li>Innovate</li>
       <li>Do your best</li>
     </ul>
-  </Box>
+  </Section>
 
-  <Box>
-    <h2>Organization</h2>
+  <Section title="Organization">
     <div style={{
       background:"url('/team/world-map.png') center/cover",
-      padding:30,
+      padding:40,
       color:"#fff"
     }}>
-      <h3>Customer</h3>
-      <p>Bruno → QA → OCy → Team Leaders → CSR</p>
-
-      <h3>Cart Optimization</h3>
-      <p>Marianna / Ops</p>
-
-      <p>Global: IL, IT, HU, UA, PH, MX, TH, ES</p>
+      Customer + Cart Optimization
     </div>
-  </Box>
+  </Section>
 
-  <Box>
-    <h2>Missions</h2>
-    <ul>
-      <li>Improve customer experience</li>
-      <li>Increase retention</li>
-      <li>Support operations</li>
-    </ul>
-  </Box>
-
-  <Box>
-    <h2>Channels</h2>
+  <Section title="KPIs">
     <div style={{display:"flex",gap:20}}>
-      {["webform","facebook","instagram","tiktok","trustpilot"]
-      .map(x=><img key={x} src={`/team/${x}.png`} height={40}/>)}
+      <Card title="CSAT" text="4.2"/>
+      <Card title="SLA" text="10h"/>
+      <Card title="NPS" text="High"/>
+      <Card title="Cost" text="Low"/>
     </div>
-  </Box>
-
-  <Box>
-    <h2>KPI</h2>
-    <ul>
-      <li>CSAT: 4.2</li>
-      <li>SLA: 10h</li>
-      <li>NPS: High</li>
-      <li>Order Cost: Low</li>
-    </ul>
-  </Box>
-
-  <Box>
-    <h2>Wheel</h2>
-    <ul>
-      <li>Pre-sales → CS + AI</li>
-      <li>Change Order → CS</li>
-      <li>WISMO → CS + AI + OCy</li>
-      <li>Item Received → CS + QA</li>
-      <li>Other → CS</li>
-    </ul>
-  </Box>
-
-  <Box>
-    <h2>Trustpilot</h2>
-    <img src="/team/tp1.jpg" height={150}/>
-  </Box>
-
+  </Section>
 </>}
 
 {/* POLICIES */}
 {page==="Policies" && <>
-<h1>Policies</h1>
+  <Section title="Core Rules">
+    <ul>
+      <li>Check ETA before answering</li>
+      <li>Never promise blindly</li>
+      <li>Always give next step</li>
+    </ul>
+  </Section>
+</>}
 
-<Expand
-title="WISMO Late Policy"
-short="What we do when order is late"
-full={[
-"Check ETA first",
-"Under 3 days: no compensation",
-"Over 3 days: coupon possible",
-"Major delay: refund or resend",
-"Always communicate clearly"
-]}
-/>
+{/* WISMO */}
+{page==="WISMO Deep Dive" && <>
+  <Section title="Late Policy (TheoGrace)">
+    <h3>Under 3 days</h3>
+    <ul>
+      <li>Apology</li>
+      <li>Give ETA</li>
+      <li>No compensation</li>
+    </ul>
 
-<Expand
-title="Communication"
-short="How we talk to customer"
-full={[
-"Be empathetic",
-"Take ownership",
-"Give clear next step"
-]}
-/>
+    <h3>Over 3 days</h3>
+    <ul>
+      <li>Apology + ownership</li>
+      <li>Coupon possible</li>
+      <li>Monitor order</li>
+    </ul>
 
+    <h3>Major delay</h3>
+    <ul>
+      <li>Refund or resend</li>
+      <li>Escalate</li>
+    </ul>
+
+    <h3>Communication</h3>
+    <ul>
+      <li>Empathy</li>
+      <li>Ownership</li>
+      <li>Clarity</li>
+    </ul>
+  </Section>
 </>}
 
 {/* QA */}
-{page==="QA Team" && <>
-<h1>QA</h1>
-<p>Handles damaged / wrong items</p>
+{page==="QA" && <>
+  <Section title="QA Role">
+    Handles damaged / wrong item / escalation
+  </Section>
 </>}
 
 {/* OCY */}
 {page==="OCy" && <>
-<h1>OCy</h1>
-<p>Handles ShineOn products rules</p>
+  <Section title="OCy">
+    ShineOn product rules
+  </Section>
 </>}
 
-{/* Q&A */}
-{page==="Q&A" && <>
-<h1>Quiz</h1>
-<ul>
-<li>Who do you go to? → CS Team</li>
-<li>Give 2 KPI → CSAT / SLA</li>
-</ul>
+{/* SEARCH */}
+{page==="Search" && <>
+  <Section title="Search">
+    <input
+      value={query}
+      onChange={e=>setQuery(e.target.value)}
+      placeholder="Search..."
+      style={{padding:10,width:"100%"}}
+    />
+
+    {results.map(r=>(
+      <div key={r}>{r}</div>
+    ))}
+  </Section>
+</>}
+
+{/* ASSISTANT */}
+{page==="Assistant" && <>
+  <Section title="Assistant">
+    <input
+      value={query}
+      onChange={e=>setQuery(e.target.value)}
+      placeholder="Ask a question..."
+      style={{padding:10,width:"100%"}}
+    />
+
+    <div style={{marginTop:20}}>
+      {answer(query)}
+    </div>
+  </Section>
 </>}
 
 </div>
