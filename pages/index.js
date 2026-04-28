@@ -138,177 +138,323 @@ export default function Home() {
         )}
 
         {page === "Training" && (
-          <>
-            <Box dark>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 28, alignItems: "center" }}>
-                <div>
-                  <div style={{ color: "#93c5fd", fontWeight: 800 }}>TG ORIENTATION WEEK</div>
-                  <h1 style={{ fontSize: 52, margin: "10px 0" }}>Customer Care in 20 minutes</h1>
-                  <p style={{ fontSize: 20, lineHeight: 1.6, color: "#e5e7eb" }}>
-                    A friendly overview of who we are, what we do, where customers reach us, and why Customer Care matters to the whole company.
-                  </p>
-                  <Pill>Customer Experience</Pill>
-                  <Pill>Brand Trust</Pill>
-                  <Pill>Retention</Pill>
-                  <Pill>Insights</Pill>
-                </div>
-                <img src="/team/team1.jpg" style={{ width: "100%", height: 260, objectFit: "cover", borderRadius: 24 }} />
-              </div>
-            </Box>
+  <div style={{ scrollBehavior: "smooth" }}>
 
-            <Box>
-              <div style={{ display: "grid", gridTemplateColumns: "150px 1fr", gap: 22, alignItems: "center" }}>
-                <img src="/team/bruno.jpg" style={{ width: 150, height: 150, borderRadius: "50%", objectFit: "cover" }} />
-                <div>
-                  <div style={{ fontSize: 30, fontWeight: 900 }}>Bruno Dreyfus</div>
-                  <div style={{ fontSize: 18, color: "#2563eb", fontWeight: 800 }}>Customer Service Director</div>
-                  <div style={{ marginTop: 14, lineHeight: 1.8, color: "#374151" }}>
-                    47 years old · Married · 3 kids · Lives in Raanana · From France<br/>
-                    Previously CRM Consultant and worked in French ecommerce: lifestyle, jewelry, underwear and home.<br/>
-                    4.5 years at Tenengroup. Hobbies: football, friends, family. Goal: become a barbecue pro 🔥
-                  </div>
-                </div>
-              </div>
-            </Box>
+    <div style={{
+      position: "fixed",
+      right: 24,
+      top: "45%",
+      zIndex: 20,
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }}>
+      {["intro","bruno","org","mission","wheel","cart","trustpilot","final","quiz"].map((id, i) => (
+        <button
+          key={id}
+          onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: "50%",
+            border: "none",
+            background: "#0f172a",
+            color: "#fff",
+            fontWeight: 900,
+            cursor: "pointer"
+          }}
+        >
+          {i + 1}
+        </button>
+      ))}
+    </div>
 
-            <Box>
-              <div style={{ fontSize: 30, fontWeight: 900 }}>Leadership & Key Functions</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14, marginTop: 18 }}>
-                {TEAM.map((p) => (
-                  <div key={p.name} style={{ border: "1px solid #e5e7eb", borderRadius: 18, padding: 16, background: "#fafafa" }}>
-                    <div style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: "50%",
-                      background: p.color,
-                      color: "#fff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontWeight: 900,
-                      marginBottom: 10
-                    }}>
-                      {p.name.split(" ").map(x => x[0]).join("").slice(0,2)}
-                    </div>
-                    <div style={{ fontWeight: 900 }}>{p.name}</div>
-                    <div style={{ color: "#4b5563", fontSize: 14, marginTop: 4 }}>{p.role}</div>
-                  </div>
-                ))}
-              </div>
-            </Box>
+    <section id="intro" style={{ minHeight: "100vh", padding: 70, display: "flex", alignItems: "center" }}>
+      <div>
+        <div style={{ fontSize: 20, color: "#2563eb", fontWeight: 800 }}>TG ORIENTATION WEEK</div>
+        <div style={{ fontSize: 78, fontWeight: 900, marginTop: 10 }}>Customer Care</div>
+        <div style={{ fontSize: 42, marginTop: 8 }}>20-minute overview</div>
+        <div style={{ marginTop: 30, fontSize: 24, maxWidth: 900, lineHeight: 1.6, color: "#374151" }}>
+          A friendly introduction to the Customer Care team: who we are, what we do, where customers reach us,
+          and how we contribute to customer experience, retention and company insights.
+        </div>
+        <div style={{ marginTop: 34 }}>
+          <Pill>Team</Pill>
+          <Pill>Mission</Pill>
+          <Pill>Channels</Pill>
+          <Pill>KPIs</Pill>
+          <Pill>Customer Journey</Pill>
+          <Pill>Trustpilot</Pill>
+        </div>
+      </div>
+    </section>
 
-            <Box dark>
-              <div style={{ fontSize: 30, fontWeight: 900 }}>Our Global Team</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 22, marginTop: 18 }}>
-                <div style={{
-                  minHeight: 260,
-                  borderRadius: 20,
-                  background: "radial-gradient(circle at 20% 30%, #2563eb 0 8px, transparent 9px), radial-gradient(circle at 48% 35%, #22c55e 0 8px, transparent 9px), radial-gradient(circle at 72% 50%, #f97316 0 8px, transparent 9px), radial-gradient(circle at 82% 65%, #a855f7 0 8px, transparent 9px), linear-gradient(135deg,#020617,#1e293b)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  position: "relative",
-                  overflow: "hidden",
-                  padding: 24
-                }}>
-                  <div style={{ fontSize: 24, fontWeight: 900 }}>Worldwide presence</div>
-                  <div style={{ marginTop: 12, color: "#cbd5e1" }}>
-                    Our team supports customers across regions, languages and time zones.
-                  </div>
-                </div>
+    <section id="bruno" style={{ minHeight: "100vh", padding: 70, display: "flex", alignItems: "center" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "360px 1fr", gap: 60, alignItems: "center" }}>
+        <div style={{
+          background: "#fff",
+          borderRadius: 28,
+          padding: 20,
+          boxShadow: "0 12px 30px rgba(15,23,42,0.12)"
+        }}>
+          <img
+            src="/team/bruno.jpg"
+            style={{
+              width: "100%",
+              height: 460,
+              objectFit: "contain",
+              borderRadius: 22,
+              background: "#f8fafc"
+            }}
+          />
+        </div>
 
-                <div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                    {COUNTRIES.map((c) => (
-                      <div key={c} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 14, padding: 12 }}>
-                        {c}
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ marginTop: 18, lineHeight: 1.8, color: "#e5e7eb" }}>
-                    👥 50–100 agents<br/>
-                    🌍 9+ countries<br/>
-                    💬 Multi-language support<br/>
-                    🕐 Global coverage
-                  </div>
-                </div>
-              </div>
-            </Box>
+        <div>
+          <div style={{ fontSize: 56, fontWeight: 900 }}>Bruno Dreyfus</div>
+          <div style={{ fontSize: 26, color: "#2563eb", fontWeight: 800, marginTop: 8 }}>
+            Customer Service Director
+          </div>
 
-            <Box>
-              <div style={{ fontSize: 30, fontWeight: 900 }}>Life at Customer Care</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 18 }}>
-                <img src="/team/team1.jpg" style={{ width: "100%", height: 260, objectFit: "cover", borderRadius: 20 }} />
-                <img src="/team/team2.jpg" style={{ width: "100%", height: 260, objectFit: "cover", borderRadius: 20 }} />
-                <img src="/team/team3.jpg" style={{ width: "100%", height: 260, objectFit: "cover", borderRadius: 20 }} />
-              </div>
-              <p style={{ color: "#4b5563", lineHeight: 1.7, marginTop: 16 }}>
-                Behind the tools, policies and KPIs, Customer Care is a human team. Collaboration, energy and ownership make the difference.
-              </p>
-            </Box>
+          <div style={{ marginTop: 26, fontSize: 22, lineHeight: 1.8, color: "#374151" }}>
+            47 years old · Married · 3 kids · Lives in Raanana · From France<br/>
+            Previously CRM Consultant and worked in French ecommerce: lifestyle, jewelry, underwear and home.<br/>
+            4.5 years at Tenengroup. Hobbies: football, friends, family. Goal: become a barbecue pro 🔥
+          </div>
 
-            <Box>
-              <div style={{ fontSize: 30, fontWeight: 900 }}>Mission</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginTop: 18 }}>
-                {[
-                  ["Customer Experience", "Optimize tone of voice, policy and service quality."],
-                  ["Lifetime Value", "Maximize retention and reduce customer churn."],
-                  ["New Channels", "Identify ways to improve customer satisfaction."],
-                  ["Company Insights", "Bring insights to Shipping, Factory and Brands."]
-                ].map(([title, text]) => (
-                  <div key={title} style={{ background: "#f8fafc", borderRadius: 18, padding: 18 }}>
-                    <div style={{ fontWeight: 900, fontSize: 18 }}>{title}</div>
-                    <div style={{ marginTop: 8, color: "#4b5563", lineHeight: 1.6 }}>{text}</div>
-                  </div>
-                ))}
+          <div style={{ marginTop: 36, fontSize: 30, fontWeight: 900 }}>My objectives at Tenengroup</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, marginTop: 18 }}>
+            {[
+              ["🎉", "Have fun"],
+              ["⚡", "Efficiency matters"],
+              ["🚀", "Innovate"],
+              ["💪", "Do your best"]
+            ].map(([icon, text]) => (
+              <div key={text} style={{
+                background: "#fff",
+                border: "1px solid #e5e7eb",
+                borderRadius: 18,
+                padding: 20,
+                fontSize: 22,
+                fontWeight: 800
+              }}>
+                <span style={{ marginRight: 10 }}>{icon}</span>{text}
               </div>
-            </Box>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <Box>
-              <div style={{ fontSize: 30, fontWeight: 900 }}>Customer Service Wheel</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginTop: 18 }}>
-                {[
-                  ["Pre-sales", "Products, shipping, warranty, special requests, payment, technical issues, coupons."],
-                  ["Change Order", "Address, item, inscription, shipping method."],
-                  ["WISMO", "Where Is My Order: late supplier, late, on time, lost, DNR, returned to sender."],
-                  ["Item Received", "Damaged, not satisfied, production mistake, customer mistake."],
-                  ["Proactive", "OOS, payment, potential mistake, ETA-1, shipping issue."],
-                  ["Bad Reviews", "Trustpilot, social media, Reddit, BBB and other public platforms."]
-                ].map(([title, text]) => (
-                  <div key={title} style={{ border: "1px solid #e5e7eb", borderRadius: 18, padding: 18 }}>
-                    <div style={{ color: "#2563eb", fontWeight: 900 }}>{title}</div>
-                    <div style={{ marginTop: 8, color: "#4b5563", lineHeight: 1.6 }}>{text}</div>
-                  </div>
-                ))}
-              </div>
-            </Box>
+    <section id="org" style={{
+      minHeight: "100vh",
+      padding: 70,
+      background: "radial-gradient(circle at 20% 25%, rgba(37,99,235,.35), transparent 18%), radial-gradient(circle at 70% 45%, rgba(34,197,94,.28), transparent 18%), linear-gradient(135deg,#020617,#0f172a)",
+      color: "#fff"
+    }}>
+      <div style={{ fontSize: 56, fontWeight: 900 }}>Organization</div>
+      <div style={{ fontSize: 24, color: "#cbd5e1", marginTop: 12 }}>
+        Customer organization with two main pillars: Customer and Cart Optimization.
+      </div>
 
-            <Box>
-              <div style={{ fontSize: 30, fontWeight: 900 }}>Trustpilot examples</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 18 }}>
-                <div style={{ background: "#ecfdf5", border: "1px solid #bbf7d0", borderRadius: 18, padding: 18 }}>
-                  <div style={{ fontWeight: 900, color: "#166534" }}>Good response</div>
-                  <p style={{ lineHeight: 1.7 }}>
-                    “We’re sorry for the delay and understand how frustrating this is. We checked your order and will follow up with the latest ETA / solution.”
-                  </p>
-                  <Pill>Empathy</Pill><Pill>Ownership</Pill><Pill>Next step</Pill>
-                </div>
-                <div style={{ background: "#fff1f2", border: "1px solid #fecdd3", borderRadius: 18, padding: 18 }}>
-                  <div style={{ fontWeight: 900, color: "#9f1239" }}>Weak response</div>
-                  <p style={{ lineHeight: 1.7 }}>
-                    “Please contact support.” No ownership, no context, no reassurance, no solution.
-                  </p>
-                  <Pill>Too generic</Pill><Pill>No action</Pill>
-                </div>
-              </div>
-            </Box>
+      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 26, marginTop: 40 }}>
+        <div>
+          <div style={{
+            background: "rgba(255,255,255,.08)",
+            borderRadius: 24,
+            padding: 26,
+            border: "1px solid rgba(255,255,255,.15)"
+          }}>
+            <div style={{ fontSize: 28, fontWeight: 900 }}>Shani Brown</div>
+            <div style={{ color: "#93c5fd", fontWeight: 800 }}>VP Customer</div>
+          </div>
 
-            <Box>
-              <div style={{ fontSize: 30, fontWeight: 900 }}>Quick Quiz</div>
-              <div style={{ marginTop: 16 }}>
-                {QUIZ.map(([q, a]) => <Reveal key={q} q={q} a={a} />)}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginTop: 22 }}>
+            <div style={{ background: "rgba(255,255,255,.08)", borderRadius: 22, padding: 22 }}>
+              <div style={{ fontSize: 24, fontWeight: 900 }}>Customer</div>
+              <div style={{ marginTop: 14, lineHeight: 1.9, color: "#e5e7eb" }}>
+                Bruno Dreyfus — CS Director<br/>
+                Laurence Darmon — QA Team Leader<br/>
+                Orly Ancel — Order Cycle Team Leader<br/>
+                Adi Zaken — Team Leader<br/>
+                Thijs Vandenbroucke — Team Leader<br/>
+                Neva Zec — Success<br/>
+                CSR teams
               </div>
-            </Box>
-          </>
-        )}
+            </div>
+
+            <div style={{ background: "rgba(255,255,255,.08)", borderRadius: 22, padding: 22 }}>
+              <div style={{ fontSize: 24, fontWeight: 900 }}>Cart Optimization</div>
+              <div style={{ marginTop: 14, lineHeight: 1.9, color: "#e5e7eb" }}>
+                Marianna Kis — Project Manager<br/>
+                Maayan Diamant — Operations<br/>
+                Dominik Lanczi — Operations<br/>
+                Optimization, funnel, order quality and conversion support
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ background: "rgba(255,255,255,.08)", borderRadius: 24, padding: 26 }}>
+          <div style={{ fontSize: 30, fontWeight: 900 }}>Global team</div>
+          <div style={{ marginTop: 12, color: "#cbd5e1" }}>50–100 agents around the world</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 22 }}>
+            {["Israel","Italy","Hungary","Ukraine","Philippines","Mexico","Thailand","Spain","Austria"].map(c => (
+              <div key={c} style={{ background: "rgba(255,255,255,.1)", borderRadius: 12, padding: 12 }}>{c}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mission" style={{ minHeight: "100vh", padding: 70 }}>
+      <div style={{ fontSize: 56, fontWeight: 900 }}>Mission, channels & KPIs</div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28, marginTop: 36 }}>
+        <Box>
+          <div style={{ fontSize: 32, fontWeight: 900 }}>Mission</div>
+          <Bullets items={[
+            "Optimize customer experience through tone of voice, policies and service quality.",
+            "Maximize lifetime value and reduce customer churn.",
+            "Identify and implement new channels to enhance satisfaction.",
+            "Coordinate and bring insights to Shipping, Factory and Brands."
+          ]} />
+        </Box>
+
+        <Box>
+          <div style={{ fontSize: 32, fontWeight: 900 }}>Where customers reach us</div>
+          <Bullets items={[
+            "Webform and emails",
+            "Social media: Facebook and Instagram",
+            "Trustpilot",
+            "Other public platforms: Reddit, BBB, complaint websites"
+          ]} />
+        </Box>
+      </div>
+
+      <Box>
+        <div style={{ fontSize: 32, fontWeight: 900 }}>Our KPIs</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: 20 }}>
+          {[
+            ["CSAT", "Customer satisfaction after an interaction."],
+            ["SLA", "How fast we respond and respect timing commitments."],
+            ["NPS", "Customer loyalty and likelihood to recommend."],
+            ["Order Cost", "Efficiency and cost of resolving customer issues."]
+          ].map(([title, text]) => (
+            <div key={title} style={{ background: "#f8fafc", borderRadius: 18, padding: 18 }}>
+              <div style={{ fontSize: 26, fontWeight: 900, color: "#2563eb" }}>{title}</div>
+              <div style={{ marginTop: 10, color: "#4b5563", lineHeight: 1.6 }}>{text}</div>
+            </div>
+          ))}
+        </div>
+      </Box>
+    </section>
+
+    <section id="wheel" style={{ minHeight: "100vh", padding: 70 }}>
+      <div style={{ fontSize: 56, fontWeight: 900 }}>Customer Service Wheel</div>
+      <div style={{ fontSize: 24, color: "#4b5563", marginTop: 12 }}>
+        Customer questions come throughout the journey, then are handled by CS, AI, OCy and QA depending on the case.
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14, marginTop: 36 }}>
+        {[
+          ["1", "Questions", "Products, shipping, warranty, special requests, payment, technical issues, coupons."],
+          ["2", "Change Order", "Address, item, inscription, shipping method."],
+          ["3", "WISMO", "Late supplier, late, on time, lost, DNR, returned to sender."],
+          ["4", "Item Received", "Damaged, not satisfied, production mistake, customer mistake."],
+          ["5", "Other", "Account issues, collaboration, spam."]
+        ].map(([num, title, text]) => (
+          <div key={title} style={{ border: "1px solid #e5e7eb", borderRadius: 22, padding: 20, background: "#fff" }}>
+            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#2563eb", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>{num}</div>
+            <div style={{ fontSize: 22, fontWeight: 900, marginTop: 14 }}>{title}</div>
+            <div style={{ color: "#4b5563", lineHeight: 1.6, marginTop: 10 }}>{text}</div>
+          </div>
+        ))}
+      </div>
+
+      <Box>
+        <div style={{ fontSize: 30, fontWeight: 900 }}>Handled by</div>
+        <div style={{ marginTop: 14 }}>
+          <Pill>CS — Customer Service</Pill>
+          <Pill>AI — Notch & Internal AI</Pill>
+          <Pill>OCy — Order Cycle</Pill>
+          <Pill>QA — Quality & Escalations</Pill>
+        </div>
+      </Box>
+
+      <Box>
+        <div style={{ fontSize: 30, fontWeight: 900 }}>Proactive communication</div>
+        <Bullets items={[
+          "OOS and potential mistakes: proactive alerts before the customer complains.",
+          "Payment issues: monitoring and customer follow-up.",
+          "Late supplier, upgrade, shipping issue and ETA-1: automatic or semi-automatic campaigns."
+        ]} />
+      </Box>
+    </section>
+
+    <section id="cart" style={{ minHeight: "100vh", padding: 70 }}>
+      <div style={{ fontSize: 56, fontWeight: 900 }}>Cart Optimization</div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 36, alignItems: "center", marginTop: 36 }}>
+        <img src="/team/cart-optimization.jpg" style={{ width: "100%", maxHeight: 520, objectFit: "contain", borderRadius: 24, background: "#fff" }} />
+        <div>
+          <div style={{ fontSize: 30, fontWeight: 900 }}>Why it matters</div>
+          <Bullets items={[
+            "Cart Optimization focuses on improving conversion and order quality.",
+            "The team helps reduce friction before the order becomes a customer-care issue.",
+            "Better cart experience means fewer mistakes, fewer contacts, and higher satisfaction.",
+            "It connects customer behavior, checkout experience and operational outcomes."
+          ]} />
+        </div>
+      </div>
+    </section>
+
+    <section id="trustpilot" style={{ minHeight: "100vh", padding: 70 }}>
+      <div style={{ fontSize: 56, fontWeight: 900 }}>Trustpilot reviews</div>
+      <div style={{ fontSize: 24, color: "#4b5563", marginTop: 12 }}>
+        Public reviews are not only complaints — they are visible signals of trust, service quality and brand credibility.
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 34 }}>
+        {["tp1.jpg","tp2.jpg","tp3.jpg","tp4.jpg","tp5.jpg","tp6.jpg"].map(img => (
+          <img key={img} src={"/team/" + img} style={{ width: "100%", height: 220, objectFit: "contain", background: "#fff", borderRadius: 18, border: "1px solid #e5e7eb" }} />
+        ))}
+      </div>
+
+      <Box>
+        <div style={{ fontSize: 28, fontWeight: 900 }}>What a good reply should show</div>
+        <Pill>Empathy</Pill>
+        <Pill>Ownership</Pill>
+        <Pill>Clear next step</Pill>
+        <Pill>No defensive tone</Pill>
+      </Box>
+    </section>
+
+    <section id="final" style={{ minHeight: "100vh", padding: 70 }}>
+      <div style={{ fontSize: 56, fontWeight: 900 }}>Final note</div>
+      <div style={{ fontSize: 28, lineHeight: 1.6, marginTop: 24, maxWidth: 1000 }}>
+        The cooperation between our departments is a big part of our success in giving a high-quality and personal service to our customers.
+      </div>
+      <div style={{ fontSize: 24, color: "#4b5563", lineHeight: 1.6, marginTop: 24 }}>
+        Everything you should know about Customer Care is available in our Customer Care Hub.
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: 40 }}>
+        <img src="/team/team1.jpg" style={{ width: "100%", height: 280, objectFit: "cover", borderRadius: 22 }} />
+        <img src="/team/team2.jpg" style={{ width: "100%", height: 280, objectFit: "cover", borderRadius: 22 }} />
+        <img src="/team/team3.jpg" style={{ width: "100%", height: 280, objectFit: "cover", borderRadius: 22 }} />
+      </div>
+    </section>
+
+    <section id="quiz" style={{ minHeight: "100vh", padding: 70 }}>
+      <div style={{ fontSize: 56, fontWeight: 900 }}>Quick quiz</div>
+      <div style={{ fontSize: 24, color: "#4b5563", marginTop: 12 }}>Click each question to reveal the answer.</div>
+
+      <div style={{ marginTop: 34, maxWidth: 900 }}>
+        {QUIZ.map(([q, a]) => <Reveal key={q} q={q} a={a} />)}
+      </div>
+    </section>
+
+  </div>
+)}
       </main>
     </div>
   );
