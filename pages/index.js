@@ -421,7 +421,7 @@ export default function Home() {
   const searchableItems = useMemo(() => {
     const eventItems = EVENTS.map((e) => ({ type:"Event", title:e.name, text:[e.short, e.intro, e.wording].concat(e.sections.flatMap((s) => s.items)).join(" "), openPage:"Events" }));
     const generic = Object.keys(pageData).flatMap((key) => pageData[key].map((x) => ({ type:key, title:x.name || x.title, text:[x.short || "", x.wording || ""].concat(x.full || []).concat(x.tone || []).join(" "), openPage:key })));
-    const wismoLateSearch = WISMO_LATE.map((x) => ({ page: "WISMO Late Zoom", type: "WISMO Late Zoom", title: x.name, short: x.short, text: flattenText(x), item: x }));
+    const wismoLateSearch = WISMO_LATE.map((x) => ({ page: "WISMO Late Zoom", type: "WISMO Late Zoom", title: x.name, short: x.short, text: [x.name, x.short, x.wording || "", ...(x.full || [])].join(" "), item: x }));
 
     const shineonSearch = shineonItems.map((x) => ({ type:"ShineOn Product", title:x.name, text:[x.short].concat(x.full || []).join(" "), openPage:"OCy" }));
     return generic.concat(eventItems).concat(wismoLateSearch).concat(shineonSearch);
