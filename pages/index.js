@@ -702,6 +702,19 @@ function CaseDecisionTool({ type }) {
   </Box>;
 }
 
+
+function SafeTeamImage({ src, alt }) {
+  const [ok, setOk] = useState(true);
+  if (!ok) {
+    return (
+      <div style={{ width:"100%", height:230, borderRadius:22, background:"#f8fafc", border:"2px dashed #cbd5e1", display:"flex", alignItems:"center", justifyContent:"center", color:"#64748b", fontWeight:900, textAlign:"center", padding:20 }}>
+        Missing image<br />{src}
+      </div>
+    );
+  }
+  return <img src={src} alt={alt} onError={() => setOk(false)} style={{ width:"100%", height:230, objectFit:"cover", borderRadius:22 }} />;
+}
+
 function TrainingSlides() {
   const [countryReveal, setCountryReveal] = useState("");
   const [kpiReveal, setKpiReveal] = useState("");
@@ -753,29 +766,40 @@ function TrainingSlides() {
       <div style={{ fontSize:56, fontWeight:900 }}>Organization</div>
       <div style={{ fontSize:24, color:"#cbd5e1", marginTop:12 }}>Clear ownership: Customer Service, Order Cycle and QA all include dedicated agents.</div>
 
-      <div style={{ display:"grid", gridTemplateColumns:"1.15fr 1fr", gap:26, marginTop:36 }}>
+      <div style={{ display:"grid", gridTemplateColumns:"1.15fr 1fr", gap:26, marginTop:32 }}>
         <div>
-          <div style={{ background:"rgba(255,255,255,.12)", borderRadius:24, padding:24, border:"1px solid rgba(255,255,255,.18)" }}>
+          <div style={{ background:"rgba(255,255,255,.14)", borderRadius:24, padding:22, border:"1px solid rgba(255,255,255,.22)", textAlign:"center" }}>
+            <div style={{ fontSize:30, fontWeight:950 }}>Shani Brown</div>
+            <div style={{ color:"#93c5fd", fontWeight:900, marginTop:4 }}>VP Customer</div>
+          </div>
+
+          <div style={{ textAlign:"center", fontSize:34, margin:"10px 0" }}>↓</div>
+
+          <div style={{ background:"rgba(255,255,255,.14)", borderRadius:24, padding:22, border:"1px solid rgba(255,255,255,.22)", textAlign:"center" }}>
             <div style={{ fontSize:30, fontWeight:950 }}>Bruno DREYFUS</div>
             <div style={{ color:"#93c5fd", fontWeight:900, marginTop:4 }}>Customer Service Director</div>
           </div>
 
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, marginTop:20 }}>
-            <div style={{ background:"rgba(255,255,255,.10)", borderRadius:22, padding:20 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:16, marginTop:20 }}>
+            <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20 }}>
               <div style={{ fontSize:22, fontWeight:950 }}>Customer Service</div>
               <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>
-                Team Leads<br/>
-                Agents
+                <b>Team Leads</b><br/>
+                Adi<br/>
+                Neva<br/>
+                Thijs<br/>
+                <br/>
+                <b>Agents</b>
               </div>
             </div>
-            <div style={{ background:"rgba(255,255,255,.10)", borderRadius:22, padding:20 }}>
+            <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20 }}>
               <div style={{ fontSize:22, fontWeight:950 }}>Order Cycle (OCy)</div>
               <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>
                 Orly<br/>
                 OCy Agents
               </div>
             </div>
-            <div style={{ background:"rgba(255,255,255,.10)", borderRadius:22, padding:20 }}>
+            <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20 }}>
               <div style={{ fontSize:22, fontWeight:950 }}>QA</div>
               <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>
                 Laurence<br/>
@@ -784,19 +808,22 @@ function TrainingSlides() {
             </div>
           </div>
 
-          <div style={{ marginTop:20, background:"rgba(255,255,255,.10)", borderRadius:22, padding:20 }}>
+          <div style={{ marginTop:20, background:"rgba(255,255,255,.12)", borderRadius:22, padding:20 }}>
             <div style={{ fontSize:22, fontWeight:950 }}>Cart Optimization</div>
             <div style={{ marginTop:10, color:"#e5e7eb", lineHeight:1.8 }}>Marianna · Maayan · Dominik — optimization, funnel, order quality and conversion support</div>
           </div>
         </div>
 
-        <div style={{ background:"rgba(255,255,255,.10)", borderRadius:24, padding:26 }}>
+        <div style={{ background:"rgba(255,255,255,.12)", borderRadius:24, padding:26 }}>
           <div style={{ fontSize:30, fontWeight:900 }}>Global team flag quiz</div>
           <div style={{ marginTop:12, color:"#cbd5e1" }}>Click a flag to reveal the country.</div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:12, marginTop:22 }}>
-            {COUNTRY_FLAGS.map(([flag,country]) => <button key={country} onClick={() => setCountryReveal(country)} style={{ fontSize:34, background:"rgba(255,255,255,.12)", border:"1px solid rgba(255,255,255,.18)", borderRadius:16, padding:14, cursor:"pointer" }}>{flag}</button>)}
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:12, marginTop:22 }}>
+            {COUNTRY_FLAGS.map(([flag,country]) => <button key={country} onClick={() => setCountryReveal(country)} style={{ background:"rgba(255,255,255,.14)", border:"1px solid rgba(255,255,255,.22)", borderRadius:16, padding:14, cursor:"pointer", color:"#fff" }}>
+              <div style={{ fontSize:38, lineHeight:1 }}>{flag}</div>
+              <div style={{ fontSize:13, marginTop:6, opacity:.75 }}>click</div>
+            </button>)}
           </div>
-          <div style={{ marginTop:20, minHeight:56, background:"rgba(255,255,255,.12)", borderRadius:16, padding:16, fontSize:24, fontWeight:900 }}>
+          <div style={{ marginTop:20, minHeight:56, background:"rgba(255,255,255,.14)", borderRadius:16, padding:16, fontSize:24, fontWeight:900 }}>
             {countryReveal ? countryReveal : "Click a flag 👆"}
           </div>
         </div>
@@ -864,10 +891,12 @@ function TrainingSlides() {
       <div style={{ fontSize:56, fontWeight:900 }}>Final note</div>
       <div style={{ fontSize:28, lineHeight:1.6, marginTop:24, maxWidth:1000 }}>The cooperation between our departments is a big part of our success in giving a high-quality and personal service to our customers.</div>
       <div style={{ fontSize:24, color:"#4b5563", lineHeight:1.6, marginTop:24 }}>Everything you should know about Customer Care is available in our Customer Care Hub.</div>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:18, marginTop:40 }}>
-        <img src="/team/team1.jpg" style={{ width:"100%", height:280, objectFit:"cover", borderRadius:22 }} alt="Team 1" />
-        <img src="/team/team2.jpg" style={{ width:"100%", height:280, objectFit:"cover", borderRadius:22 }} alt="Team 2" />
-        <img src="/team/team3.jpg" style={{ width:"100%", height:280, objectFit:"cover", borderRadius:22 }} alt="Team 3" />
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:18, marginTop:40 }}>
+        <SafeTeamImage src="/team/team1.jpg" alt="Team 1" />
+        <SafeTeamImage src="/team/team2.jpg" alt="Team 2" />
+        <SafeTeamImage src="/team/team3.jpg" alt="Team 3" />
+        <SafeTeamImage src="/team/team4.jpg" alt="Team 4" />
+        <SafeTeamImage src="/team/team5.jpg" alt="Team 5" />
       </div>
     </section>
 
