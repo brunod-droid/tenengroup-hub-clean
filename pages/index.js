@@ -764,68 +764,65 @@ function TrainingSlides() {
 
     <section id="org" style={{ minHeight:"100vh", padding:70, background:"linear-gradient(rgba(2,6,23,.82), rgba(15,23,42,.88)), url('/team/world-map.jpg') center/cover no-repeat", color:"#fff" }}>
       <div style={{ fontSize:56, fontWeight:900 }}>Organization</div>
-      <div style={{ fontSize:24, color:"#cbd5e1", marginTop:12 }}>Clear ownership: Customer Service, Order Cycle and QA all include dedicated agents.</div>
+      <div style={{ fontSize:24, color:"#cbd5e1", marginTop:12 }}>Customer organization: clear ownership by team, with Shani Brown leading the Customer scope.</div>
 
-      <div style={{ display:"grid", gridTemplateColumns:"1.15fr 1fr", gap:26, marginTop:32 }}>
-        <div>
-          <div style={{ background:"rgba(255,255,255,.14)", borderRadius:24, padding:22, border:"1px solid rgba(255,255,255,.22)", textAlign:"center" }}>
-            <div style={{ fontSize:30, fontWeight:950 }}>Shani Brown</div>
-            <div style={{ color:"#93c5fd", fontWeight:900, marginTop:4 }}>VP Customer</div>
-          </div>
-
-          <div style={{ textAlign:"center", fontSize:34, margin:"10px 0" }}>↓</div>
-
-          <div style={{ background:"rgba(255,255,255,.14)", borderRadius:24, padding:22, border:"1px solid rgba(255,255,255,.22)", textAlign:"center" }}>
-            <div style={{ fontSize:30, fontWeight:950 }}>Bruno DREYFUS</div>
-            <div style={{ color:"#93c5fd", fontWeight:900, marginTop:4 }}>Customer Service Director</div>
-          </div>
-
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:16, marginTop:20 }}>
-            <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20 }}>
-              <div style={{ fontSize:22, fontWeight:950 }}>Customer Service</div>
-              <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>
-                <b>Team Leads</b><br/>
-                Adi<br/>
-                Neva<br/>
-                Thijs<br/>
-                <br/>
-                <b>Agents</b>
-              </div>
-            </div>
-            <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20 }}>
-              <div style={{ fontSize:22, fontWeight:950 }}>Order Cycle (OCy)</div>
-              <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>
-                Orly<br/>
-                OCy Agents
-              </div>
-            </div>
-            <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20 }}>
-              <div style={{ fontSize:22, fontWeight:950 }}>QA</div>
-              <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>
-                Laurence<br/>
-                QA Agents
-              </div>
-            </div>
-          </div>
-
-          <div style={{ marginTop:20, background:"rgba(255,255,255,.12)", borderRadius:22, padding:20 }}>
-            <div style={{ fontSize:22, fontWeight:950 }}>Cart Optimization</div>
-            <div style={{ marginTop:10, color:"#e5e7eb", lineHeight:1.8 }}>Marianna · Maayan · Dominik — optimization, funnel, order quality and conversion support</div>
-          </div>
+      <div style={{ marginTop:32 }}>
+        <div style={{ background:"rgba(255,255,255,.14)", borderRadius:24, padding:22, border:"1px solid rgba(255,255,255,.22)", textAlign:"center", maxWidth:520, margin:"0 auto" }}>
+          <div style={{ fontSize:30, fontWeight:950 }}>Shani Brown</div>
+          <div style={{ color:"#93c5fd", fontWeight:900, marginTop:4 }}>VP Customer</div>
         </div>
 
-        <div style={{ background:"rgba(255,255,255,.12)", borderRadius:24, padding:26 }}>
-          <div style={{ fontSize:30, fontWeight:900 }}>Global team flag quiz</div>
-          <div style={{ marginTop:12, color:"#cbd5e1" }}>Click a flag to reveal the country.</div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:12, marginTop:22 }}>
-            {COUNTRY_FLAGS.map(([flag,country]) => <button key={country} onClick={() => setCountryReveal(country)} style={{ background:"rgba(255,255,255,.14)", border:"1px solid rgba(255,255,255,.22)", borderRadius:16, padding:14, cursor:"pointer", color:"#fff" }}>
-              <div style={{ fontSize:38, lineHeight:1 }}>{flag}</div>
-              <div style={{ fontSize:13, marginTop:6, opacity:.75 }}>click</div>
-            </button>)}
+        <div style={{ textAlign:"center", fontSize:34, margin:"12px 0" }}>↓</div>
+
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:16 }}>
+          <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20, border:"1px solid rgba(255,255,255,.16)" }}>
+            <div style={{ fontSize:22, fontWeight:950 }}>Customer Service</div>
+            <div style={{ marginTop:12, color:"#93c5fd", fontWeight:900 }}>Bruno DREYFUS</div>
+            <div style={{ marginTop:14, lineHeight:1.85, color:"#e5e7eb" }}>
+              <b>Team Leads</b><br/>
+              Adi<br/>
+              Tace<br/>
+              Neva<br/>
+              <br/>
+              <b>Agents</b>
+            </div>
           </div>
-          <div style={{ marginTop:20, minHeight:56, background:"rgba(255,255,255,.14)", borderRadius:16, padding:16, fontSize:24, fontWeight:900 }}>
-            {countryReveal ? countryReveal : "Click a flag 👆"}
+
+          <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20, border:"1px solid rgba(255,255,255,.16)" }}>
+            <div style={{ fontSize:22, fontWeight:950 }}>Order Cycle (OCy)</div>
+            <div style={{ marginTop:12, color:"#93c5fd", fontWeight:900 }}>Orly</div>
+            <div style={{ marginTop:14, lineHeight:1.85, color:"#e5e7eb" }}>OCy Agents</div>
           </div>
+
+          <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20, border:"1px solid rgba(255,255,255,.16)" }}>
+            <div style={{ fontSize:22, fontWeight:950 }}>QA</div>
+            <div style={{ marginTop:12, color:"#93c5fd", fontWeight:900 }}>Laurence</div>
+            <div style={{ marginTop:14, lineHeight:1.85, color:"#e5e7eb" }}>QA Agents</div>
+          </div>
+
+          <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20, border:"1px solid rgba(255,255,255,.16)" }}>
+            <div style={{ fontSize:22, fontWeight:950 }}>Project Manager</div>
+            <div style={{ marginTop:12, color:"#93c5fd", fontWeight:900 }}>Mariana</div>
+          </div>
+
+          <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20, border:"1px solid rgba(255,255,255,.16)" }}>
+            <div style={{ fontSize:22, fontWeight:950 }}>Cart Optimization</div>
+            <div style={{ marginTop:12, color:"#93c5fd", fontWeight:900 }}>Mayanne</div>
+            <div style={{ marginTop:8, color:"#93c5fd", fontWeight:900 }}>Dominique</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ marginTop:24, background:"rgba(255,255,255,.12)", borderRadius:24, padding:24, border:"1px solid rgba(255,255,255,.16)" }}>
+        <div style={{ fontSize:30, fontWeight:900 }}>Global team flag quiz</div>
+        <div style={{ marginTop:8, color:"#cbd5e1" }}>Click a flag to reveal the country.</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(9, 1fr)", gap:10, marginTop:18 }}>
+          {COUNTRY_FLAGS.map(([flag,country]) => <button key={country} onClick={() => setCountryReveal(country)} style={{ background:"rgba(255,255,255,.14)", border:"1px solid rgba(255,255,255,.22)", borderRadius:16, padding:"14px 8px", cursor:"pointer", color:"#fff" }}>
+            <div style={{ fontSize:34, lineHeight:1 }}>{flag}</div>
+          </button>)}
+        </div>
+        <div style={{ marginTop:16, minHeight:52, background:"rgba(255,255,255,.14)", borderRadius:16, padding:14, fontSize:24, fontWeight:900 }}>
+          {countryReveal ? countryReveal : "Click a flag 👆"}
         </div>
       </div>
     </section>
