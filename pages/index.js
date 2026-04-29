@@ -1,7 +1,7 @@
 
 import { useMemo, useState } from "react";
 
-const MENU = ["Home","Training","Brands","Cases","Policies","WISMO Late Zoom","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A"];
+const MENU = ["Home","Training","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A"];
 
 const QUICK_TOOLS = [
   { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
@@ -19,6 +19,26 @@ const CHANNELS = [
   ["TikTok","tiktok.jpg"],
   ["Trustpilot","trustpilot.jpg"],
   ["Other Web","other.jpg"]
+];
+
+
+const COUNTRY_FLAGS = [
+  ["🇮🇱", "Israel"],
+  ["🇮🇹", "Italy"],
+  ["🇭🇺", "Hungary"],
+  ["🇺🇦", "Ukraine"],
+  ["🇵🇭", "Philippines"],
+  ["🇲🇽", "Mexico"],
+  ["🇹🇭", "Thailand"],
+  ["🇪🇸", "Spain"],
+  ["🇦🇹", "Austria"]
+];
+
+const KPI_DEFINITIONS = [
+  ["CSAT", "Customer Satisfaction Score", "Goal: 4.2"],
+  ["SLA", "Service Level Agreement", "Goal: 10h"],
+  ["NPS", "Net Promoter Score", "Goal: High"],
+  ["OC", "Order Cost", "Goal: Low"]
 ];
 
 const BRANDS = [
@@ -305,7 +325,10 @@ const QUIZ = [
   ["Who do you go to if you have a question about customers?", "Customer Care team."],
   ["Give 2 KPIs from Customer Service.", "CSAT, SLA, NPS or Order Cost."],
   ["Who handles product-quality escalations?", "QA Team."],
-  ["What makes a good Trustpilot reply?", "Empathy, ownership and a clear next step."]
+  ["What makes a good Trustpilot reply?", "Empathy, ownership and a clear next step."],
+  ["What should you never do with an angry customer?", "Promise something you did not verify."],
+  ["Best survival tool in Customer Care?", "A good CRM search, empathy, and coffee."],
+  ["When a customer says 'I will post everywhere', what is the first reflex?", "Stay calm, acknowledge, move to private channel, and escalate if needed."]
 ];
 
 const SUGGESTED_QUESTIONS = [
@@ -583,7 +606,105 @@ function BrandCard({ brand }) {
   </div>;
 }
 
+
+function TeamBadge({ label }) {
+  const colors = {
+    CS: ["#dbeafe", "#1d4ed8"],
+    AI: ["#ede9fe", "#7c3aed"],
+    OCy: ["#dcfce7", "#15803d"],
+    QA: ["#ffedd5", "#c2410c"]
+  };
+  const [bg, fg] = colors[label] || ["#f3f4f6", "#374151"];
+  return <span style={{ display:"inline-block", padding:"7px 10px", borderRadius:999, background:bg, color:fg, fontWeight:900, fontSize:12, marginRight:6, marginBottom:6 }}>{label}</span>;
+}
+
+function CaseDecisionTool({ type }) {
+  const [step, setStep] = useState("");
+  const tools = {
+    damaged: {
+      title: "Damaged decision tool",
+      q: "Did the customer provide a photo?",
+      yes: {
+        title: "Photo received",
+        action: "Validate the damage, classify the case, and prioritize replacement. Refund is not the first option unless policy/escalation supports it.",
+        wording: "I’m really sorry your item arrived damaged. Thank you for sharing the picture. I’ll review this right away and prioritize the best solution, usually a replacement, according to our policy."
+      },
+      no: {
+        title: "Photo missing",
+        action: "Ask for a clear picture before deciding. Do not promise refund/replacement before evidence.",
+        wording: "I’m really sorry about this. Could you please send us a clear picture of the issue so we can resolve it as quickly as possible?"
+      }
+    },
+    notSatisfied: {
+      title: "Not Satisfied decision tool",
+      q: "Is the item correctly produced?",
+      yes: {
+        title: "Correctly produced",
+        action: "Treat as Not Satisfied. Offer exchange or store credit first. Refund is not the default for personalized items.",
+        wording: "I understand this is not exactly what you expected. Since the item was produced as ordered, we can offer an exchange or store credit so you can choose something you truly love."
+      },
+      no: {
+        title: "Possible production issue",
+        action: "Move to damaged / production error flow. Ask for pictures if needed and consider replacement.",
+        wording: "I’m sorry this doesn’t look right. Could you please share a picture so we can check whether this is a production issue and help with the right solution?"
+      }
+    },
+    dnr: {
+      title: "DNR decision tool",
+      q: "Does tracking show delivered?",
+      yes: {
+        title: "Delivered scan exists",
+        action: "Ask customer to check around, wait the policy window, then investigate / reorder / refund depending on policy.",
+        wording: "I understand you haven’t received it although tracking shows delivered. Please check around your address and with neighbors. We’ll monitor this and review the next step according to our delivery policy."
+      },
+      no: {
+        title: "No delivered scan",
+        action: "This is WISMO, not DNR. Check ETA, carrier tracking, delay and root cause.",
+        wording: "I checked the tracking and it does not show delivered yet. I’ll review the latest status and ETA for you now."
+      }
+    },
+    changeOrder: {
+      title: "Change Order decision tool",
+      q: "Is the order already in production or shipped?",
+      yes: {
+        title: "Too late to guarantee change",
+        action: "Do not promise the change. Check if exception is possible, otherwise explain clearly.",
+        wording: "I’ll check what is still possible, but personalized orders move quickly into production, so I can’t guarantee this change until I verify the current status."
+      },
+      no: {
+        title: "Change may be possible",
+        action: "Confirm requested change, update order if allowed, and document the action.",
+        wording: "Thanks for the update. I’ll check the order status and, if it is still possible, update the order with your requested change."
+      }
+    }
+  };
+  const t = tools[type] || tools.damaged;
+  const result = step === "yes" ? t.yes : step === "no" ? t.no : null;
+
+  return <Box>
+    <div style={{ fontSize:28, fontWeight:900 }}>⚡ {t.title}</div>
+    <div style={{ marginTop:14, fontWeight:900 }}>{t.q}</div>
+    <div style={{ marginTop:12 }}>
+      <button onClick={() => setStep("yes")} style={{ background:step==="yes" ? "#2563eb" : "#eef2ff", color:step==="yes" ? "#fff" : "#3730a3", border:"none", borderRadius:14, padding:"12px 16px", fontWeight:900, marginRight:10, cursor:"pointer" }}>Yes</button>
+      <button onClick={() => setStep("no")} style={{ background:step==="no" ? "#2563eb" : "#eef2ff", color:step==="no" ? "#fff" : "#3730a3", border:"none", borderRadius:14, padding:"12px 16px", fontWeight:900, cursor:"pointer" }}>No</button>
+    </div>
+    {result && <div style={{ marginTop:20, display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+      <div style={{ background:"#f8fafc", borderRadius:18, padding:18 }}>
+        <div style={{ fontSize:22, fontWeight:900 }}>{result.title}</div>
+        <div style={{ marginTop:10, color:"#374151", lineHeight:1.7 }}>{result.action}</div>
+      </div>
+      <div style={{ background:"#fefce8", border:"1px solid #fde68a", borderRadius:18, padding:18 }}>
+        <div style={{ fontWeight:900 }}>Customer wording</div>
+        <div style={{ marginTop:8, color:"#374151", lineHeight:1.7, fontStyle:"italic" }}>{result.wording}</div>
+        <CopyButton text={result.wording} />
+      </div>
+    </div>}
+  </Box>;
+}
+
 function TrainingSlides() {
+  const [countryReveal, setCountryReveal] = useState("");
+  const [kpiReveal, setKpiReveal] = useState("");
   const slides = ["intro","bruno","org","mission","wheel","cart","trustpilot","final","quiz"];
   const scrollToSlide = (id) => {
     const el = document.getElementById(id);
@@ -605,18 +726,24 @@ function TrainingSlides() {
       </div>
     </section>
 
-    <section id="bruno" style={{ minHeight:"100vh", padding:70, display:"flex", alignItems:"center" }}>
-      <div style={{ display:"grid", gridTemplateColumns:"360px 1fr", gap:60, alignItems:"center" }}>
-        <div style={{ background:"#fff", borderRadius:28, padding:20, boxShadow:"0 12px 30px rgba(15,23,42,0.12)" }}>
-          <img src="/team/bruno.jpg" style={{ width:"100%", height:460, objectFit:"contain", borderRadius:22, background:"#f8fafc" }} alt="Bruno Dreyfus" />
+    <section id="bruno" style={{ minHeight:"100vh", padding:70, display:"flex", alignItems:"center", background:"linear-gradient(135deg,#f8fafc,#eef2ff)" }}>
+      <div style={{ display:"grid", gridTemplateColumns:"390px 1fr", gap:60, alignItems:"center", width:"100%" }}>
+        <div style={{ background:"#fff", borderRadius:32, padding:22, boxShadow:"0 18px 45px rgba(15,23,42,0.14)" }}>
+          <img src="/team/bruno.jpg" style={{ width:"100%", height:520, objectFit:"contain", borderRadius:24, background:"#f8fafc" }} alt="Bruno Dreyfus" />
         </div>
         <div>
-          <div style={{ fontSize:56, fontWeight:900 }}>Bruno Dreyfus</div>
-          <div style={{ fontSize:26, color:"#2563eb", fontWeight:800, marginTop:8 }}>Customer Service Director</div>
-          <div style={{ marginTop:26, fontSize:22, lineHeight:1.8, color:"#374151" }}>47 years old · Married · 3 kids · Lives in Raanana · From France<br/>Previously CRM Consultant and worked in French ecommerce: lifestyle, jewelry, underwear and home.<br/>4.5 years at Tenengroup. Hobbies: football, friends, family. Goal: become a barbecue pro 🔥</div>
+          <div style={{ fontSize:58, fontWeight:950, letterSpacing:"-1px" }}>Bruno DREYFUS</div>
+          <div style={{ fontSize:26, color:"#2563eb", fontWeight:900, marginTop:8 }}>Customer Service Director</div>
+          <div style={{ marginTop:26, fontSize:22, lineHeight:1.8, color:"#374151" }}>
+            47 years old · Married · 3 kids · Lives in Raanana · From France<br/>
+            Previously CRM Consultant and worked in French ecommerce: lifestyle, jewelry, underwear and home.<br/>
+            4.5 years at Tenengroup.<br/><br/>
+            <b>Hobbies & Goal</b><br/>
+            Football, friends, family — and becoming a barbecue pro 🔥
+          </div>
           <div style={{ marginTop:36, fontSize:30, fontWeight:900 }}>My objectives at Tenengroup</div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:16, marginTop:18 }}>
-            {[["🎉","Have fun"],["⚡","Efficiency matters"],["🚀","Innovate"],["💪","Do your best"]].map(([icon, text]) => <div key={text} style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:18, padding:20, fontSize:22, fontWeight:800 }}><span style={{ marginRight:10 }}>{icon}</span>{text}</div>)}
+            {[["🎉","Have fun"],["⚡","Efficiency matters"],["🚀","Innovate"],["💪","Do your best"]].map(([icon, text]) => <div key={text} style={{ background:"#fff", border:"1px solid #dbeafe", borderRadius:22, padding:22, fontSize:22, fontWeight:900, boxShadow:"0 10px 22px rgba(37,99,235,0.08)" }}><span style={{ marginRight:10 }}>{icon}</span>{text}</div>)}
           </div>
         </div>
       </div>
@@ -624,29 +751,53 @@ function TrainingSlides() {
 
     <section id="org" style={{ minHeight:"100vh", padding:70, background:"linear-gradient(rgba(2,6,23,.82), rgba(15,23,42,.88)), url('/team/world-map.jpg') center/cover no-repeat", color:"#fff" }}>
       <div style={{ fontSize:56, fontWeight:900 }}>Organization</div>
-      <div style={{ fontSize:24, color:"#cbd5e1", marginTop:12 }}>Customer organization with two main pillars: Customer and Cart Optimization.</div>
-      <div style={{ display:"grid", gridTemplateColumns:"1.2fr 1fr", gap:26, marginTop:40 }}>
+      <div style={{ fontSize:24, color:"#cbd5e1", marginTop:12 }}>Clear ownership: Customer Service, Order Cycle and QA all include dedicated agents.</div>
+
+      <div style={{ display:"grid", gridTemplateColumns:"1.15fr 1fr", gap:26, marginTop:36 }}>
         <div>
-          <div style={{ background:"rgba(255,255,255,.10)", borderRadius:24, padding:26, border:"1px solid rgba(255,255,255,.18)" }}>
-            <div style={{ fontSize:28, fontWeight:900 }}>Shani Brown</div>
-            <div style={{ color:"#93c5fd", fontWeight:800 }}>VP Customer</div>
+          <div style={{ background:"rgba(255,255,255,.12)", borderRadius:24, padding:24, border:"1px solid rgba(255,255,255,.18)" }}>
+            <div style={{ fontSize:30, fontWeight:950 }}>Bruno DREYFUS</div>
+            <div style={{ color:"#93c5fd", fontWeight:900, marginTop:4 }}>Customer Service Director</div>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:18, marginTop:22 }}>
-            <div style={{ background:"rgba(255,255,255,.10)", borderRadius:22, padding:22 }}>
-              <div style={{ fontSize:24, fontWeight:900 }}>Customer</div>
-              <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>Bruno Dreyfus — CS Director<br/>Laurence Darmon — QA Team Leader<br/>Orly Ancel — Order Cycle Team Leader<br/>Adi Zaken — Team Leader<br/>Thijs Vandenbroucke — Team Leader<br/>Neva Zec — Trainer / Success<br/>CSR teams</div>
+
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, marginTop:20 }}>
+            <div style={{ background:"rgba(255,255,255,.10)", borderRadius:22, padding:20 }}>
+              <div style={{ fontSize:22, fontWeight:950 }}>Customer Service</div>
+              <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>
+                Team Leads<br/>
+                Agents
+              </div>
             </div>
-            <div style={{ background:"rgba(255,255,255,.10)", borderRadius:22, padding:22 }}>
-              <div style={{ fontSize:24, fontWeight:900 }}>Cart Optimization</div>
-              <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>Marianna Kis — Project Manager<br/>Maayan Diamant — Operations<br/>Dominik Lanczi — Operations<br/>Optimization, funnel, order quality and conversion support</div>
+            <div style={{ background:"rgba(255,255,255,.10)", borderRadius:22, padding:20 }}>
+              <div style={{ fontSize:22, fontWeight:950 }}>Order Cycle (OCy)</div>
+              <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>
+                Orly<br/>
+                OCy Agents
+              </div>
             </div>
+            <div style={{ background:"rgba(255,255,255,.10)", borderRadius:22, padding:20 }}>
+              <div style={{ fontSize:22, fontWeight:950 }}>QA</div>
+              <div style={{ marginTop:14, lineHeight:1.9, color:"#e5e7eb" }}>
+                Laurence<br/>
+                QA Agents
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop:20, background:"rgba(255,255,255,.10)", borderRadius:22, padding:20 }}>
+            <div style={{ fontSize:22, fontWeight:950 }}>Cart Optimization</div>
+            <div style={{ marginTop:10, color:"#e5e7eb", lineHeight:1.8 }}>Marianna · Maayan · Dominik — optimization, funnel, order quality and conversion support</div>
           </div>
         </div>
+
         <div style={{ background:"rgba(255,255,255,.10)", borderRadius:24, padding:26 }}>
-          <div style={{ fontSize:30, fontWeight:900 }}>Global team</div>
-          <div style={{ marginTop:12, color:"#cbd5e1" }}>50–100 agents around the world</div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginTop:22 }}>
-            {COUNTRIES.map((c) => <div key={c} style={{ background:"rgba(255,255,255,.12)", borderRadius:12, padding:12 }}>{c}</div>)}
+          <div style={{ fontSize:30, fontWeight:900 }}>Global team flag quiz</div>
+          <div style={{ marginTop:12, color:"#cbd5e1" }}>Click a flag to reveal the country.</div>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:12, marginTop:22 }}>
+            {COUNTRY_FLAGS.map(([flag,country]) => <button key={country} onClick={() => setCountryReveal(country)} style={{ fontSize:34, background:"rgba(255,255,255,.12)", border:"1px solid rgba(255,255,255,.18)", borderRadius:16, padding:14, cursor:"pointer" }}>{flag}</button>)}
+          </div>
+          <div style={{ marginTop:20, minHeight:56, background:"rgba(255,255,255,.12)", borderRadius:16, padding:16, fontSize:24, fontWeight:900 }}>
+            {countryReveal ? countryReveal : "Click a flag 👆"}
           </div>
         </div>
       </div>
@@ -657,18 +808,40 @@ function TrainingSlides() {
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:28, marginTop:36 }}>
         <Box><div style={{ fontSize:32, fontWeight:900 }}>Missions</div><Bullets items={["Optimize customer experience through tone of voice, policies and service quality.","Maximize lifetime value and reduce customer churn.","Identify and implement new channels to enhance satisfaction.","Coordinate and bring insights to Shipping, Factory and Brands."]} /></Box>
         <Box><div style={{ fontSize:32, fontWeight:900 }}>Where customers reach us</div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:16, marginTop:18 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, marginTop:18 }}>
             {CHANNELS.map(([name,img]) => <div key={name} style={{ textAlign:"center", background:"#f8fafc", borderRadius:16, padding:14 }}><img src={"/team/" + img} style={{ height:44, objectFit:"contain" }} alt={name} /><div style={{ marginTop:8, fontWeight:800 }}>{name}</div></div>)}
           </div>
         </Box>
       </div>
-      <Box><div style={{ fontSize:32, fontWeight:900 }}>Our KPIs</div><div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, marginTop:20 }}>{[["CSAT","Goal: 4.2","Customer satisfaction after an interaction."],["SLA","Goal: 10h","How fast we respond and respect timing commitments."],["NPS","Goal: High","Customer loyalty and likelihood to recommend."],["Order Cost","Goal: Low","Efficiency and cost of resolving customer issues."]].map(([title, goal, text]) => <div key={title} style={{ background:"#f8fafc", borderRadius:18, padding:18 }}><div style={{ fontSize:26, fontWeight:900, color:"#2563eb" }}>{title}</div><div style={{ marginTop:6, fontWeight:900 }}>{goal}</div><div style={{ marginTop:10, color:"#4b5563", lineHeight:1.6 }}>{text}</div></div>)}</div></Box>
+      <Box>
+        <div style={{ fontSize:32, fontWeight:900 }}>KPI quiz — click to reveal</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, marginTop:20 }}>
+          {KPI_DEFINITIONS.map(([code, meaning, goal]) => <div key={code} onClick={() => setKpiReveal(kpiReveal === code ? "" : code)} style={{ background:"#f8fafc", borderRadius:18, padding:20, cursor:"pointer", border:kpiReveal === code ? "2px solid #2563eb" : "1px solid #e5e7eb" }}>
+            <div style={{ fontSize:30, fontWeight:950, color:"#2563eb" }}>{code}</div>
+            <div style={{ marginTop:8, fontWeight:900 }}>{goal}</div>
+            <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.6 }}>{kpiReveal === code ? meaning : "Click to reveal meaning"}</div>
+          </div>)}
+        </div>
+      </Box>
     </section>
 
     <section id="wheel" style={{ minHeight:"100vh", padding:70 }}>
       <div style={{ fontSize:56, fontWeight:900 }}>Customer Service Wheel</div>
       <div style={{ fontSize:24, color:"#4b5563", marginTop:12 }}>Customer questions come throughout the journey, then are handled by CS, AI, OCy and QA depending on the case.</div>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:14, marginTop:36 }}>{[["1","Pre-sales","Products, shipping, warranty, special requests, payment, technical issues, coupons.","CS + AI"],["2","Change Order","Address, item, inscription, shipping method.","CS"],["3","WISMO","Late supplier, late, on time, lost, DNR, returned to sender.","CS + AI + OCy"],["4","Item Received","Damaged, not satisfied, production mistake, customer mistake.","CS + QA"],["5","Other","Account issues, collaboration, spam.","CS"]].map(([num,title,text,team]) => <div key={title} style={{ border:"1px solid #e5e7eb", borderRadius:22, padding:20, background:"#fff" }}><div style={{ width:40, height:40, borderRadius:"50%", background:"#2563eb", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900 }}>{num}</div><div style={{ fontSize:22, fontWeight:900, marginTop:14 }}>{title}</div><div style={{ color:"#4b5563", lineHeight:1.6, marginTop:10 }}>{text}</div><div style={{ marginTop:14 }}><Pill>{team}</Pill></div></div>)}</div>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:14, marginTop:36 }}>
+        {[
+          ["1","Pre-sales","Products, shipping, warranty, special requests, payment, technical issues, coupons.",["CS","AI"]],
+          ["2","Change Order","Address, item, inscription, shipping method.",["CS"]],
+          ["3","WISMO","Late supplier, late, on time, lost, DNR, returned to sender.",["CS","AI","OCy"]],
+          ["4","Item Received","Damaged, not satisfied, production mistake, customer mistake.",["CS","QA"]],
+          ["5","Other","Account issues, collaboration, spam.",["CS"]]
+        ].map(([num,title,text,teams]) => <div key={title} style={{ border:"1px solid #e5e7eb", borderRadius:22, padding:20, background:"#fff" }}>
+          <div style={{ width:40, height:40, borderRadius:"50%", background:"#2563eb", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900 }}>{num}</div>
+          <div style={{ fontSize:22, fontWeight:900, marginTop:14 }}>{title}</div>
+          <div style={{ color:"#4b5563", lineHeight:1.6, marginTop:10 }}>{text}</div>
+          <div style={{ marginTop:14 }}>{teams.map((t) => <TeamBadge key={t} label={t} />)}</div>
+        </div>)}
+      </div>
       <Box><div style={{ fontSize:30, fontWeight:900 }}>Proactive communication</div><Bullets items={["OOS and potential mistakes: proactive alerts before the customer complains.","Payment issues: monitoring and customer follow-up.","Late supplier, upgrade, shipping issue and ETA-1: automatic or semi-automatic campaigns."]} /></Box>
     </section>
 
@@ -683,7 +856,7 @@ function TrainingSlides() {
     <section id="trustpilot" style={{ minHeight:"100vh", padding:70 }}>
       <div style={{ fontSize:56, fontWeight:900 }}>Trustpilot reviews</div>
       <div style={{ fontSize:24, color:"#4b5563", marginTop:12 }}>Public reviews are not only complaints — they are visible signals of trust, service quality and brand credibility.</div>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:16, marginTop:34 }}>{["tp1.jpg","tp2.jpg","tp3.jpg","tp4.jpg","tp5.jpg","tp6.jpg"].map((img) => <img key={img} src={"/team/" + img} style={{ width:"100%", height:220, objectFit:"contain", background:"#fff", borderRadius:18, border:"1px solid #e5e7eb" }} alt={img} />)}</div>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, marginTop:34 }}>{["tp1.jpg","tp2.jpg","tp3.jpg","tp4.jpg","tp5.jpg","tp6.jpg"].map((img) => <img key={img} src={"/team/" + img} style={{ width:"100%", height:220, objectFit:"contain", background:"#fff", borderRadius:18, border:"1px solid #e5e7eb" }} alt={img} />)}</div>
       <Box><div style={{ fontSize:28, fontWeight:900 }}>What a good reply should show</div><Pill>Empathy</Pill><Pill>Ownership</Pill><Pill>Clear next step</Pill><Pill>No defensive tone</Pill></Box>
     </section>
 
@@ -691,7 +864,7 @@ function TrainingSlides() {
       <div style={{ fontSize:56, fontWeight:900 }}>Final note</div>
       <div style={{ fontSize:28, lineHeight:1.6, marginTop:24, maxWidth:1000 }}>The cooperation between our departments is a big part of our success in giving a high-quality and personal service to our customers.</div>
       <div style={{ fontSize:24, color:"#4b5563", lineHeight:1.6, marginTop:24 }}>Everything you should know about Customer Care is available in our Customer Care Hub.</div>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:18, marginTop:40 }}>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:18, marginTop:40 }}>
         <img src="/team/team1.jpg" style={{ width:"100%", height:280, objectFit:"cover", borderRadius:22 }} alt="Team 1" />
         <img src="/team/team2.jpg" style={{ width:"100%", height:280, objectFit:"cover", borderRadius:22 }} alt="Team 2" />
         <img src="/team/team3.jpg" style={{ width:"100%", height:280, objectFit:"cover", borderRadius:22 }} alt="Team 3" />
@@ -702,6 +875,21 @@ function TrainingSlides() {
       <div style={{ fontSize:56, fontWeight:900 }}>Quick quiz</div>
       <div style={{ fontSize:24, color:"#4b5563", marginTop:12 }}>Click each question to reveal the answer.</div>
       <div style={{ marginTop:34, maxWidth:900 }}>{QUIZ.map(([q, a]) => <Reveal key={q} q={q} a={a} />)}</div>
+      <Box>
+        <div style={{ fontSize:28, fontWeight:900 }}>Final case — customer escalation 😬</div>
+        <div style={{ marginTop:12, color:"#374151", lineHeight:1.8 }}>
+          Customer says: “My order is late, it arrived broken, I’m angry, and I’m going to spam you on Instagram, Facebook and Trustpilot.”
+        </div>
+        <Bullets items={[
+          "Stay calm and empathize.",
+          "Acknowledge both issues: late + damaged.",
+          "Move the public/social conversation to DM while staying polite publicly.",
+          "Ask for / review pictures and order details.",
+          "Escalate if needed because this is high-risk and public.",
+          "Offer replacement or refund depending on proof, policy and severity.",
+          "Consider a gesture if the delay and damage are confirmed."
+        ]} />
+      </Box>
     </section>
   </div>;
 }
@@ -783,6 +971,7 @@ export default function Home() {
             <button onClick={() => { setPage("Policies"); setSearch("not satisfied"); }} style={{ background:"#eef2ff", color:"#3730a3", border:"none", borderRadius:12, padding:"10px 14px", fontWeight:800, cursor:"pointer" }}>Not Satisfied</button>
             <button onClick={() => { setPage("Policies"); setSearch("DNR"); }} style={{ background:"#eef2ff", color:"#3730a3", border:"none", borderRadius:12, padding:"10px 14px", fontWeight:800, cursor:"pointer" }}>DNR</button>
             <button onClick={() => setPage("Social Policy")} style={{ background:"#eef2ff", color:"#3730a3", border:"none", borderRadius:12, padding:"10px 14px", fontWeight:800, cursor:"pointer" }}>Social</button>
+            <button onClick={() => setPage("Agent Tools")} style={{ background:"#111827", color:"#fff", border:"none", borderRadius:12, padding:"10px 14px", fontWeight:800, cursor:"pointer" }}>All Agent Tools</button>
           </div>
         </Box>
 
@@ -866,6 +1055,20 @@ export default function Home() {
           <input placeholder="Search product name or note..." value={productSearch} onChange={(e) => setProductSearch(e.target.value)} style={{ width:"100%", padding:14, borderRadius:10, border:"1px solid #d1d5db", boxSizing:"border-box", marginTop:14 }} />
         </Box>
         {filteredProducts.map((x) => <ExpandableCard key={x.id} title={x.name} shortText={x.short} bullets={x.full} />)}
+      </>}
+
+
+      {page === "Agent Tools" && <>
+        <h1 style={{ fontSize:40 }}>Agent Tools — Case Resolution Engine</h1>
+        <Box>
+          <div style={{ fontSize:24, fontWeight:900 }}>Fast decision tools</div>
+          <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>Use these when you need an immediate action, compensation direction and copy-ready customer wording.</div>
+        </Box>
+        <AgentDecisionTool />
+        <CaseDecisionTool type="damaged" />
+        <CaseDecisionTool type="notSatisfied" />
+        <CaseDecisionTool type="dnr" />
+        <CaseDecisionTool type="changeOrder" />
       </>}
 
       {page === "Events" && <>
