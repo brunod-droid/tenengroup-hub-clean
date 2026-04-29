@@ -23,15 +23,15 @@ const CHANNELS = [
 
 
 const COUNTRY_FLAGS = [
-  ["🇮🇱", "Israel"],
-  ["🇮🇹", "Italy"],
-  ["🇭🇺", "Hungary"],
-  ["🇺🇦", "Ukraine"],
-  ["🇵🇭", "Philippines"],
-  ["🇲🇽", "Mexico"],
-  ["🇹🇭", "Thailand"],
-  ["🇪🇸", "Spain"],
-  ["🇦🇹", "Austria"]
+  ["il","Israel"],
+  ["it","Italy"],
+  ["hu","Hungary"],
+  ["ua","Ukraine"],
+  ["ph","Philippines"],
+  ["mx","Mexico"],
+  ["th","Thailand"],
+  ["es","Spain"],
+  ["at","Austria"]
 ];
 
 const KPI_DEFINITIONS = [
@@ -816,14 +816,47 @@ function TrainingSlides() {
       <div style={{ marginTop:24, background:"rgba(255,255,255,.12)", borderRadius:24, padding:24, border:"1px solid rgba(255,255,255,.16)" }}>
         <div style={{ fontSize:30, fontWeight:900 }}>Global team flag quiz</div>
         <div style={{ marginTop:8, color:"#cbd5e1" }}>Click a flag to reveal the country.</div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(9, 1fr)", gap:10, marginTop:18 }}>
-          {COUNTRY_FLAGS.map(([flag,country]) => <button key={country} onClick={() => setCountryReveal(country)} style={{ background:"rgba(255,255,255,.14)", border:"1px solid rgba(255,255,255,.22)", borderRadius:16, padding:"14px 8px", cursor:"pointer", color:"#fff" }}>
-            <div style={{ fontSize:34, lineHeight:1 }}>{flag}</div>
-          </button>)}
-        </div>
-        <div style={{ marginTop:16, minHeight:52, background:"rgba(255,255,255,.14)", borderRadius:16, padding:14, fontSize:24, fontWeight:900 }}>
-          {countryReveal ? countryReveal : "Click a flag 👆"}
-        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:12, marginTop:18 }}>
+  {COUNTRY_FLAGS.map(([code,country]) => (
+    <button
+      key={country}
+      onClick={() => setCountryReveal(country)}
+      style={{
+        background:"#fff",
+        border:"1px solid #e5e7eb",
+        borderRadius:12,
+        padding:10,
+        cursor:"pointer",
+        transition:"0.2s"
+      }}
+      onMouseEnter={(e)=> e.currentTarget.style.transform="scale(1.1)"}
+      onMouseLeave={(e)=> e.currentTarget.style.transform="scale(1)"}
+    >
+      <img
+        src={`/flags/${code}.png`}
+        alt={country}
+        style={{
+          width:40,
+          height:30,
+          objectFit:"cover",
+          borderRadius:4
+        }}
+      />
+    </button>
+  ))}
+</div>
+
+<div style={{
+  marginTop:16,
+  minHeight:52,
+  background:"rgba(255,255,255,.14)",
+  borderRadius:16,
+  padding:14,
+  fontSize:24,
+  fontWeight:900
+}}>
+  {countryReveal ? countryReveal : "Click a flag 👆"}
+</div>
       </div>
     </section>
 
