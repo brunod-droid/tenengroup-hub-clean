@@ -719,6 +719,7 @@ function TrainingSlides() {
   const [countryReveal, setCountryReveal] = useState("");
   const [kpiReveal, setKpiReveal] = useState("");
   const [finalCaseReveal, setFinalCaseReveal] = useState(false);
+  const [selectedTpReview, setSelectedTpReview] = useState(null);
   const slides = ["intro","bruno","org","mission","wheel","cart","trustpilot","final","quiz"];
   const scrollToSlide = (id) => {
     const el = document.getElementById(id);
@@ -880,8 +881,78 @@ function TrainingSlides() {
 
     <section id="trustpilot" style={{ minHeight:"100vh", padding:70 }}>
       <div style={{ fontSize:56, fontWeight:900 }}>Trustpilot reviews</div>
-      <div style={{ fontSize:24, color:"#4b5563", marginTop:12 }}>Public reviews are not only complaints — they are visible signals of trust, service quality and brand credibility.</div>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, marginTop:34 }}>{["tp1.jpg","tp2.jpg","tp3.jpg","tp4.jpg","tp5.jpg","tp6.jpg"].map((img) => <img key={img} src={"/team/" + img} style={{ width:"100%", height:220, objectFit:"contain", background:"#fff", borderRadius:18, border:"1px solid #e5e7eb" }} alt={img} />)}</div>
+      <div style={{ fontSize:24, color:"#4b5563", marginTop:12 }}>Click a review to display it large, full screen.</div>
+
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:18, marginTop:34 }}>
+        {["tp1.jpg","tp2.jpg","tp3.jpg","tp4.jpg","tp5.jpg","tp6.jpg"].map((img, index) => (
+          <button
+            key={img}
+            onClick={() => setSelectedTpReview(img)}
+            style={{
+              background:"#fff",
+              border:"1px solid #e5e7eb",
+              borderRadius:22,
+              padding:28,
+              cursor:"pointer",
+              textAlign:"left",
+              boxShadow:"0 10px 24px rgba(15,23,42,0.08)"
+            }}
+          >
+            <div style={{ fontSize:28, fontWeight:900 }}>Avis TrustPilot {index + 1}</div>
+            <div style={{ marginTop:10, color:"#64748b", lineHeight:1.6 }}>Click to enlarge</div>
+          </button>
+        ))}
+      </div>
+
+      {selectedTpReview && (
+        <div
+          onClick={() => setSelectedTpReview(null)}
+          style={{
+            position:"fixed",
+            inset:0,
+            background:"rgba(15,23,42,0.92)",
+            zIndex:9999,
+            display:"flex",
+            alignItems:"center",
+            justifyContent:"center",
+            padding:40,
+            cursor:"zoom-out"
+          }}
+        >
+          <button
+            onClick={() => setSelectedTpReview(null)}
+            style={{
+              position:"absolute",
+              top:24,
+              right:28,
+              background:"#fff",
+              color:"#111827",
+              border:"none",
+              borderRadius:999,
+              width:46,
+              height:46,
+              fontSize:24,
+              fontWeight:900,
+              cursor:"pointer"
+            }}
+          >
+            ×
+          </button>
+          <img
+            src={"/team/" + selectedTpReview}
+            alt={selectedTpReview}
+            style={{
+              maxWidth:"92vw",
+              maxHeight:"88vh",
+              objectFit:"contain",
+              borderRadius:22,
+              background:"#fff",
+              boxShadow:"0 25px 60px rgba(0,0,0,0.35)"
+            }}
+          />
+        </div>
+      )}
+
       <Box><div style={{ fontSize:28, fontWeight:900 }}>What a good reply should show</div><Pill>Empathy</Pill><Pill>Ownership</Pill><Pill>Clear next step</Pill><Pill>No defensive tone</Pill></Box>
     </section>
 
