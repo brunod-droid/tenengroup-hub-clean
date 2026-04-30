@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Papa from "papaparse";
-import { ReportingNav, pageStyle, cardStyle } from "./_components";
+import { ReportingNav, pageStyle, cardStyle } from "../../lib/yr-reporting/components";
 import { detectFileType, mergeFileIntoData } from "../../lib/yr-reporting/parser";
 import { getWeekFromStart } from "../../lib/yr-reporting/dates";
 import { getReportByWeek, upsertReport, emptyReportData } from "../../lib/yr-reporting/storage";

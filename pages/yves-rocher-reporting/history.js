@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { deleteReport, getReports } from "../../lib/yr-reporting/storage";
-import { ReportingNav, pageStyle, cardStyle } from "./_components";
+import { ReportingNav, pageStyle, cardStyle } from "../../lib/yr-reporting/components";
 
 export default function HistoryPage() {
   const [reports, setReports] = useState([]);

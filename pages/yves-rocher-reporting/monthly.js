@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { getReports, getSettings } from "../../lib/yr-reporting/storage";
 import { aggregateMonthly } from "../../lib/yr-reporting/metrics";
-import { ReportingNav, MetricCard, pageStyle, cardStyle, formatNumber } from "./_components";
+import { ReportingNav, MetricCard, pageStyle, cardStyle, formatNumber } from "../../lib/yr-reporting/components";
 
 export default function MonthlyReport() {
   const [reports, setReports] = useState([]);

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getReports, getSettings } from "../../lib/yr-reporting/storage";
 import { calculateWeeklyMetrics } from "../../lib/yr-reporting/metrics";
-import { ReportingNav, MetricCard, pageStyle, cardStyle, formatNumber } from "./_components";
+import { ReportingNav, MetricCard, pageStyle, cardStyle, formatNumber } from "../../lib/yr-reporting/components";
 
 export default function YvesRocherReportingDashboard() {
   const [reports, setReports] = useState([]);
