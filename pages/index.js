@@ -718,6 +718,7 @@ function SafeTeamImage({ src, alt }) {
 function TrainingSlides() {
   const [countryReveal, setCountryReveal] = useState("");
   const [kpiReveal, setKpiReveal] = useState("");
+  const [finalCaseReveal, setFinalCaseReveal] = useState(false);
   const slides = ["intro","bruno","org","mission","wheel","cart","trustpilot","final","quiz"];
   const scrollToSlide = (id) => {
     const el = document.getElementById(id);
@@ -901,20 +902,65 @@ function TrainingSlides() {
       <div style={{ fontSize:56, fontWeight:900 }}>Quick quiz</div>
       <div style={{ fontSize:24, color:"#4b5563", marginTop:12 }}>Click each question to reveal the answer.</div>
       <div style={{ marginTop:34, maxWidth:900 }}>{QUIZ.map(([q, a]) => <Reveal key={q} q={q} a={a} />)}</div>
+
       <Box>
         <div style={{ fontSize:28, fontWeight:900 }}>Final case — customer escalation 😬</div>
-        <div style={{ marginTop:12, color:"#374151", lineHeight:1.8 }}>
-          Customer says: “My order is late, it arrived broken, I’m angry, and I’m going to spam you on Instagram, Facebook and Trustpilot.”
+        <div style={{ marginTop:12, color:"#64748b", fontWeight:800 }}>Read the email, discuss as a group, then reveal the expected handling.</div>
+
+        <div style={{
+          marginTop:18,
+          background:"#f8fafc",
+          border:"1px solid #cbd5e1",
+          borderRadius:18,
+          overflow:"hidden",
+          boxShadow:"0 12px 28px rgba(15,23,42,0.08)"
+        }}>
+          <div style={{ background:"#0f172a", color:"#fff", padding:"12px 18px", display:"flex", gap:10, alignItems:"center" }}>
+            <span style={{ width:12, height:12, borderRadius:"50%", background:"#ef4444", display:"inline-block" }} />
+            <span style={{ width:12, height:12, borderRadius:"50%", background:"#f59e0b", display:"inline-block" }} />
+            <span style={{ width:12, height:12, borderRadius:"50%", background:"#22c55e", display:"inline-block" }} />
+            <span style={{ marginLeft:12, fontWeight:900 }}>Customer email</span>
+          </div>
+
+          <div style={{ padding:22, background:"#fff" }}>
+            <div style={{ display:"grid", gridTemplateColumns:"90px 1fr", gap:8, color:"#475569", marginBottom:8 }}>
+              <b>From:</b><span>angry.customer@email.com</span>
+              <b>To:</b><span>Yves Rocher Customer Service</span>
+              <b>Subject:</b><span style={{ color:"#b91c1c", fontWeight:900 }}>Extremely disappointed with my order</span>
+            </div>
+
+            <div style={{ borderTop:"1px solid #e5e7eb", marginTop:16, paddingTop:16, lineHeight:1.8, color:"#111827", fontSize:18 }}>
+              Hi,<br/><br/>
+              My order is already late, and now it finally arrived completely broken.<br/><br/>
+              This was supposed to be a gift, and now I have nothing to give. I am really angry and disappointed.<br/><br/>
+              If I do not get a serious solution quickly, I will post everywhere — Instagram, Facebook and Trustpilot.<br/><br/>
+              I expect someone to take this seriously.
+            </div>
+          </div>
         </div>
-        <Bullets items={[
-          "Stay calm and empathize.",
-          "Acknowledge both issues: late + damaged.",
-          "Move the public/social conversation to DM while staying polite publicly.",
-          "Ask for / review pictures and order details.",
-          "Escalate if needed because this is high-risk and public.",
-          "Offer replacement or refund depending on proof, policy and severity.",
-          "Consider a gesture if the delay and damage are confirmed."
-        ]} />
+
+        <div style={{ marginTop:20, fontSize:24, fontWeight:900 }}>Question: how should we handle this case?</div>
+
+        <button
+          onClick={() => setFinalCaseReveal(!finalCaseReveal)}
+          style={{ marginTop:14, background:"#2563eb", color:"#fff", border:"none", borderRadius:14, padding:"12px 16px", fontWeight:900, cursor:"pointer" }}
+        >
+          {finalCaseReveal ? "Hide answer" : "Show expected answer"}
+        </button>
+
+        {finalCaseReveal && (
+          <div style={{ marginTop:18 }}>
+            <Bullets items={[
+              "Stay calm and start with strong empathy.",
+              "Acknowledge both issues clearly: the order is late and the item arrived damaged.",
+              "Take ownership and explain that we will handle it as a priority.",
+              "Move the social/public part to private message while keeping the public tone polite.",
+              "Ask for or review photos and order details.",
+              "Escalate because this is a high-risk case: delay + damage + public threat.",
+              "Offer the right solution according to policy: replacement or refund, and consider a gesture if delay and damage are confirmed."
+            ]} />
+          </div>
+        )}
       </Box>
     </section>
   </div>;
