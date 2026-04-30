@@ -1,7 +1,7 @@
 
 import { useMemo, useState } from "react";
 
-const MENU = ["Home","Training","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A"];
+const MENU = ["Home","Training","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Yves Rocher Reporting","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A"];
 
 const QUICK_TOOLS = [
   { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
@@ -23,15 +23,15 @@ const CHANNELS = [
 
 
 const COUNTRY_FLAGS = [
-  ["il","Israel"],
-  ["it","Italy"],
-  ["hu","Hungary"],
-  ["ua","Ukraine"],
-  ["ph","Philippines"],
-  ["mx","Mexico"],
-  ["th","Thailand"],
-  ["es","Spain"],
-  ["at","Austria"]
+  ["🇮🇱", "Israel"],
+  ["🇮🇹", "Italy"],
+  ["🇭🇺", "Hungary"],
+  ["🇺🇦", "Ukraine"],
+  ["🇵🇭", "Philippines"],
+  ["🇲🇽", "Mexico"],
+  ["🇹🇭", "Thailand"],
+  ["🇪🇸", "Spain"],
+  ["🇦🇹", "Austria"]
 ];
 
 const KPI_DEFINITIONS = [
@@ -816,47 +816,14 @@ function TrainingSlides() {
       <div style={{ marginTop:24, background:"rgba(255,255,255,.12)", borderRadius:24, padding:24, border:"1px solid rgba(255,255,255,.16)" }}>
         <div style={{ fontSize:30, fontWeight:900 }}>Global team flag quiz</div>
         <div style={{ marginTop:8, color:"#cbd5e1" }}>Click a flag to reveal the country.</div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:12, marginTop:18 }}>
-  {COUNTRY_FLAGS.map(([code,country]) => (
-    <button
-      key={country}
-      onClick={() => setCountryReveal(country)}
-      style={{
-        background:"#fff",
-        border:"1px solid #e5e7eb",
-        borderRadius:12,
-        padding:10,
-        cursor:"pointer",
-        transition:"0.2s"
-      }}
-      onMouseEnter={(e)=> e.currentTarget.style.transform="scale(1.1)"}
-      onMouseLeave={(e)=> e.currentTarget.style.transform="scale(1)"}
-    >
-      <img
-        src={`/flags/${code}.png`}
-        alt={country}
-        style={{
-          width:40,
-          height:30,
-          objectFit:"cover",
-          borderRadius:4
-        }}
-      />
-    </button>
-  ))}
-</div>
-
-<div style={{
-  marginTop:16,
-  minHeight:52,
-  background:"rgba(255,255,255,.14)",
-  borderRadius:16,
-  padding:14,
-  fontSize:24,
-  fontWeight:900
-}}>
-  {countryReveal ? countryReveal : "Click a flag 👆"}
-</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(9, 1fr)", gap:10, marginTop:18 }}>
+          {COUNTRY_FLAGS.map(([flag,country]) => <button key={country} onClick={() => setCountryReveal(country)} style={{ background:"rgba(255,255,255,.14)", border:"1px solid rgba(255,255,255,.22)", borderRadius:16, padding:"14px 8px", cursor:"pointer", color:"#fff" }}>
+            <div style={{ fontSize:34, lineHeight:1 }}>{flag}</div>
+          </button>)}
+        </div>
+        <div style={{ marginTop:16, minHeight:52, background:"rgba(255,255,255,.14)", borderRadius:16, padding:14, fontSize:24, fontWeight:900 }}>
+          {countryReveal ? countryReveal : "Click a flag 👆"}
+        </div>
       </div>
     </section>
 
@@ -1000,7 +967,7 @@ export default function Home() {
       <div style={{ width:64, height:64, borderRadius:14, background:"#111827", display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, fontWeight:800, marginBottom:12 }}>TG</div>
       <div style={{ fontSize:22, fontWeight:800 }}>Tenengroup</div>
       <div style={{ marginTop:6, opacity:0.75 }}>Customer Care Hub</div>
-      <div style={{ marginTop:28 }}>{MENU.map((m) => <div key={m} onClick={() => setPage(m)} style={{ padding:"12px 14px", borderRadius:10, cursor:"pointer", background:page === m ? "#1d4ed8" : "transparent", marginBottom:8, fontWeight:600 }}>{m}</div>)}</div>
+      <div style={{ marginTop:28 }}>{MENU.map((m) => <div key={m} onClick={() => { if (m === "Yves Rocher Reporting") { window.location.href = "/yves-rocher-reporting"; } else { setPage(m); } }} style={{ padding:"12px 14px", borderRadius:10, cursor:"pointer", background:page === m ? "#1d4ed8" : "transparent", marginBottom:8, fontWeight:600 }}>{m}</div>)}</div>
       <div style={{ marginTop:26, borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:16 }}>
         <div style={{ fontSize:12, opacity:0.7, marginBottom:10 }}>QUICK TOOLS</div>
         {QUICK_TOOLS.map((tool) => <div key={tool.name} style={{ marginBottom:10 }}><a href={tool.url} target="_blank" rel="noreferrer" style={{ color:"#dbeafe", textDecoration:"none" }}>{tool.name}</a></div>)}
@@ -1037,6 +1004,7 @@ export default function Home() {
         <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:16, marginBottom:22 }}>
           <SmallCard title="Training" text="20-minute CS overview" onClick={() => setPage("Training")} />
           <SmallCard title="Brands" text="Logos, colors and tone of voice" onClick={() => setPage("Brands")} />
+                    <SmallCard title="Yves Rocher Reporting" text="CSV upload, weekly/monthly dashboards and drivers" onClick={() => { window.location.href = "/yves-rocher-reporting"; }} />
           <SmallCard title="WISMO Late Zoom" text="Late policy and compensation logic" onClick={() => setPage("WISMO Late Zoom")} />
           <SmallCard title="QA Team" text="Escalations and quality checks" onClick={() => setPage("QA Team")} />
           <SmallCard title="OCy" text="Order Cycle and ShineOn rules" onClick={() => setPage("OCy")} />
@@ -1063,6 +1031,24 @@ export default function Home() {
       </>}
 
       {page === "Training" && <TrainingSlides />}
+
+      {page === "Yves Rocher Reporting" && <>
+        <h1 style={{ fontSize:40 }}>Yves Rocher Reporting</h1>
+        <Box>
+          <div style={{ fontSize:24, fontWeight:900 }}>Reporting module</div>
+          <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
+            This module opens in its own route with CSV upload, weekly reports, monthly reports, history and settings.
+          </div>
+          <button
+            onClick={() => { window.location.href = "/yves-rocher-reporting"; }}
+            style={{ marginTop:16, background:"#15803d", color:"#fff", border:"none", borderRadius:12, padding:"12px 16px", fontWeight:900, cursor:"pointer" }}
+          >
+            Open Yves Rocher Reporting
+          </button>
+        </Box>
+      </>}
+
+
 
 
       {page === "Brands" && <>
