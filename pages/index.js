@@ -1,7 +1,7 @@
 
 import { useMemo, useState } from "react";
 
-const MENU = ["Home","Training","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Yves Rocher Reporting","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A"];
+const MENU = ["Home","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A","Training","Yves Rocher Reporting"];
 
 const QUICK_TOOLS = [
   { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
@@ -23,15 +23,15 @@ const CHANNELS = [
 
 
 const COUNTRY_FLAGS = [
-  ["🇮🇱", "Israel"],
-  ["🇮🇹", "Italy"],
-  ["🇭🇺", "Hungary"],
-  ["🇺🇦", "Ukraine"],
-  ["🇵🇭", "Philippines"],
-  ["🇲🇽", "Mexico"],
-  ["🇹🇭", "Thailand"],
-  ["🇪🇸", "Spain"],
-  ["🇦🇹", "Austria"]
+  ["il", "Israel"],
+  ["it", "Italy"],
+  ["hu", "Hungary"],
+  ["ua", "Ukraine"],
+  ["ph", "Philippines"],
+  ["mx", "Mexico"],
+  ["th", "Thailand"],
+  ["es", "Spain"],
+  ["at", "Austria"]
 ];
 
 const KPI_DEFINITIONS = [
@@ -804,12 +804,12 @@ function TrainingSlides() {
 
           <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20, border:"1px solid rgba(255,255,255,.16)" }}>
             <div style={{ fontSize:22, fontWeight:950 }}>Project Manager</div>
-            <div style={{ marginTop:12, color:"#93c5fd", fontWeight:900 }}>Mariana</div>
+            <div style={{ marginTop:12, color:"#93c5fd", fontWeight:900 }}>Marianna</div>
           </div>
 
           <div style={{ background:"rgba(255,255,255,.12)", borderRadius:22, padding:20, border:"1px solid rgba(255,255,255,.16)" }}>
             <div style={{ fontSize:22, fontWeight:950 }}>Cart Optimization</div>
-            <div style={{ marginTop:12, color:"#93c5fd", fontWeight:900 }}>Mayanne</div>
+            <div style={{ marginTop:12, color:"#93c5fd", fontWeight:900 }}>Maayan</div>
             <div style={{ marginTop:8, color:"#93c5fd", fontWeight:900 }}>Dominique</div>
           </div>
         </div>
@@ -819,9 +819,21 @@ function TrainingSlides() {
         <div style={{ fontSize:30, fontWeight:900 }}>Global team flag quiz</div>
         <div style={{ marginTop:8, color:"#cbd5e1" }}>Click a flag to reveal the country.</div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(9, 1fr)", gap:10, marginTop:18 }}>
-          {COUNTRY_FLAGS.map(([flag,country]) => <button key={country} onClick={() => setCountryReveal(country)} style={{ background:"rgba(255,255,255,.14)", border:"1px solid rgba(255,255,255,.22)", borderRadius:16, padding:"14px 8px", cursor:"pointer", color:"#fff" }}>
-            <div style={{ fontSize:34, lineHeight:1 }}>{flag}</div>
-          </button>)}
+          {COUNTRY_FLAGS.map(([code,country]) => (
+            <button
+              key={country}
+              onClick={() => setCountryReveal(country)}
+              style={{ background:"#fff", border:"1px solid rgba(255,255,255,.28)", borderRadius:16, padding:"10px 8px", cursor:"pointer", color:"#111827", transition:"transform .18s ease" }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.08)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+            >
+              <img
+                src={"/flags/" + code + ".png"}
+                alt={country}
+                style={{ width:46, height:32, objectFit:"cover", borderRadius:5, boxShadow:"0 2px 8px rgba(0,0,0,.20)" }}
+              />
+            </button>
+          ))}
         </div>
         <div style={{ marginTop:16, minHeight:52, background:"rgba(255,255,255,.14)", borderRadius:16, padding:14, fontSize:24, fontWeight:900 }}>
           {countryReveal ? countryReveal : "Click a flag 👆"}
@@ -1084,7 +1096,40 @@ export default function Home() {
       <div style={{ width:64, height:64, borderRadius:14, background:"#111827", display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, fontWeight:800, marginBottom:12 }}>TG</div>
       <div style={{ fontSize:22, fontWeight:800 }}>Tenengroup</div>
       <div style={{ marginTop:6, opacity:0.75 }}>Customer Care Hub</div>
-      <div style={{ marginTop:28 }}>{MENU.map((m) => <div key={m} onClick={() => { if (m === "Yves Rocher Reporting") { window.location.href = "/yves-rocher-reporting"; } else { setPage(m); } }} style={{ padding:"12px 14px", borderRadius:10, cursor:"pointer", background:page === m ? "#1d4ed8" : "transparent", marginBottom:8, fontWeight:600 }}>{m}</div>)}</div>
+      <div style={{ marginTop:28 }}>{MENU.map((m) => {
+          const special = m === "Training" || m === "Yves Rocher Reporting";
+          const active = page === m;
+          const bg = m === "Yves Rocher Reporting"
+            ? "#15803d"
+            : m === "Training"
+              ? "#7c3aed"
+              : active
+                ? "#1d4ed8"
+                : "transparent";
+          const inactiveSpecialBg = m === "Yves Rocher Reporting"
+            ? "rgba(21,128,61,.22)"
+            : m === "Training"
+              ? "rgba(124,58,237,.22)"
+              : "transparent";
+          return (
+            <div
+              key={m}
+              onClick={() => { if (m === "Yves Rocher Reporting") { window.location.href = "/yves-rocher-reporting"; } else { setPage(m); } }}
+              style={{
+                padding:"12px 14px",
+                borderRadius:10,
+                cursor:"pointer",
+                background: special ? bg : bg,
+                marginBottom:8,
+                fontWeight: special ? 900 : 600,
+                border: special ? "1px solid rgba(255,255,255,.18)" : "none",
+                boxShadow: active || special ? "0 8px 18px rgba(0,0,0,.16)" : "none"
+              }}
+            >
+              {m}
+            </div>
+          );
+        })}</div>
       <div style={{ marginTop:26, borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:16 }}>
         <div style={{ fontSize:12, opacity:0.7, marginBottom:10 }}>QUICK TOOLS</div>
         {QUICK_TOOLS.map((tool) => <div key={tool.name} style={{ marginBottom:10 }}><a href={tool.url} target="_blank" rel="noreferrer" style={{ color:"#dbeafe", textDecoration:"none" }}>{tool.name}</a></div>)}
