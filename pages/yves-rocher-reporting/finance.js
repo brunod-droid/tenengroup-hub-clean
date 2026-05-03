@@ -8,11 +8,93 @@ function toNumber(value) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function sumFinance(rows, regex) {
-  return rows.reduce((sum, row) => {
-    const key = Object.keys(row || {}).find((column) => regex.test(String(column).toLowerCase()));
-    return sum + toNumber(key ? row[key] : 0);
-  }, 0);
+function getValue(row, names) {
+  const keys = Object.keys(row || {});
+  const key = keys.find((k) => names.some((name) => String(k).toLowerCase().trim() === name));
+  return key ? row[key] : "";
+}
+
+function normalizeFinanceRows(rows = []) {
+  return rows
+    .map((row) => {
+      const agent =
+        getValue(row, ["agent", "agents", "name", "csr", "csr name"]) ||
+        row.Agent ||
+        row.Name ||
+        row.CSR ||
+        "";
+
+      const hours =
+        getValue(row, ["hours", "csr hours", "heures", "heures csr"]) ||
+        row.Hours ||
+        row["CSR Hours"] ||
+        "";
+
+      const costPerHour =
+        getValue(row, ["cost per hour", "hourly cost", "cost/hour", "cout horaire", "coût horaire", "cost per hour w"]) ||
+        row["Cost per hour"] ||
+        row["Hourly cost"] ||
+        "";
+
+      return {
+        agent: String(agent || "").trim(),
+        hours: toNumber(hours),
+        costPerHour: toNumber(costPerHour),
+      };
+    })
+    .filter((row) => row.agent || row.hours || row.costPerHour);
+}
+
+function buildFinanceMetrics(report) {
+  const financeRows = normalizeFinanceRows(report?.data?.finance || []);
+  const ordersRows = report?.data?.orders || [];
+  const ordersCount =
+    ordersRows.reduce((sum, row) => {
+      const paidAt = row["Paid at"] || row["Paid At"] || row["paid at"];
+      if (paidAt !== undefined) return paidAt ? sum + 1 : sum;
+
+      const ordersValue = row.Orders || row.orders || row["Order Count"] || row["Total Orders"];
+      return sum + toNumber(ordersValue);
+    }, 0) || ordersRows.length;
+
+  const messagesSent =
+    report?.data?.agents?.reduce((sum, row) => {
+      const value =
+        row["Messages sent"] ||
+        row["Messages Sent"] ||
+        row["Messages sent during the period"] ||
+        row.Messages ||
+        row.messages ||
+        0;
+      return sum + toNumber(value);
+    }, 0) ||
+    report?.data?.tickets?.reduce((sum, row) => {
+      const value =
+        row["Messages sent"] ||
+        row["Messages Sent"] ||
+        row["Messages sent during the period"] ||
+        row.Messages ||
+        row.messages ||
+        0;
+      return sum + toNumber(value);
+    }, 0) ||
+    0;
+
+  const totalHours = financeRows.reduce((sum, row) => sum + row.hours, 0);
+  const totalCost = financeRows.reduce((sum, row) => sum + row.hours * row.costPerHour, 0);
+
+  return {
+    financeRows: financeRows.map((row) => ({
+      ...row,
+      totalCost: row.hours * row.costPerHour,
+    })),
+    totalHours,
+    totalCost,
+    ordersCount,
+    messagesSent,
+    orderCost: ordersCount ? totalCost / ordersCount : 0,
+    productivity: totalHours ? messagesSent / totalHours : 0,
+  };
 }
 
 export default function FinancePage() {
@@ -26,36 +108,81 @@ export default function FinancePage() {
   }, []);
 
   const report = reports.find((item) => item.week === week);
-  const finance = report?.data?.finance || [];
-
-  const metrics = useMemo(() => ({
-    refunds: sumFinance(finance, /refund/),
-    credits: sumFinance(finance, /credit|coupon|gesture/),
-    revenue: sumFinance(finance, /revenue|sales|gmv/)
-  }), [finance]);
+  const metrics = useMemo(() => buildFinanceMetrics(report), [report]);
 
   return (
     <main style={pageStyle}>
       <ReportingNav />
-      <h1 style={{ fontSize: 42, fontWeight: 900 }}>Finance</h1>
-      <p style={{ color: "#64748b" }}>This page can be protected separately with Basic Auth.</p>
+
+      <div style={{ marginBottom: 22 }}>
+        <div style={{ color: "#991b1b", fontWeight: 900 }}>Protected Finance Area</div>
+        <h1 style={{ fontSize: 42, margin: "6px 0" }}>Finance KPIs</h1>
+        <p style={{ color: "#475569", lineHeight: 1.7 }}>
+          Input expected: one finance CSV with agent name, CSR hours and cost per hour. The page calculates CSR hours,
+          CSR cost, order cost and productivity.
+        </p>
+      </div>
 
       <div style={cardStyle}>
         <label style={{ fontWeight: 900, marginRight: 12 }}>Select week</label>
         <select value={week} onChange={(e) => setWeek(e.target.value)} style={{ padding: 10, borderRadius: 10 }}>
-          {reports.map((r) => <option key={r.week} value={r.week}>{r.week}</option>)}
+          {reports.map((r) => (
+            <option key={r.week} value={r.week}>
+              {r.week}
+            </option>
+          ))}
         </select>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 20 }}>
-        <MetricCard label="Revenue" value={formatNumber(metrics.revenue, 2)} />
-        <MetricCard label="Refunds" value={formatNumber(metrics.refunds, 2)} />
-        <MetricCard label="Credits / gestures" value={formatNumber(metrics.credits, 2)} />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: 20 }}>
+        <MetricCard label="CSR Hours" value={formatNumber(metrics.totalHours, 1)} hint="Sum of all CSR hours" />
+        <MetricCard label="CSR Cost" value={formatNumber(metrics.totalCost, 2)} hint="Hours × cost/hour" />
+        <MetricCard label="Order Cost" value={formatNumber(metrics.orderCost, 2)} hint="CSR cost / orders" />
+        <MetricCard label="Productivity" value={formatNumber(metrics.productivity, 1)} hint="Messages sent / CSR hour" />
       </div>
 
       <div style={{ ...cardStyle, marginTop: 20 }}>
-        <h2>Raw finance rows</h2>
-        <pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 12, borderRadius: 12 }}>{JSON.stringify(finance, null, 2)}</pre>
+        <h2>Finance input by agent</h2>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 12 }}>
+            <thead>
+              <tr style={{ textAlign: "left", color: "#64748b", borderBottom: "1px solid #e5e7eb" }}>
+                <th style={{ padding: 10 }}>Agent</th>
+                <th style={{ padding: 10 }}>Hours</th>
+                <th style={{ padding: 10 }}>Cost / hour</th>
+                <th style={{ padding: 10 }}>Total cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              {metrics.financeRows.length ? (
+                metrics.financeRows.map((row, index) => (
+                  <tr key={`${row.agent}-${index}`} style={{ borderBottom: "1px solid #f1f5f9" }}>
+                    <td style={{ padding: 10, fontWeight: 900 }}>{row.agent || "Unknown"}</td>
+                    <td style={{ padding: 10 }}>{formatNumber(row.hours, 1)}</td>
+                    <td style={{ padding: 10 }}>{formatNumber(row.costPerHour, 2)}</td>
+                    <td style={{ padding: 10 }}>{formatNumber(row.totalCost, 2)}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td style={{ padding: 10, color: "#64748b" }} colSpan={4}>
+                    No finance data uploaded yet. Upload a CSV filename containing "finance".
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginTop: 20 }}>
+        <h2>Formula</h2>
+        <pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 14, borderRadius: 12 }}>
+{`CSR Hours = sum(agent hours)
+CSR Cost = sum(agent hours × cost per hour)
+Order Cost = CSR Cost / paid orders
+Productivity = messages sent / CSR Hours`}
+        </pre>
       </div>
     </main>
   );
