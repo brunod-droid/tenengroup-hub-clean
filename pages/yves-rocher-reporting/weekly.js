@@ -1,7 +1,44 @@
 import { useEffect, useMemo, useState } from "react";
 import { getReports, getSettings } from "../../lib/yr-reporting/storage";
-import { calculateWeeklyMetrics } from "../../lib/yr-reporting/metrics";
+import { calculateWeeklyMetrics, parseDurationToHours, toNumber } from "../../lib/yr-reporting/metrics";
 import { ReportingNav, MetricCard, pageStyle, cardStyle, formatNumber } from "../../lib/yr-reporting/components";
+
+function normalize(value = "") {
+  return String(value).toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function getLabel(row = {}) {
+  if (row[" "] !== undefined) return row[" "];
+  if (row[""] !== undefined) return row[""];
+  const keys = Object.keys(row || {});
+  return keys.length ? row[keys[0]] : "";
+}
+
+function getCurrent(row = {}) {
+  if (row["current period"] !== undefined) return row["current period"];
+  if (row["Current period"] !== undefined) return row["Current period"];
+  if (row["Current Period"] !== undefined) return row["Current Period"];
+  const keys = Object.keys(row || {});
+  return keys.length > 1 ? row[keys[1]] : "";
+}
+
+function directCustomerExperienceMetrics(report) {
+  const cx = report?.data?.cx || [];
+  let csat = 0;
+  let frt = 0;
+  let resolution = 0;
+
+  cx.forEach((row) => {
+    const label = normalize(getLabel(row));
+    const value = getCurrent(row);
+
+    if (label.includes("average csat") || label === "csat") csat = toNumber(value);
+    if (label.includes("first response time")) frt = parseDurationToHours(value);
+    if (label.includes("resolution time")) resolution = parseDurationToHours(value);
+  });
+
+  return { csat, frt, resolution };
+}
 
 function statusHint(type, value, unit) {
   if (!value) return "⚠️ Not found in uploaded files";
@@ -37,9 +74,27 @@ export default function WeeklyReport() {
   }, []);
 
   const report = reports.find((item) => item.week === week);
+
   const metrics = useMemo(() => {
     if (!report || !settings) return null;
-    return calculateWeeklyMetrics(report, settings);
+
+    const base = calculateWeeklyMetrics(report, settings);
+    const direct = directCustomerExperienceMetrics(report);
+
+    const csat = base.csat || direct.csat;
+    const firstResponseTime = base.firstResponseTime || direct.frt;
+    const resolutionTime = base.resolutionTime || direct.resolution;
+    const slaValue = base.slaValue || firstResponseTime;
+    const slaUnit = base.slaUnit || (firstResponseTime ? "h" : "");
+
+    return {
+      ...base,
+      csat,
+      firstResponseTime,
+      resolutionTime,
+      slaValue,
+      slaUnit
+    };
   }, [report, settings]);
 
   const slaDisplay = metrics?.slaValue ? `${formatNumber(metrics.slaValue, 1)}${metrics.slaUnit}` : "Not found";
@@ -79,10 +134,11 @@ export default function WeeklyReport() {
             <HighlightKpi label="Backlog" value={formatNumber(metrics.backlog)} hint="Open tickets" color="#7c3aed" />
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: 20 }}>
             <MetricCard label="Tickets Created" value={formatNumber(metrics.ticketsCreated)} />
             <MetricCard label="Tickets Closed" value={formatNumber(metrics.ticketsClosed)} />
             <MetricCard label="Orders" value={formatNumber(metrics.ordersCount)} />
+            <MetricCard label="Resolution Time" value={metrics.resolutionTime ? `${formatNumber(metrics.resolutionTime, 1)}h` : "Not found"} />
           </div>
 
           <div style={{ ...cardStyle, marginTop: 20 }}>
@@ -101,11 +157,10 @@ export default function WeeklyReport() {
 
             {showDebug && (
               <div style={{ marginTop: 16, color: "#475569", lineHeight: 1.7 }}>
-                <div><b>Customer Experience rows detected:</b> {metrics.debug?.cxRows || 0}</div>
-                <div><b>Customer Experience columns detected:</b></div>
-                <pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 12, borderRadius: 12 }}>{(metrics.debug?.cxColumns || []).join(", ") || "No columns found"}</pre>
-                <div><b>Workload columns detected:</b></div>
-                <pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 12, borderRadius: 12 }}>{(metrics.debug?.workloadColumns || []).join(", ") || "No columns found"}</pre>
+                <div><b>Customer Experience raw rows:</b></div>
+                <pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 12, borderRadius: 12 }}>
+                  {JSON.stringify(report?.data?.cx || [], null, 2)}
+                </pre>
               </div>
             )}
           </div>
