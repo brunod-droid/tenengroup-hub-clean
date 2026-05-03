@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 
-function checkBasicAuth(request, user, password, realm) {
-  if (!user || !password) return NextResponse.next();
+function checkBasicAuth(request, expectedPassword, realm) {
+  if (!expectedPassword) return NextResponse.next();
 
   const basicAuth = request.headers.get("authorization");
 
   if (basicAuth) {
     const value = basicAuth.split(" ")[1];
-    const [inputUser, inputPassword] = atob(value).split(":");
+    const decoded = atob(value);
+    const [, inputPassword] = decoded.split(":");
 
-    if (inputUser === user && inputPassword === password) {
+    if (inputPassword === expectedPassword) {
       return NextResponse.next();
     }
   }
@@ -26,12 +27,7 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/yves-rocher-reporting/finance")) {
-    return checkBasicAuth(
-      request,
-      process.env.YR_FINANCE_USER,
-      process.env.YR_FINANCE_PASSWORD,
-      "Yves Rocher Finance"
-    );
+    return checkBasicAuth(request, process.env.YR_FINANCE_PASSWORD || "YRFinance", "Yves Rocher Finance");
   }
 
   return NextResponse.next();
