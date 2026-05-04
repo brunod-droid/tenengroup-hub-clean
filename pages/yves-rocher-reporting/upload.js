@@ -1,96 +1,179 @@
 import { useState } from "react";
 import Papa from "papaparse";
+import { getWeekRange } from "../../lib/yr-reporting/dates";
+import { getReports, saveReports } from "../../lib/yr-reporting/storage";
+import { detectFileType, normalizeRows, defaultReportData } from "../../lib/yr-reporting/parser";
 import { ReportingNav, pageStyle, cardStyle } from "../../lib/yr-reporting/components";
-import { detectFileType, mergeFileIntoData } from "../../lib/yr-reporting/parser";
-import { getWeekFromStart } from "../../lib/yr-reporting/dates";
-import { getReportByWeek, upsertReport, emptyReportData } from "../../lib/yr-reporting/storage";
-import { validateRows } from "../../lib/yr-reporting/validation";
 
-function parseFile(file) {
+function parseCsvFile(file) {
   return new Promise((resolve, reject) => {
     Papa.parse(file, {
       header: true,
-      skipEmptyLines: true,
-      complete: (result) => resolve(result.data || []),
-      error: reject
+      skipEmptyLines: "greedy",
+      dynamicTyping: false,
+      worker: false,
+      transformHeader: (header) => String(header || "").trim().replace(/^\ufeff/, ""),
+      complete: (results) => {
+        if (results.errors?.length) {
+          const fatal = results.errors.find((error) => error.type === "Delimiter" || error.type === "Quotes");
+          if (fatal) {
+            reject(new Error(`${file.name}: ${fatal.message}`));
+            return;
+          }
+        }
+
+        resolve(normalizeRows(results.data || []));
+      },
+      error: (error) => reject(error)
     });
   });
 }
 
-export default function UploadYvesRocherReports() {
-  const [weekStart, setWeekStart] = useState("");
-  const [status, setStatus] = useState([]);
-  const [isUploading, setIsUploading] = useState(false);
+function makeWeekKey(weekStart, weekEnd) {
+  return `${weekStart}_${weekEnd}`;
+}
 
-  async function handleFiles(fileList) {
+export default function UploadPage() {
+  const [weekStart, setWeekStart] = useState("");
+  const [status, setStatus] = useState("");
+  const [details, setDetails] = useState([]);
+
+  async function handleUpload(files) {
+    const fileList = Array.from(files || []);
+    if (!fileList.length) return;
+
     if (!weekStart) {
-      alert("Please choose the week start date first. Week starts on Sunday.");
+      setStatus("Please select a week start first.");
       return;
     }
 
-    const files = Array.from(fileList || []);
-    if (!files.length) return;
+    const { weekEnd } = getWeekRange(weekStart);
+    const week = makeWeekKey(weekStart, weekEnd);
 
-    setIsUploading(true);
-    const week = getWeekFromStart(weekStart);
-    const existing = getReportByWeek(week.week);
-    let data = existing?.data || emptyReportData();
-    const nextStatus = [];
+    setStatus("Uploading and parsing files...");
+    setDetails([]);
 
-    for (const file of files) {
-      const type = detectFileType(file.name);
+    try {
+      const reports = getReports();
+      const existingIndex = reports.findIndex((report) => report.week === week);
+      const existingReport =
+        existingIndex >= 0
+          ? reports[existingIndex]
+          : { week, weekStart, weekEnd, data: defaultReportData(), uploadedAt: new Date().toISOString() };
 
-      if (!type) {
-        nextStatus.push({ file: file.name, ok: false, message: "Unknown file type. Filename must include ticket-volume, workload, customer-experience, agents-metrics, channels-metrics, tickets, orders, finance, or social." });
-        continue;
-      }
+      const nextReport = {
+        ...existingReport,
+        week,
+        weekStart,
+        weekEnd,
+        data: { ...defaultReportData(), ...(existingReport.data || {}) },
+        uploadedAt: new Date().toISOString()
+      };
 
-      try {
-        const rows = await parseFile(file);
-        const validation = validateRows(type, rows);
-        data = mergeFileIntoData(data, type, rows);
+      const uploadDetails = [];
 
-        nextStatus.push({
+      for (const file of fileList) {
+        const type = detectFileType(file.name);
+
+        if (!type) {
+          uploadDetails.push({
+            file: file.name,
+            status: "Rejected",
+            message: "Unknown file type. Filename must include ticket-volume, workload, customer-experience, agents-metrics, channels-metrics, tickets, orders/order/shopify, finance/cost, or social."
+          });
+          continue;
+        }
+
+        const rows = await parseCsvFile(file);
+        nextReport.data[type] = rows;
+
+        uploadDetails.push({
           file: file.name,
-          ok: validation.ok,
-          message: validation.ok ? `${rows.length} rows imported as ${type}` : `${rows.length} rows imported as ${type}, but missing: ${validation.missing.join(", ")}`
+          status: "Imported",
+          message: `${rows.length} rows imported as ${type}`
         });
-      } catch (error) {
-        nextStatus.push({ file: file.name, ok: false, message: error.message || "CSV parsing error" });
       }
-    }
 
-    upsertReport({ week: week.week, weekStart: week.weekStart, weekEnd: week.weekEnd, data });
-    setStatus(nextStatus);
-    setIsUploading(false);
+      if (existingIndex >= 0) {
+        reports[existingIndex] = nextReport;
+      } else {
+        reports.unshift(nextReport);
+      }
+
+      saveReports(reports);
+      setDetails(uploadDetails);
+      setStatus(`Done. Week ${week} saved.`);
+    } catch (error) {
+      setStatus(`Upload failed: ${error.message}`);
+    }
   }
 
   return (
     <main style={pageStyle}>
       <ReportingNav />
-      <h1 style={{ fontSize: 40 }}>Upload CSV files</h1>
-      <p style={{ color: "#475569" }}>Upload multiple CSV exports. Files are parsed in your browser and stored in localStorage.</p>
+
+      <h1 style={{ fontSize: 42, fontWeight: 900 }}>Upload CSV files</h1>
 
       <div style={cardStyle}>
-        <label style={{ display: "block", fontWeight: 900, marginBottom: 8 }}>Week start date</label>
-        <input type="date" value={weekStart} onChange={(event) => setWeekStart(event.target.value)} style={{ padding: 12, borderRadius: 10, border: "1px solid #cbd5e1" }} />
-        <div style={{ marginTop: 8, color: "#64748b" }}>Choose the Sunday of the reporting week.</div>
-
-        <div onDrop={(event) => { event.preventDefault(); handleFiles(event.dataTransfer.files); }} onDragOver={(event) => event.preventDefault()} style={{ marginTop: 22, border: "2px dashed #94a3b8", borderRadius: 18, padding: 40, textAlign: "center", background: "#f8fafc" }}>
-          <div style={{ fontSize: 24, fontWeight: 900 }}>Drag & drop CSV files here</div>
-          <p style={{ color: "#64748b" }}>Or choose files manually.</p>
-          <input type="file" accept=".csv" multiple onChange={(event) => handleFiles(event.target.files)} />
+        <div style={{ fontWeight: 900, marginBottom: 8 }}>Week start</div>
+        <input
+          type="date"
+          value={weekStart}
+          onChange={(e) => setWeekStart(e.target.value)}
+          style={{ padding: 12, borderRadius: 10, border: "1px solid #d1d5db" }}
+        />
+        <div style={{ marginTop: 10, color: "#64748b" }}>
+          Week starts on Sunday. Upload files for the same reporting week.
         </div>
       </div>
 
-      {isUploading && <div style={{ ...cardStyle, marginTop: 18 }}>Uploading and parsing files...</div>}
+      <div
+        style={{
+          ...cardStyle,
+          marginTop: 20,
+          border: "2px dashed #94a3b8",
+          textAlign: "center"
+        }}
+      >
+        <div style={{ fontSize: 24, fontWeight: 900 }}>Drag & drop CSV files here</div>
+        <div style={{ marginTop: 10, color: "#64748b" }}>
+          Orders files can now be named orders_export.csv, order.csv or shopify_orders.csv.
+        </div>
 
-      {!!status.length && (
-        <div style={{ ...cardStyle, marginTop: 18 }}>
-          <h2>Upload results</h2>
-          {status.map((item) => (
-            <div key={item.file} style={{ padding: "10px 0", borderBottom: "1px solid #e5e7eb", color: item.ok ? "#166534" : "#b91c1c" }}>
-              <b>{item.file}</b> — {item.message}
+        <input
+          type="file"
+          accept=".csv,text/csv"
+          multiple
+          onChange={(e) => handleUpload(e.target.files)}
+          style={{ marginTop: 18 }}
+        />
+      </div>
+
+      {status && (
+        <div style={{ ...cardStyle, marginTop: 20 }}>
+          <strong>Status:</strong> {status}
+        </div>
+      )}
+
+      {!!details.length && (
+        <div style={{ ...cardStyle, marginTop: 20 }}>
+          <h2>Upload details</h2>
+          {details.map((item) => (
+            <div
+              key={item.file}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "240px 120px 1fr",
+                gap: 12,
+                padding: "10px 0",
+                borderBottom: "1px solid #e5e7eb"
+              }}
+            >
+              <strong>{item.file}</strong>
+              <span>{item.status}</span>
+              <span style={{ color: item.status === "Rejected" ? "#b91c1c" : "#166534" }}>
+                {item.message}
+              </span>
             </div>
           ))}
         </div>
