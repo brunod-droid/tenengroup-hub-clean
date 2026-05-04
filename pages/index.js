@@ -1,7 +1,7 @@
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const MENU = ["Home","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A","Training","Yves Rocher Reporting"];
+const MENU = ["Home","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","Supplier Info","OCy","AI Agents","Q&A","Training","Yves Rocher Reporting"];
 
 const QUICK_TOOLS = [
   { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
@@ -1049,6 +1049,120 @@ function TrainingSlides() {
   </div>;
 }
 
+
+function SupplierInfo() {
+  const [suppliers, setSuppliers] = useState([]);
+  const [supplierSearch, setSupplierSearch] = useState("");
+  const [activeOnly, setActiveOnly] = useState(false);
+
+  useEffect(() => {
+    fetch("/data/suppliers.json")
+      .then((res) => res.json())
+      .then((data) => setSuppliers(Array.isArray(data) ? data : []))
+      .catch(() => setSuppliers([]));
+  }, []);
+
+  const filteredSuppliers = suppliers.filter((supplier) => {
+    const q = supplierSearch.toLowerCase().trim();
+    const matchesSearch =
+      !q ||
+      String(supplier.ID || "").toLowerCase().includes(q) ||
+      String(supplier.SupName || "").toLowerCase().includes(q);
+
+    const activeValue = Number(supplier.Active || 0);
+    const matchesActive = !activeOnly || activeValue === 1;
+
+    return matchesSearch && matchesActive;
+  });
+
+  const badge = (value, positiveLabel = "Yes", negativeLabel = "No") => {
+    const isOn = Number(value || 0) === 1;
+    return (
+      <span style={{
+        display: "inline-block",
+        padding: "6px 10px",
+        borderRadius: 999,
+        background: isOn ? "#dcfce7" : "#fee2e2",
+        color: isOn ? "#166534" : "#991b1b",
+        fontWeight: 900,
+        fontSize: 12
+      }}>
+        {isOn ? positiveLabel : negativeLabel}
+      </span>
+    );
+  };
+
+  return (
+    <>
+      <h1 style={{ fontSize: 40 }}>Supplier Info</h1>
+
+      <Box>
+        <div style={{ fontSize: 24, fontWeight: 900 }}>QA supplier reference</div>
+        <div style={{ marginTop: 10, color: "#4b5563", lineHeight: 1.7 }}>
+          Search suppliers by ID or name. This list comes from <b>/public/data/suppliers.json</b>.
+        </div>
+
+        <div style={{ display: "flex", gap: 12, marginTop: 18, alignItems: "center", flexWrap: "wrap" }}>
+          <input
+            value={supplierSearch}
+            onChange={(e) => setSupplierSearch(e.target.value)}
+            placeholder="Search supplier ID or name..."
+            style={{ flex: 1, minWidth: 260, padding: 14, borderRadius: 12, border: "1px solid #d1d5db" }}
+          />
+
+          <button
+            onClick={() => setActiveOnly(!activeOnly)}
+            style={{
+              background: activeOnly ? "#15803d" : "#eef2ff",
+              color: activeOnly ? "#fff" : "#3730a3",
+              border: "none",
+              borderRadius: 12,
+              padding: "12px 16px",
+              fontWeight: 900,
+              cursor: "pointer"
+            }}
+          >
+            {activeOnly ? "Showing active only" : "Show active only"}
+          </button>
+        </div>
+      </Box>
+
+      <Box>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+          <div style={{ fontSize: 24, fontWeight: 900 }}>Suppliers</div>
+          <div style={{ color: "#64748b", fontWeight: 800 }}>{filteredSuppliers.length} results</div>
+        </div>
+
+        <div style={{ overflowX: "auto", marginTop: 18 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ textAlign: "left", color: "#64748b", borderBottom: "1px solid #e5e7eb" }}>
+                <th style={{ padding: 12 }}>ID</th>
+                <th style={{ padding: 12 }}>Supplier name</th>
+                <th style={{ padding: 12 }}>Transfer</th>
+                <th style={{ padding: 12 }}>Master</th>
+                <th style={{ padding: 12 }}>Active</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredSuppliers.map((supplier, index) => (
+                <tr key={`${supplier.ID}-${supplier.SupName}-${index}`} style={{ borderBottom: "1px solid #f1f5f9" }}>
+                  <td style={{ padding: 12, fontWeight: 900 }}>{supplier.ID}</td>
+                  <td style={{ padding: 12 }}>{supplier.SupName}</td>
+                  <td style={{ padding: 12 }}>{badge(supplier.EnableTransfer)}</td>
+                  <td style={{ padding: 12 }}>{badge(supplier.Master)}</td>
+                  <td style={{ padding: 12 }}>{badge(supplier.Active, "Active", "Inactive")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Box>
+    </>
+  );
+}
+
+
 export default function Home() {
   const [page, setPage] = useState("Home");
   const [question, setQuestion] = useState("");
@@ -1169,6 +1283,7 @@ export default function Home() {
                     <SmallCard title="Yves Rocher Reporting" text="CSV upload, weekly/monthly dashboards and drivers" onClick={() => { window.location.href = "/yves-rocher-reporting"; }} />
           <SmallCard title="WISMO Late Zoom" text="Late policy and compensation logic" onClick={() => setPage("WISMO Late Zoom")} />
           <SmallCard title="QA Team" text="Escalations and quality checks" onClick={() => setPage("QA Team")} />
+          <SmallCard title="Supplier Info" text="Supplier IDs, transfer and active status" onClick={() => setPage("Supplier Info")} />
           <SmallCard title="OCy" text="Order Cycle and ShineOn rules" onClick={() => setPage("OCy")} />
           <SmallCard title="Social Policy" text="Facebook / Instagram" onClick={() => setPage("Social Policy")} />
         </div>
@@ -1252,6 +1367,9 @@ export default function Home() {
         <h1 style={{ fontSize:40 }}>{page}</h1>
         {pageData[page].map((x) => <ExpandableCard key={x.id} title={x.name || x.title} shortText={x.short} bullets={x.full} extraTitle={x.tone ? "Tone of voice" : null} extraItems={x.tone || null} wording={x.wording || null} documents={x.documents || null} />)}
       </>}
+
+
+      {page === "Supplier Info" && <SupplierInfo />}
 
       {page === "OCy" && <>
         <h1 style={{ fontSize:40 }}>OCy / Order Cycle</h1>
