@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { getReports } from "../../lib/yr-reporting/storage";
 import { ReportingNav, pageStyle, cardStyle, MetricCard, formatNumber } from "../../lib/yr-reporting/components";
-import { isPaidOrder, toNumber } from "../../lib/yr-reporting/metrics";
+import { toNumber } from "../../lib/yr-reporting/metrics";
 
 function getValue(row, names) {
   const keys = Object.keys(row || {});
@@ -27,18 +27,28 @@ function isHumanAgentName(name = "") {
   return n.includes("antonette") || n.includes("antoinette") || n.includes("kyrene");
 }
 
-function buildFinanceMetrics(report) {
-  const financeRows = normalizeFinanceRows(report?.data?.finance || []);
-  const ordersRows = report?.data?.orders || [];
+function countOrders(orders = []) {
+  const explicit = orders.reduce((sum, row) => sum + toNumber(row.Orders || row.orders || row["Order Count"] || row["Total Orders"] || 0), 0);
+  if (explicit > 0) return explicit;
+
   const seen = new Set();
-  const paidOrders = [];
-  ordersRows.forEach((row, index) => {
-    if (!isPaidOrder(row)) return;
+  let count = 0;
+  orders.forEach((row, index) => {
+    const paidAt = row["Paid at"] || row["Paid At"] || row["paid at"];
+    const cancelledAt = row["Cancelled at"] || row["Cancelled At"] || row["cancelled at"];
+    if (cancelledAt && String(cancelledAt).trim()) return;
+    if (paidAt !== undefined && !String(paidAt || "").trim()) return;
     const key = String(row.Id || row.ID || row.id || row.Name || row.name || `row-${index}`);
     if (seen.has(key)) return;
     seen.add(key);
-    paidOrders.push(row);
+    count += 1;
   });
+  return count;
+}
+
+function buildFinanceMetrics(report) {
+  const financeRows = normalizeFinanceRows(report?.data?.finance || []);
+  const ordersCount = countOrders(report?.data?.orders || []);
 
   const agentRows = report?.data?.agents || [];
   const humanMessagesFromAgents = agentRows.reduce((sum, row) => {
@@ -49,14 +59,13 @@ function buildFinanceMetrics(report) {
   }, 0);
 
   const humanMessagesFromTickets = (report?.data?.tickets || []).reduce((sum, row) => {
-    const name = row["Assignee name"] || row["Assignee"] || row.assignee || "";
+    const name = row["Assignee name"] || row.Assignee || row.assignee || "";
     if (!isHumanAgentName(name)) return sum;
     const value = row["Number of agent messages"] || row["Agent messages"] || row["Messages sent"] || row["Messages Sent"] || row.Messages || 0;
     return sum + toNumber(value);
   }, 0);
 
   const humanMessages = humanMessagesFromAgents || humanMessagesFromTickets;
-
   const humanFinanceRows = financeRows.filter((row) => isHumanAgentName(row.agent));
   const humanHours = humanFinanceRows.reduce((sum, row) => sum + row.hours, 0);
 
@@ -67,10 +76,10 @@ function buildFinanceMetrics(report) {
     financeRows: financeRows.map((row) => ({ ...row, totalCost: row.hours * row.costPerHour })),
     totalHours,
     totalCost,
-    ordersCount: paidOrders.length,
+    ordersCount,
     humanMessages,
     humanHours,
-    orderCost: paidOrders.length ? totalCost / paidOrders.length : 0,
+    orderCost: ordersCount ? totalCost / ordersCount : 0,
     productivity: humanHours ? humanMessages / humanHours : 0
   };
 }
@@ -113,7 +122,7 @@ export default function FinancePage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: 20 }}>
         <MetricCard label="CSR Hours" value={formatNumber(metrics.totalHours, 0)} hint="All CSR hours" />
         <MetricCard label="CSR Cost" value={money(metrics.totalCost, 0)} hint="Hours × cost/hour" />
-        <MetricCard label="Order Cost" value={money(metrics.orderCost, 2)} hint="CSR cost / paid orders" />
+        <MetricCard label="Order Cost" value={money(metrics.orderCost, 2)} hint={`${formatNumber(metrics.ordersCount)} paid orders`} />
         <MetricCard label="Productivity" value={formatNumber(metrics.productivity, 0)} hint={`${formatNumber(metrics.humanMessages)} human messages / ${formatNumber(metrics.humanHours, 0)} human hours`} />
       </div>
 
