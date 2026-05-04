@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-const MENU = ["Home","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","Supplier Info","OCy","AI Agents","Q&A","Training","Yves Rocher Reporting"];
+const MENU = ["Home","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A","Training","Yves Rocher Reporting"];
 
 const QUICK_TOOLS = [
   { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
@@ -1283,7 +1283,6 @@ export default function Home() {
                     <SmallCard title="Yves Rocher Reporting" text="CSV upload, weekly/monthly dashboards and drivers" onClick={() => { window.location.href = "/yves-rocher-reporting"; }} />
           <SmallCard title="WISMO Late Zoom" text="Late policy and compensation logic" onClick={() => setPage("WISMO Late Zoom")} />
           <SmallCard title="QA Team" text="Escalations and quality checks" onClick={() => setPage("QA Team")} />
-          <SmallCard title="Supplier Info" text="Supplier IDs, transfer and active status" onClick={() => setPage("Supplier Info")} />
           <SmallCard title="OCy" text="Order Cycle and ShineOn rules" onClick={() => setPage("OCy")} />
           <SmallCard title="Social Policy" text="Facebook / Instagram" onClick={() => setPage("Social Policy")} />
         </div>
@@ -1366,11 +1365,8 @@ export default function Home() {
       {Object.keys(pageData).includes(page) && <>
         <h1 style={{ fontSize:40 }}>{page}</h1>
         {pageData[page].map((x) => <ExpandableCard key={x.id} title={x.name || x.title} shortText={x.short} bullets={x.full} extraTitle={x.tone ? "Tone of voice" : null} extraItems={x.tone || null} wording={x.wording || null} documents={x.documents || null} />)}
+        {page === "QA Team" && <SupplierInfo />}
       </>}
-
-
-      {page === "Supplier Info" && <SupplierInfo />}
-
       {page === "OCy" && <>
         <h1 style={{ fontSize:40 }}>OCy / Order Cycle</h1>
         {OCY_TEAM.map((x) => <ExpandableCard key={x.id} title={x.name || x.title} shortText={x.short} bullets={x.full} />)}
