@@ -93,7 +93,7 @@ export default function WeeklyReport() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, marginTop: 20 }}>
-            <HighlightKpi label="Tickets / Order" value={`${formatNumber(metrics.ticketsPerOrder * 100, 0)}%`} hint={`${formatNumber(metrics.actionableTickets)} assigned tickets / ${formatNumber(metrics.ordersCount)} orders`} color="#2563eb" />
+            <HighlightKpi label="Tickets / Order" value={`${formatNumber(metrics.ticketsPerOrder * 100, 0)}%`} hint={`${formatNumber(metrics.actionableTickets)} assigned tickets / ${formatNumber(metrics.ordersCount)} paid orders`} color="#2563eb" />
             <HighlightKpi label="Backlog" value={formatNumber(metrics.backlog)} hint="Open tickets" color="#7c3aed" />
             <HighlightKpi label="Messages sent" value={formatNumber(metrics.totalMessagesSent)} hint="Customer-facing messages" color="#0f766e" />
             <HighlightKpi label="Resolution Time" value={metrics.resolutionTime ? `${formatNumber(metrics.resolutionTime, 1)}h` : "Not found"} hint="Average resolution time" color="#ea580c" />
@@ -102,7 +102,7 @@ export default function WeeklyReport() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: 20 }}>
             <MetricCard label="Tickets Created" value={formatNumber(metrics.ticketsCreatedRaw)} hint="Raw tickets from volume/file" />
             <MetricCard label="Assigned Tickets" value={formatNumber(metrics.actionableTickets)} hint={`${formatNumber(metrics.unassignedTickets)} unassigned / not handled`} />
-            <MetricCard label="Orders" value={formatNumber(metrics.ordersCount)} hint="Shopify paid orders" />
+            <MetricCard label="Paid Orders" value={formatNumber(metrics.ordersCount)} hint={`${formatNumber(metrics.unpaidOrRemovedOrders)} unpaid / cancelled / duplicate removed`} />
             <MetricCard label="Global FRT source" value={formatHours(metrics.slaValue)} hint="Fallback from customer experience" />
           </div>
 
@@ -121,7 +121,11 @@ export default function WeeklyReport() {
 
           <div style={{ ...cardStyle, marginTop: 20 }}>
             <button onClick={() => setShowDebug(!showDebug)} style={{ background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, padding: "10px 14px", fontWeight: 800, cursor: "pointer" }}>{showDebug ? "Hide file diagnostics" : "Show file diagnostics"}</button>
-            {showDebug && <div style={{ marginTop: 16, color: "#475569", lineHeight: 1.7 }}><div><b>Ticket columns:</b></div><pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 12, borderRadius: 12 }}>{(metrics.debug?.ticketColumns || []).join(", ")}</pre><div><b>Agent metrics columns:</b></div><pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 12, borderRadius: 12 }}>{(metrics.debug?.agentMetricsColumns || []).join(", ") || "No agent metrics file detected"}</pre></div>}
+            {showDebug && <div style={{ marginTop: 16, color: "#475569", lineHeight: 1.7 }}>
+              <div><b>Order columns:</b></div><pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 12, borderRadius: 12 }}>{(metrics.debug?.orderColumns || []).join(", ")}</pre>
+              <div><b>Ticket columns:</b></div><pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 12, borderRadius: 12 }}>{(metrics.debug?.ticketColumns || []).join(", ")}</pre>
+              <div><b>Agent metrics columns:</b></div><pre style={{ whiteSpace: "pre-wrap", background: "#f8fafc", padding: 12, borderRadius: 12 }}>{(metrics.debug?.agentMetricsColumns || []).join(", ") || "No agent metrics file detected"}</pre>
+            </div>}
           </div>
         </>
       )}
