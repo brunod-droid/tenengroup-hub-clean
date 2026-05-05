@@ -296,7 +296,8 @@ const SOCIAL_POLICY = [
 
 const QA_TEAM = [
   { id:"qa-role", name:"QA Team Role", short:"Handles item received, quality checks and escalations.", full:["Handles damaged, wrong item, production errors and warranty cases.","Validates damaged vs Not Satisfied vs production error.","Supports complex and unclear cases.","Recommends reorder, exchange, credit or escalation."] },
-  { id:"qa-escalation", name:"When to escalate to QA", short:"Escalation rules.", full:["Unclear pictures or unclear issue.","Repeated complaints on same product.","Premium or sensitive cases.","Potential factory issue."] }
+  { id:"qa-escalation", name:"When to escalate to QA", short:"Escalation rules.", full:["Unclear pictures or unclear issue.","Repeated complaints on same product.","Premium or sensitive cases.","Potential factory issue."] },
+  { id:"coupons-file", name:"Coupons File", short:"Codes that cannot be issued by the Coupon Generator.", full:["TGRUS VIP: $35","TGRUS: $50","OAL: $50","LL: 50%","Use the source file below as reference for valid event coupons and exceptions."] }
 ];
 
 const OCY_TEAM = [
@@ -1050,6 +1051,52 @@ function TrainingSlides() {
 }
 
 
+
+function QAIntroCoupons() {
+  const couponDocs = [
+    { label: "Open 2026 EVENTS coupons source", url: "/docs/2026-events-coupons-valid-01012027.xlsx" }
+  ];
+
+  return (
+    <>
+      <Box>
+        <div style={{ fontSize:28, fontWeight:900 }}>QA Organization</div>
+        <div style={{ marginTop:12, display:"grid", gridTemplateColumns:"260px 1fr", gap:14, alignItems:"stretch" }}>
+          <div style={{ padding:18, borderRadius:16, background:"#eef2ff", border:"1px solid #c7d2fe" }}>
+            <div style={{ fontSize:13, color:"#4338ca", fontWeight:900 }}>Lead</div>
+            <div style={{ fontSize:26, fontWeight:950, marginTop:6 }}>Laurence</div>
+            <div style={{ color:"#4b5563", marginTop:8, lineHeight:1.6 }}>Quality · Products · Factory · Insight</div>
+          </div>
+          <div style={{ padding:18, borderRadius:16, background:"#f0fdf4", border:"1px solid #bbf7d0" }}>
+            <div style={{ fontSize:13, color:"#15803d", fontWeight:900 }}>Agents</div>
+            <div style={{ fontSize:26, fontWeight:950, marginTop:6 }}>QA</div>
+            <div style={{ color:"#4b5563", marginTop:8, lineHeight:1.6 }}>Handles QA cases, product checks, factory feedback and customer issue validation.</div>
+          </div>
+        </div>
+      </Box>
+
+      <Box>
+        <div style={{ fontSize:28, fontWeight:900 }}>Coupons File</div>
+        <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>Codes that cannot be issued by the Coupon Generator.</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:12, marginTop:16 }}>
+          {[
+            ["TGRUS VIP", "$35"],
+            ["TGRUS", "$50"],
+            ["OAL", "$50"],
+            ["LL", "50%"]
+          ].map(([code, value]) => (
+            <div key={code} style={{ padding:16, borderRadius:16, background:"#fff7ed", border:"1px solid #fed7aa" }}>
+              <div style={{ color:"#9a3412", fontWeight:900, fontSize:13 }}>{code}</div>
+              <div style={{ fontSize:30, fontWeight:950, marginTop:6 }}>{value}</div>
+            </div>
+          ))}
+        </div>
+        <DocumentButtons documents={couponDocs} />
+      </Box>
+    </>
+  );
+}
+
 function SupplierInfo() {
   const [suppliers, setSuppliers] = useState([]);
   const [supplierSearch, setSupplierSearch] = useState("");
@@ -1364,6 +1411,7 @@ export default function Home() {
 
       {Object.keys(pageData).includes(page) && <>
         <h1 style={{ fontSize:40 }}>{page}</h1>
+        {page === "QA Team" && <QAIntroCoupons />}
         {pageData[page].map((x) => <ExpandableCard key={x.id} title={x.name || x.title} shortText={x.short} bullets={x.full} extraTitle={x.tone ? "Tone of voice" : null} extraItems={x.tone || null} wording={x.wording || null} documents={x.documents || null} />)}
         {page === "QA Team" && <SupplierInfo />}
       </>}
