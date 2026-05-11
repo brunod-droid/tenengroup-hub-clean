@@ -1,8 +1,26 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-const MENU = ["Home","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A","Training","Yves Rocher Reporting"];
-
+const MENU = [
+  "Home",
+  "Brands",
+  "Cases",
+  "Policies",
+  "WISMO Late Zoom",
+  "Agent Tools",
+  "Events",
+  "CRM",
+  "Logistics",
+  "Yves Rocher",
+  "Social Policy",
+  "QA Team",
+  "OCy",
+  "AI Agents",
+  "Q&A",
+  "Theograce Weekly Reporting",
+  "Training",
+  "Yves Rocher Reporting"
+];
 const QUICK_TOOLS = [
   { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
   { name: "OM / OCS", url: "https://bo.tenengroup.com/" },
@@ -1258,15 +1276,21 @@ export default function Home() {
       <div style={{ fontSize:22, fontWeight:800 }}>Tenengroup</div>
       <div style={{ marginTop:6, opacity:0.75 }}>Customer Care Hub</div>
       <div style={{ marginTop:28 }}>{MENU.map((m) => {
-          const special = m === "Training" || m === "Yves Rocher Reporting";
+          const special =
+  m === "Training" ||
+  m === "Yves Rocher Reporting" ||
+  m === "Theograce Weekly Reporting";
           const active = page === m;
-          const bg = m === "Yves Rocher Reporting"
-            ? "#15803d"
-            : m === "Training"
-              ? "#7c3aed"
-              : active
-                ? "#1d4ed8"
-                : "transparent";
+          const bg =
+  m === "Yves Rocher Reporting"
+    ? "#15803d"
+    : m === "Training"
+      ? "#7c3aed"
+      : m === "Theograce Weekly Reporting"
+        ? "#0f766e"
+        : active
+          ? "#1d4ed8"
+          : "transparent";
           const inactiveSpecialBg = m === "Yves Rocher Reporting"
             ? "rgba(21,128,61,.22)"
             : m === "Training"
@@ -1275,7 +1299,15 @@ export default function Home() {
           return (
             <div
               key={m}
-              onClick={() => { if (m === "Yves Rocher Reporting") { window.location.href = "/yves-rocher-reporting"; } else { setPage(m); } }}
+              onClick={() => {
+  if (m === "Yves Rocher Reporting") {
+    window.location.href = "/yves-rocher-reporting";
+  } else if (m === "Theograce Weekly Reporting") {
+    window.location.href = "/theograce/weekly-reporting";
+  } else {
+    setPage(m);
+  }
+}}
               style={{
                 padding:"12px 14px",
                 borderRadius:10,
