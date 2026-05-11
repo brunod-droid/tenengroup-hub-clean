@@ -1358,9 +1358,25 @@ export default function Home() {
 
         <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:16, marginBottom:22 }}>
           <SmallCard title="Training" text="20-minute CS overview" onClick={() => setPage("Training")} />
-          <SmallCard title="Brands" text="Logos, colors and tone of voice" onClick={() => setPage("Brands")} />
-                    <SmallCard title="Yves Rocher Reporting" text="CSV upload, weekly/monthly dashboards and drivers" onClick={() => { window.location.href = "/yves-rocher-reporting"; }} />
-          <SmallCard title="WISMO Late Zoom" text="Late policy and compensation logic" onClick={() => setPage("WISMO Late Zoom")} />
+<SmallCard title="Brands" text="Logos, colors and tone of voice" onClick={() => setPage("Brands")} />
+
+<SmallCard
+  title="Yves Rocher Reporting"
+  text="CSV upload, weekly/monthly dashboards and drivers"
+  onClick={() => {
+    window.location.href = "/yves-rocher-reporting";
+  }}
+/>
+
+<SmallCard
+  title="Theograce Weekly Reporting"
+  text="CSAT, SLA, Conversations and YOY"
+  onClick={() => {
+    window.location.href = "/theograce/weekly-reporting";
+  }}
+/>
+
+<SmallCard title="WISMO Late Zoom" text="Late policy and compensation logic" onClick={() => setPage("WISMO Late Zoom")} />
           <SmallCard title="QA Team" text="Escalations and quality checks" onClick={() => setPage("QA Team")} />
           <SmallCard title="OCy" text="Order Cycle and ShineOn rules" onClick={() => setPage("OCy")} />
           <SmallCard title="Social Policy" text="Facebook / Instagram" onClick={() => setPage("Social Policy")} />
