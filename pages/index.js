@@ -1,8 +1,24 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-const MENU = ["Home","Brands","Cases","Policies","WISMO Late Zoom","Agent Tools","Events","CRM","Logistics","Yves Rocher","Social Policy","QA Team","OCy","AI Agents","Q&A","Training","Yves Rocher Reporting"];
-
+const MENU = [
+  "Home",
+  "Brands",
+  "Cases",
+  "Policies",
+  "WISMO Late Zoom",
+  "Agent Tools",
+  "Events",
+  "CRM",
+  "Logistics",
+  "Yves Rocher",
+  "Social Policy",
+  "QA Team",
+  "OCy",
+  "AI Agents",
+  "Q&A",
+  "Training"
+];
 const QUICK_TOOLS = [
   { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
   { name: "OM / OCS", url: "https://bo.tenengroup.com/" },
@@ -56,7 +72,7 @@ const BRANDS = [
       "The brand connects personalization with family joy, gifting and meaningful relationships."
     ],
     tone:["Elegant","Premium","Emotional","Family-oriented","Stylish","Nicky Hilton association"],
-    documents:[{label:"Open brand full source", url:"/docs/theograce-brand.pdf"}]
+    documents:[{label:"Open brand full source", url:"/docs/theograce-brand.pdf"}, {label:"Open Theograce Weekly Reporting", url:"/theograce/weekly-reporting"}]
   },
   {
     id:"oak-luna",
@@ -133,7 +149,7 @@ const BRANDS = [
       "Tone should be botanical, helpful, accessible and beauty-focused."
     ],
     tone:["Botanical","Helpful","Accessible","Beauty-focused","Clear and practical"],
-    documents:[{label:"Open Yves Rocher full source", url:"/docs/yves-rocher-training.pdf"}]
+    documents:[{label:"Open Yves Rocher full source", url:"/docs/yves-rocher-training.pdf"}, {label:"Open Yves Rocher Reporting", url:"/yves-rocher-reporting"}]
   }
 ];
 
@@ -282,6 +298,7 @@ const LOGISTICS = [
 ];
 
 const YVES_ROCHER = [
+  { id:"reporting", name:"Yves Rocher Reporting", short:"Weekly/monthly dashboards, upload, finance and drivers.", full:["Open the dedicated Yves Rocher reporting module.","Upload Gorgias, Shopify/order count and finance inputs.","Review weekly KPIs, agent drilldown, CSAT, SLA, orders, productivity and drivers."], documents:[{label:"Open Yves Rocher Reporting", url:"/yves-rocher-reporting"}] },
   { id:"overview", name:"Yves Rocher Overview", short:"U.S. Shopify store for plant-based beauty products.", full:["Official U.S. online store for Yves Rocher.","Core categories: skincare, haircare, body care and fragrance.","Operational stack: Shopify, Gorgias, Notch/Taylor and Staci."] },
   { id:"shopify", name:"Shopify", short:"Order management, tags, refunds and history.", full:["Search by order ID, name or email.","Shopify tags explain operational actions.","Before BC number, some order edits may still be possible.","After BC / packing stage, edits or cancellation are usually not possible."] },
   { id:"wismo", name:"Yves Rocher WISMO", short:"Wrong address, DNR, lost, returned to sender.", full:["Wrong address reship costs $19.","DNR: allow 7 business days even if status shows delivered.","Ask customer to sign Non-Receipt form.","Returned to sender: provide free reship and ask for different address."] },
@@ -517,7 +534,7 @@ function AgentDecisionTool() {
 
       <div style={{ marginTop:20 }}>
         <div style={{ fontWeight:900, marginBottom:10 }}>1. Is the order late compared to ETA?</div>
-        <Button active={isLate === "yes"} onClick={() => { setIsLate("yes"); setDelay(""); }}>Yes</Button>
+        <Button active={isLate === "yes"} onClick={() => setPage(m)}>Yes</Button>
         <Button active={isLate === "no"} onClick={() => { setIsLate("no"); setDelay(""); }}>No</Button>
       </div>
 
@@ -1052,6 +1069,49 @@ function TrainingSlides() {
 
 
 
+
+function TrainingMenu() {
+  return (
+    <>
+      <h1 style={{ fontSize:40 }}>Training</h1>
+      <Box>
+        <div style={{ fontSize:28, fontWeight:900 }}>Training presentations</div>
+        <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
+          Choose the training presentation you want to open.
+        </div>
+
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(2, minmax(260px, 1fr))", gap:18, marginTop:22 }}>
+          <button
+            onClick={() => window.location.href = "/training"}
+            style={{ background:"#7c3aed", color:"#fff", border:"none", borderRadius:20, padding:26, textAlign:"left", cursor:"pointer", boxShadow:"0 12px 26px rgba(124,58,237,.22)" }}
+          >
+            <div style={{ fontSize:26, fontWeight:950 }}>TG ORIENTATION WEEK</div>
+            <div style={{ marginTop:8, opacity:.9, lineHeight:1.6 }}>Customer Care 20-minute overview</div>
+          </button>
+
+          <button
+            onClick={() => window.location.href = "/training/ai-customer-service"}
+            style={{ background:"#0f766e", color:"#fff", border:"none", borderRadius:20, padding:26, textAlign:"left", cursor:"pointer", boxShadow:"0 12px 26px rgba(15,118,110,.22)" }}
+          >
+            <div style={{ fontSize:26, fontWeight:950 }}>Prez AI in Customer Service</div>
+            <div style={{ marginTop:8, opacity:.9, lineHeight:1.6 }}>AI use cases, automation and service quality</div>
+          </button>
+        </div>
+      </Box>
+
+      <Box>
+        <div style={{ fontSize:24, fontWeight:900 }}>Classic embedded training</div>
+        <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
+          The TG Orientation Week deck is still available below in the hub.
+        </div>
+      </Box>
+
+      <TrainingSlides />
+    </>
+  );
+}
+
+
 function QAIntroCoupons() {
   const couponDocs = [
     { label: "Open 2026 EVENTS coupons source", url: "/docs/2026-events-coupons-valid-01012027.xlsx" }
@@ -1258,15 +1318,13 @@ export default function Home() {
       <div style={{ fontSize:22, fontWeight:800 }}>Tenengroup</div>
       <div style={{ marginTop:6, opacity:0.75 }}>Customer Care Hub</div>
       <div style={{ marginTop:28 }}>{MENU.map((m) => {
-          const special = m === "Training" || m === "Yves Rocher Reporting";
+          const special = m === "Training";
           const active = page === m;
-          const bg = m === "Yves Rocher Reporting"
-            ? "#15803d"
-            : m === "Training"
-              ? "#7c3aed"
-              : active
-                ? "#1d4ed8"
-                : "transparent";
+          const bg = m === "Training"
+            ? "#7c3aed"
+            : active
+              ? "#1d4ed8"
+              : "transparent";
           const inactiveSpecialBg = m === "Yves Rocher Reporting"
             ? "rgba(21,128,61,.22)"
             : m === "Training"
@@ -1275,7 +1333,15 @@ export default function Home() {
           return (
             <div
               key={m}
-              onClick={() => { if (m === "Yves Rocher Reporting") { window.location.href = "/yves-rocher-reporting"; } else { setPage(m); } }}
+              onClick={() => {
+  if (m === "Yves Rocher Reporting") {
+    window.location.href = "/yves-rocher-reporting";
+  } else if (m === "Theograce Weekly Reporting") {
+    window.location.href = "/theograce/weekly-reporting";
+  } else {
+    setPage(m);
+  }
+}}
               style={{
                 padding:"12px 14px",
                 borderRadius:10,
@@ -1325,9 +1391,8 @@ export default function Home() {
         </Box>
 
         <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:16, marginBottom:22 }}>
-          <SmallCard title="Training" text="20-minute CS overview" onClick={() => setPage("Training")} />
-          <SmallCard title="Brands" text="Logos, colors and tone of voice" onClick={() => setPage("Brands")} />
-                    <SmallCard title="Yves Rocher Reporting" text="CSV upload, weekly/monthly dashboards and drivers" onClick={() => { window.location.href = "/yves-rocher-reporting"; }} />
+          <SmallCard title="Training" text="TG Orientation Week and AI presentation" onClick={() => setPage("Training")} />
+          <SmallCard title="Brands" text="Logos, colors, tone of voice and brand reporting" onClick={() => setPage("Brands")} />
           <SmallCard title="WISMO Late Zoom" text="Late policy and compensation logic" onClick={() => setPage("WISMO Late Zoom")} />
           <SmallCard title="QA Team" text="Escalations and quality checks" onClick={() => setPage("QA Team")} />
           <SmallCard title="OCy" text="Order Cycle and ShineOn rules" onClick={() => setPage("OCy")} />
@@ -1353,23 +1418,7 @@ export default function Home() {
         </div>
       </>}
 
-      {page === "Training" && <TrainingSlides />}
-
-      {page === "Yves Rocher Reporting" && <>
-        <h1 style={{ fontSize:40 }}>Yves Rocher Reporting</h1>
-        <Box>
-          <div style={{ fontSize:24, fontWeight:900 }}>Reporting module</div>
-          <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
-            This module opens in its own route with CSV upload, weekly reports, monthly reports, history and settings.
-          </div>
-          <button
-            onClick={() => { window.location.href = "/yves-rocher-reporting"; }}
-            style={{ marginTop:16, background:"#15803d", color:"#fff", border:"none", borderRadius:12, padding:"12px 16px", fontWeight:900, cursor:"pointer" }}
-          >
-            Open Yves Rocher Reporting
-          </button>
-        </Box>
-      </>}
+      {page === "Training" && <TrainingMenu />}
 
 
 
