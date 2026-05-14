@@ -1070,6 +1070,72 @@ function TrainingSlides() {
 
 
 
+
+function TrainingMenu() {
+  return (
+    <>
+      <h1 style={{ fontSize:40 }}>Training</h1>
+
+      <Box>
+        <div style={{ fontSize:30, fontWeight:900 }}>Choose a training</div>
+        <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
+          Open one of the available training presentations.
+        </div>
+
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(2, minmax(260px, 1fr))", gap:18, marginTop:24 }}>
+          <button
+            onClick={() => {
+              const el = document.getElementById("training-orientation-deck");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            style={{
+              background:"#7c3aed",
+              color:"#fff",
+              border:"none",
+              borderRadius:22,
+              padding:28,
+              textAlign:"left",
+              cursor:"pointer",
+              boxShadow:"0 14px 30px rgba(124,58,237,.25)"
+            }}
+          >
+            <div style={{ fontSize:28, fontWeight:950 }}>TG ORIENTATION WEEK</div>
+            <div style={{ marginTop:10, opacity:.9, lineHeight:1.6 }}>
+              Customer Care 20-minute overview
+            </div>
+          </button>
+
+          <button
+            onClick={() => {
+              window.location.href = "/training/ai-customer-service";
+            }}
+            style={{
+              background:"#0f766e",
+              color:"#fff",
+              border:"none",
+              borderRadius:22,
+              padding:28,
+              textAlign:"left",
+              cursor:"pointer",
+              boxShadow:"0 14px 30px rgba(15,118,110,.25)"
+            }}
+          >
+            <div style={{ fontSize:28, fontWeight:950 }}>Prez AI in Customer Service</div>
+            <div style={{ marginTop:10, opacity:.9, lineHeight:1.6 }}>
+              AI at Work · Customer Service · Operations
+            </div>
+          </button>
+        </div>
+      </Box>
+
+      <div id="training-orientation-deck" style={{ marginTop:30 }}>
+        <TrainingSlides />
+      </div>
+    </>
+  );
+}
+
+
 function QAIntroCoupons() {
   const couponDocs = [
     { label: "Open 2026 EVENTS coupons source", url: "/docs/2026-events-coupons-valid-01012027.xlsx" }
