@@ -1,456 +1,388 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const slides = [
   {
     id: 1,
-    tag: 'Opening',
-    title: 'AI at Work',
-    subtitle: 'How AI Removes Friction From Everyday Tasks',
+    type: 'speech',
+    section: 'Opening',
+    eyebrow: 'AI at Work',
+    title: 'How AI removes friction from everyday work',
+    subtitle: 'A practical session for Brands, Factory, Operations, Dev, Ecommerce and Customer Service.',
     time: '3 min',
-    objective: 'Set the tone: this is not a theory session, it is a practical workshop.',
-    bullets: [
-      'Real examples from Tenengroup operations and Customer Service',
-      'Live demos, exercises, and concrete use cases',
-      'Goal: leave with at least one task you can improve with AI'
-    ],
-    speakerNote: 'Start energetic. Tell them: today is not about AI replacing people. It is about removing boring friction from work.'
+    keyMessage: 'AI is not a magic tool. It is a practical assistant for small repetitive tasks.',
+    bullets: ['Real Tenengroup examples', 'Live demos', 'Exercises with your own files', 'One concrete idea to use tomorrow'],
+    speakerNote: 'Start with energy. Explain that the goal is not to become AI experts. The goal is to identify where AI can save time in daily work.',
   },
   {
     id: 2,
-    tag: 'Wow moment',
-    title: 'You already interacted with an AI Agent this week',
-    subtitle: 'The countdown emails were the first demo.',
-    time: '5 min',
-    objective: 'Make the audience realize they already experienced an automated AI workflow.',
-    bullets: [
-      'The agent read participant names and emails from a Google Sheet',
-      'It searched for a useful AI/productivity insight',
-      'It wrote, personalized, and sent the emails automatically',
-      'No human validation: imperfections were part of the demo'
+    type: 'quiz',
+    section: 'Quiz',
+    eyebrow: 'Warm-up',
+    title: 'Which one was already done by an AI Agent?',
+    subtitle: 'Before we even started the training...',
+    time: '4 min',
+    question: 'What did the AI Agent do before this session?',
+    options: [
+      'Only drafted the invitation text',
+      'Read a Google Sheet, personalized emails, searched information and sent messages automatically',
+      'Only corrected spelling mistakes',
+      'Only created slides',
     ],
-    speakerNote: 'Ask: who realized the countdown emails were fully automated? This is your first engagement moment.'
+    answer: 'Read a Google Sheet, personalized emails, searched information and sent messages automatically',
+    revealTitle: 'Exactly. You already experienced an AI Agent.',
+    revealText: 'The countdown emails were the first live demo: scheduled, personalized, automatically written and sent. Even imperfections were part of the experiment.',
+    speakerNote: 'Ask people to raise hands before revealing the answer. This creates immediate engagement.',
   },
   {
     id: 3,
-    tag: 'Mindset',
-    title: 'What people think AI is vs what AI actually does',
-    subtitle: 'Less sci-fi, more daily productivity.',
-    time: '4 min',
-    objective: 'Break the fear and make AI feel accessible.',
-    bullets: [
-      'People imagine robots, replacement, and science fiction',
-      'In reality, AI summarizes, writes, searches, organizes, monitors, and analyzes',
-      'These are exactly the micro-tasks that slow teams down every day'
-    ],
-    speakerNote: 'Keep it light and funny. Mention the “copy-paste Olympics” and the 37-tab Excel file nobody wants to open.'
+    type: 'flow',
+    section: 'Agent example',
+    eyebrow: 'Live example',
+    title: 'The countdown email agent',
+    subtitle: 'A simple autonomous workflow people can understand immediately.',
+    time: '5 min',
+    steps: ['Google Sheet', 'Names + emails', 'AI searches one useful insight', 'AI writes the email', 'AI personalizes it', 'Email is sent automatically'],
+    keyMessage: 'An Agent is useful when a task repeats, uses information, and needs an output.',
+    speakerNote: 'Show the Google Sheet and one email. Do not over-explain the technology. Focus on the workflow.',
   },
   {
     id: 4,
-    tag: 'Problem',
-    title: 'The real enemy: micro-tasks',
-    subtitle: 'Small tasks repeated every day become huge time losses.',
+    type: 'speech',
+    section: 'Mindset',
+    eyebrow: 'Reality check',
+    title: 'AI is less sci-fi than people think',
+    subtitle: 'Most of the value comes from boring tasks done faster.',
     time: '4 min',
-    objective: 'Create relevance for every department.',
-    bullets: [
-      'Writing emails and follow-ups',
-      'Cleaning Excel files and reports',
-      'Searching for information in documents or tools',
-      'Preparing summaries, plans, and updates',
-      'Monitoring issues, reviews, trends, or competitors'
-    ],
-    speakerNote: 'Make people think about their own work. Ask: what is one task you repeat every week and hate doing?'
+    keyMessage: 'AI is great at the tasks that slow us down every day.',
+    bullets: ['Summarize', 'Write', 'Search', 'Compare', 'Organize', 'Monitor', 'Translate', 'Explain'],
+    speakerNote: 'Make it funny: AI is not a robot taking your chair. It is the intern who loves Excel, summaries and repetitive tasks.',
   },
   {
     id: 5,
-    tag: 'Framework',
-    title: 'Different AI tools for different needs',
-    subtitle: 'Chat, Projects, GPTs, Agents, and Hub are not the same thing.',
-    time: '6 min',
-    objective: 'Clarify the AI ecosystem in simple business terms.',
-    bullets: [
-      'Chat: quick help, rewriting, summarizing, brainstorming',
-      'Project: collaborative workspace with context and files, like ETA-1',
-      'GPT: repeatable specialized assistant, like Late Supplier processing',
-      'Agent: autonomous workflow, like the countdown email agent',
-      'Hub: centralized knowledge and internal documentation'
-    ],
-    speakerNote: 'This is important. Many people confuse Projects and GPTs. Use simple metaphors: Project = workspace, GPT = specialized employee, Agent = autonomous teammate.'
+    type: 'poll',
+    section: 'Participation',
+    eyebrow: 'Quick poll',
+    title: 'Where do you lose the most time?',
+    subtitle: 'Pick the pain that hurts most in your daily work.',
+    time: '5 min',
+    pollOptions: ['Excel / reports', 'Emails / writing', 'Searching information', 'Planning / follow-up', 'Meetings / summaries', 'Monitoring issues'],
+    speakerNote: 'Ask people to vote by hand. Then connect their answers to the next sections.',
   },
   {
     id: 6,
-    tag: 'Demo',
-    title: 'AI for customer communication',
-    subtitle: 'Faster replies, better tone, more consistency.',
+    type: 'toolkit',
+    section: 'Framework',
+    eyebrow: 'Choose the right AI format',
+    title: 'Chat, Project, GPT, Agent or Hub?',
+    subtitle: 'Different needs require different AI setups.',
     time: '6 min',
-    objective: 'Show how AI can improve quality, not only speed.',
-    bullets: [
-      'Use a real Notch customer case',
-      'Show the customer message first',
-      'Ask: human or AI-assisted?',
-      'Reveal the AI-assisted reply and discuss tone, empathy, and clarity'
+    tools: [
+      { name: 'Chat', use: 'Quick help', example: 'Rewrite an email' },
+      { name: 'Project', use: 'Shared context', example: 'ETA-1 campaign' },
+      { name: 'GPT', use: 'Repeatable expert', example: 'Late Supplier processor' },
+      { name: 'Agent', use: 'Autonomous workflow', example: 'Countdown emails' },
+      { name: 'Hub', use: 'Company knowledge', example: 'Customer Hub' },
     ],
-    speakerNote: 'Use the Adam Shaire sentimental locket example. It is emotional, concrete, and shows empathy.'
+    speakerNote: 'Use simple metaphors: Chat = quick helper. Project = workspace. GPT = specialized employee. Agent = autonomous teammate. Hub = library + assistant.',
   },
   {
     id: 7,
-    tag: 'Live demo',
-    title: 'Rewrite this customer message live',
-    subtitle: 'One message, many useful versions.',
-    time: '6 min',
-    objective: 'Make AI feel immediately usable.',
-    bullets: [
-      'Start with: “where is my order i wait since 2 weeks”',
-      'Ask AI to make it professional',
-      'Then empathetic, shorter, luxury tone, French version, escalation version',
-      'Show that prompting is about guiding the output'
-    ],
-    speakerNote: 'Fast pace. This should feel fun and magical, but still practical.'
+    type: 'quiz',
+    section: 'Quiz',
+    eyebrow: 'Tool choice',
+    title: 'What should become a GPT?',
+    subtitle: 'Choose the best AI setup for the task.',
+    time: '4 min',
+    question: 'Which task is the best candidate for a GPT?',
+    options: ['A one-time brainstorm', 'A temporary project discussion', 'A repeatable Late Supplier process with stable rules', 'A live competitor monitor that sends daily alerts'],
+    answer: 'A repeatable Late Supplier process with stable rules',
+    revealTitle: 'Correct: stable process = GPT.',
+    revealText: 'A GPT is best when the task has stable instructions and should behave the same way every time. A daily monitor is better as an Agent.',
+    speakerNote: 'This slide helps people understand Projects vs GPTs vs Agents with a real operational example.',
   },
   {
     id: 8,
-    tag: 'Universal pain',
-    title: 'The biggest universal pain: Excel',
-    subtitle: 'Everyone has an Excel file that hurts.',
-    time: '3 min',
-    objective: 'Transition from communication to operational automation.',
-    bullets: [
-      'Cleaning data',
-      'Creating formulas',
-      'Building pivots and summaries',
-      'Finding anomalies',
-      'Repeating the same report every week'
-    ],
-    speakerNote: 'Pause after saying “Excel.” Let people react. This is the universal pain point.'
+    type: 'demo',
+    section: 'Customer communication',
+    eyebrow: 'Demo 1',
+    title: 'AI can improve customer communication',
+    subtitle: 'Faster replies, better tone, stronger consistency.',
+    time: '6 min',
+    demoGoal: 'Show a real Notch case and ask: human or AI-assisted?',
+    bullets: ['Show the customer message', 'Reveal the AI-assisted answer', 'Discuss empathy, clarity and speed', 'Explain where human judgment still matters'],
+    promptBox: 'Rewrite this answer to be empathetic, concise, professional and adapted to a sentimental customer case.',
+    speakerNote: 'Use the Adam Shaire locket example. It shows emotion, not just automation.',
   },
   {
     id: 9,
-    tag: 'Flagship demo',
-    title: 'Late Supplier: operational expertise turned into automation',
-    subtitle: 'Not coding. Clear business rules translated into instructions.',
-    time: '8 min',
-    objective: 'Show the strongest operational example.',
-    bullets: [
-      'Upload raw operational data',
-      'Apply exact business rules and priorities',
-      'Generate comments, summaries, owner mapping, and Excel outputs',
-      'Create repeatable processing instead of manual work'
+    type: 'interactiveDemo',
+    section: 'Live demo',
+    eyebrow: 'Demo 2',
+    title: 'One message. Five useful versions.',
+    subtitle: 'This is how easy AI assistance can be.',
+    time: '6 min',
+    originalText: 'where is my order i wait since 2 weeks no answer this is unacceptable',
+    transformations: [
+      { label: 'Professional', text: 'I’m sorry for the delay and I understand your frustration. I’ll check your order status and get back to you with a clear update as soon as possible.' },
+      { label: 'Empathetic', text: 'I completely understand how disappointing it is to wait without a clear update. Let me look into this right away and make sure you receive a precise answer.' },
+      { label: 'Luxury tone', text: 'Thank you for your patience. I’m truly sorry for the wait and will personally review your order to provide you with a clear and reassuring update.' },
+      { label: 'Short', text: 'I’m sorry for the delay. I’ll check your order now and send you an update as quickly as possible.' },
+      { label: 'French', text: 'Je suis désolé pour ce délai et je comprends votre frustration. Je vais vérifier votre commande et revenir vers vous rapidement avec une réponse claire.' },
     ],
-    speakerNote: 'Key sentence: this is not about replacing expertise. AI needs your expertise to automate correctly.'
+    speakerNote: 'Click each tone and show that the same input can become different outputs depending on the business need.',
   },
   {
     id: 10,
-    tag: 'Exercise',
-    title: 'Exercise 1: Use AI on your own Excel file',
-    subtitle: 'Bring a real file. Ask for a real improvement.',
-    time: '10 min',
-    objective: 'Make every participant apply AI to their own work.',
-    bullets: [
-      'Summarize this file',
-      'Find anomalies or duplicates',
-      'Create formulas I need',
-      'Build a KPI summary',
-      'Explain this report and suggest improvements'
-    ],
-    speakerNote: 'Walk around. Help people convert vague requests into better prompts.'
+    type: 'speech',
+    section: 'Excel',
+    eyebrow: 'Universal pain',
+    title: 'Everyone has an Excel file that hurts',
+    subtitle: 'The 37-tab file. The mystery formula. The weekly copy-paste ritual.',
+    time: '3 min',
+    keyMessage: 'Excel is often where AI creates the fastest visible value.',
+    bullets: ['Clean data', 'Create formulas', 'Detect anomalies', 'Summarize KPIs', 'Build reports', 'Explain what changed'],
+    speakerNote: 'Pause after the title. People will recognize themselves immediately.',
   },
   {
     id: 11,
-    tag: 'Agent mindset',
-    title: 'AI Agents: from assistant to autonomous workflow',
-    subtitle: 'Agents do not wait for instructions every time.',
-    time: '6 min',
-    objective: 'Explain what makes agents different.',
-    bullets: [
-      'They can run on a schedule',
-      'They can search, monitor, summarize, and send updates',
-      'Examples: CX monitoring, competitor tracking, review alerts, daily digests',
-      'Your countdown emails were the live example'
-    ],
-    speakerNote: 'Make it concrete: an agent is useful when the task repeats and needs monitoring or communication.'
+    type: 'demo',
+    section: 'Excel automation',
+    eyebrow: 'Flagship example',
+    title: 'Late Supplier: from business rules to automation',
+    subtitle: 'Operational expertise translated into clear AI instructions.',
+    time: '8 min',
+    demoGoal: 'Show that AI can process files when the rules are clear.',
+    bullets: ['Upload raw operational data', 'Apply exact classification rules', 'Generate comments and summaries', 'Create Excel output and CSV exports', 'Reduce manual work and errors'],
+    promptBox: 'You are my data processor. Run the Late Supplier pipeline exactly as specified. Do not ask questions. Execute the steps verbatim.',
+    speakerNote: 'Key message: this is not coding. This is Bruno’s operational expertise structured so AI can execute it.',
   },
   {
     id: 12,
-    tag: 'Exercise',
-    title: 'Exercise 2: Design your own AI Agent',
-    subtitle: 'If you had one autonomous teammate, what would it do?',
-    time: '6 min',
-    objective: 'Help teams project AI into their own workflows.',
-    bullets: [
-      'What should it monitor?',
-      'How often should it run?',
-      'What source should it check?',
-      'Who should it notify?',
-      'What should the output look like?'
+    type: 'exercise',
+    section: 'Exercise',
+    eyebrow: 'Hands-on',
+    title: 'Exercise: improve one real Excel file',
+    subtitle: 'Use your own file. Pick one concrete improvement.',
+    time: '10 min',
+    challenge: 'Open an Excel or report file you use and ask AI to help with one improvement.',
+    cards: [
+      { title: 'Brand', text: 'Summarize customer feedback, campaign results or product comments.' },
+      { title: 'Factory', text: 'Detect late orders, anomalies, missing data or production blockers.' },
+      { title: 'Operations', text: 'Clean reports, compare files, create weekly summaries.' },
+      { title: 'Dev', text: 'Document a process, explain errors, summarize requirements.' },
+      { title: 'Customer Service', text: 'Analyze ticket drivers, SLA, refunds, complaints or macros.' },
+      { title: 'Ecommerce', text: 'Summarize performance, trends, reviews or conversion issues.' },
     ],
-    speakerNote: 'Ask each group or department for one idea. Capture the best ones for follow-up.'
+    promptBox: 'Analyze this file. Tell me what it contains, what looks unusual, and suggest 3 ways to automate or improve this report.',
+    speakerNote: 'This is the most important hands-on moment. Help people formulate their first useful prompt.',
   },
   {
     id: 13,
-    tag: 'Knowledge',
-    title: 'The Customer Hub: AI connected to company knowledge',
-    subtitle: 'AI becomes stronger when it has the right context.',
-    time: '6 min',
-    objective: 'Show the strategic value of the Hub.',
-    bullets: [
-      'Centralized processes and documentation',
-      'Training resources and onboarding material',
-      'Knowledge base for Customer Service and operations',
-      'No-code approach: this training page itself was built with AI support'
-    ],
-    speakerNote: 'Show the live Hub page. Explain that the presentation is being added to the Hub as a reusable resource.'
+    type: 'quiz',
+    section: 'Quiz',
+    eyebrow: 'Prompting',
+    title: 'Which prompt is better?',
+    subtitle: 'Good outputs come from clear instructions.',
+    time: '4 min',
+    question: 'Which prompt will usually produce a better result?',
+    options: ['Analyze this file', 'Make something useful', 'Summarize this file, identify anomalies, explain the main KPIs, and suggest 3 actions', 'Do AI on this'],
+    answer: 'Summarize this file, identify anomalies, explain the main KPIs, and suggest 3 actions',
+    revealTitle: 'Better prompt = clearer mission.',
+    revealText: 'AI works better when you give context, objective, output format and constraints. You do not need technical skills — just clarity.',
+    speakerNote: 'This is a practical teaching moment. Keep it short and memorable.',
   },
   {
     id: 14,
-    tag: 'Meta demo',
-    title: 'AI helped build this training',
-    subtitle: 'AI is not only for execution. It helps structure thinking.',
-    time: '4 min',
-    objective: 'Make AI feel accessible for planning and preparation.',
-    bullets: [
-      'Agenda creation',
-      'Slide structure',
-      'Exercise design',
-      'Invitation and countdown emails',
-      'Hub page content'
+    type: 'agentBuilder',
+    section: 'Agents',
+    eyebrow: 'Exercise',
+    title: 'Design your own AI Agent',
+    subtitle: 'If you had one autonomous teammate, what should it do?',
+    time: '7 min',
+    fields: ['Trigger: when should it run?', 'Sources: what should it check?', 'Task: what should it do?', 'Output: what should it send?', 'Audience: who should receive it?'],
+    examples: [
+      'Daily review monitor for brand reputation',
+      'Weekly factory risk summary',
+      'Competitor promotion tracker',
+      'Customer complaint escalation detector',
+      'Ecommerce trend digest',
     ],
-    speakerNote: 'This is a very human moment: AI helped organize the thinking, but the business examples came from real work.'
+    speakerNote: 'Ask people to design one agent in pairs. No technical details. Just workflow thinking.',
   },
   {
     id: 15,
-    tag: 'Trust',
-    title: 'AI is powerful, but not magical',
-    subtitle: 'We still need judgment, data protection, and common sense.',
-    time: '5 min',
-    objective: 'Add credibility and responsible usage.',
-    bullets: [
-      'AI can hallucinate or misunderstand context',
-      'Bad prompts create bad outputs',
-      'Customer data requires GDPR-compliant tools',
-      'Human validation is still needed for sensitive decisions',
-      'Use approved tools for company and customer data'
+    type: 'hub',
+    section: 'Customer Hub',
+    eyebrow: 'Knowledge',
+    title: 'AI becomes stronger with company knowledge',
+    subtitle: 'The Customer Hub turns processes and training into reusable knowledge.',
+    time: '6 min',
+    blocks: [
+      { title: 'For onboarding', text: 'New people can find processes faster.' },
+      { title: 'For support', text: 'Teams can search SOPs and policies.' },
+      { title: 'For training', text: 'This presentation becomes a reusable resource.' },
+      { title: 'For scale', text: 'Knowledge stops living only in people’s heads.' },
     ],
-    speakerNote: 'This slide builds trust. Do not skip it.'
+    speakerNote: 'Show the live Hub page. Mention that the page itself was built with AI support and will be improved after the session.',
   },
   {
     id: 16,
-    tag: 'Closing',
+    type: 'speech',
+    section: 'Meta',
+    eyebrow: 'Behind the scenes',
+    title: 'AI helped build this training',
+    subtitle: 'Agenda, slides, exercises, emails and Hub content were created with AI assistance.',
+    time: '4 min',
+    keyMessage: 'AI does not replace thinking. It accelerates structure, preparation and execution.',
+    bullets: ['Brainstorming the agenda', 'Structuring the slides', 'Creating exercises', 'Writing countdown emails', 'Preparing the Hub page'],
+    speakerNote: 'This is important for non-technical people. It shows that AI can help with planning, not only automation.',
+  },
+  {
+    id: 17,
+    type: 'quiz',
+    section: 'Responsible AI',
+    eyebrow: 'Safety',
+    title: 'What should we never forget?',
+    subtitle: 'AI is useful, but not magical.',
+    time: '5 min',
+    question: 'What is the most important rule when using AI with business or customer data?',
+    options: ['Trust every answer immediately', 'Use any free tool with any data', 'Use approved tools and keep human judgment for sensitive decisions', 'Avoid AI completely'],
+    answer: 'Use approved tools and keep human judgment for sensitive decisions',
+    revealTitle: 'Correct. AI needs responsibility.',
+    revealText: 'AI can hallucinate, misunderstand context or expose sensitive information if used incorrectly. Use GDPR-compliant tools and validate important outputs.',
+    speakerNote: 'Keep it serious but not scary. Responsible usage makes adoption possible.',
+  },
+  {
+    id: 18,
+    type: 'closing',
+    section: 'Closing',
+    eyebrow: 'Takeaway',
     title: 'Start small',
     subtitle: 'One task. One workflow. One hour saved.',
     time: '4 min',
-    objective: 'Give a realistic adoption message.',
-    bullets: [
-      'Do not try to automate everything at once',
-      'Pick one repetitive task',
-      'Use AI to reduce friction',
-      'Share what works with your team',
-      'Small gains at scale create big impact'
-    ],
-    speakerNote: 'Final message: AI will not replace people, but people using AI will replace people not using AI.'
-  }
+    keyMessage: 'Small productivity gains repeated across teams can create major impact.',
+    bullets: ['Pick one repetitive task', 'Give AI clear context', 'Test the output', 'Improve the prompt', 'Share what works'],
+    finalQuote: 'AI will not replace people. But people using AI will replace people not using AI.',
+    speakerNote: 'End with a practical challenge: by next week, try AI on one real task and share the result.',
+  },
 ];
 
-const resources = [
-  'AI Countdown Agent example',
-  'Notch AI customer communication cases',
-  'Late Supplier automation prompt',
-  'ETA-1 project example',
-  'Projects vs GPTs vs Agents guide',
-  'Prompt library for email, Excel, reporting, and research',
-  'GDPR and responsible AI reminders'
+const promptLibrary = [
+  {
+    title: 'Email',
+    prompt: 'Rewrite this email to be clear, professional and warm. Keep it short and suggest a better subject line.',
+  },
+  {
+    title: 'Excel',
+    prompt: 'Analyze this file. Identify the main KPIs, anomalies, missing data and 3 actions I should take.',
+  },
+  {
+    title: 'Planning',
+    prompt: 'Turn this objective into a simple action plan with owners, priorities and deadlines.',
+  },
+  {
+    title: 'Knowledge base',
+    prompt: 'Summarize this document into a short SOP with steps, risks and FAQs.',
+  },
+  {
+    title: 'Agent idea',
+    prompt: 'Design an AI Agent that monitors this topic daily and sends a short actionable email summary.',
+  },
 ];
 
 export default function AICustomerServiceTraining() {
-  const [selectedSlide, setSelectedSlide] = useState(slides[0]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [revealed, setRevealed] = useState({});
+  const [selectedTransformation, setSelectedTransformation] = useState(0);
+  const currentSlide = slides[currentIndex];
+  const progress = useMemo(() => Math.round(((currentIndex + 1) / slides.length) * 100), [currentIndex]);
+
+  const goNext = () => setCurrentIndex((index) => Math.min(index + 1, slides.length - 1));
+  const goPrev = () => setCurrentIndex((index) => Math.max(index - 1, 0));
+  const toggleReveal = (id) => setRevealed((state) => ({ ...state, [id]: !state[id] }));
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="fixed left-4 top-4 z-50">
-        <a href="/" className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50">
-          ← Back to Hub
-        </a>
-      </div>
-      <section className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white">
-        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
-          <div className="max-w-4xl">
-            <p className="mb-4 inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white ring-1 ring-white/20">
-              Interactive training · Customer Service · Operations · Brands · Factory · Dev · Ecommerce
-            </p>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-              AI at Work
-            </h1>
-            <p className="mt-5 text-2xl font-semibold text-slate-200">
-              How AI removes friction from everyday tasks
-            </p>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-              A fun, practice-oriented 1-hour session based on real Tenengroup examples: AI agents, customer replies, Excel automation, shared projects, GPTs, and the Customer Hub.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#slides" className="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 shadow-sm hover:bg-slate-100">
-                View slides
-              </a>
-              <a href="#exercises" className="rounded-xl bg-white/10 px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/20 hover:bg-white/15">
-                Jump to exercises
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-        <div className="grid gap-6 md:grid-cols-4">
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <p className="text-sm font-medium text-slate-500">Duration</p>
-            <p className="mt-2 text-3xl font-bold">60 min</p>
-          </div>
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <p className="text-sm font-medium text-slate-500">Format</p>
-            <p className="mt-2 text-3xl font-bold">Live demos</p>
-          </div>
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <p className="text-sm font-medium text-slate-500">Goal</p>
-            <p className="mt-2 text-3xl font-bold">1 task improved</p>
-          </div>
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <p className="text-sm font-medium text-slate-500">Mindset</p>
-            <p className="mt-2 text-3xl font-bold">Practical</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-6 pb-12 lg:px-8">
-        <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-          <h2 className="text-2xl font-bold">Training agenda</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <AgendaItem time="0–10 min" title="AI Agent opening" text="Show the countdown email agent as a real example participants already experienced." />
-            <AgendaItem time="10–20 min" title="Customer communication" text="Notch cases and live email rewriting demo." />
-            <AgendaItem time="20–38 min" title="Excel automation" text="Late Supplier, ETA-1, reporting, and participant exercise." />
-            <AgendaItem time="38–48 min" title="Projects, GPTs, Agents" text="Explain when to use each AI format with real Tenengroup examples." />
-            <AgendaItem time="48–55 min" title="Customer Hub" text="Show how AI and company knowledge become reusable resources." />
-            <AgendaItem time="55–60 min" title="Takeaways & Q&A" text="Start small: one task, one workflow, one hour saved." />
-          </div>
-        </div>
-      </section>
-
-      <section id="slides" className="mx-auto max-w-7xl px-6 pb-12 lg:px-8">
-        <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <main className="min-h-screen bg-slate-950 text-white">
+      <div className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600">Slide deck</p>
-            <h2 className="text-3xl font-bold">Slide-by-slide training content</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">Tenengroup AI Training</p>
+            <p className="text-sm text-slate-300">Slide {currentSlide.id} / {slides.length} · {currentSlide.section} · {currentSlide.time}</p>
           </div>
-          <p className="text-sm text-slate-500">Click a slide to review content and speaker notes.</p>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
-          <div className="max-h-[720px] space-y-3 overflow-auto pr-2">
-            {slides.map((slide) => (
-              <button
-                key={slide.id}
-                onClick={() => setSelectedSlide(slide)}
-                className={`w-full rounded-2xl p-4 text-left shadow-sm ring-1 transition ${
-                  selectedSlide.id === slide.id
-                    ? 'bg-slate-950 text-white ring-slate-950'
-                    : 'bg-white text-slate-900 ring-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-xs font-semibold uppercase tracking-wide opacity-70">Slide {slide.id}</span>
-                  <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
-                    {slide.time}
-                  </span>
-                </div>
-                <p className="mt-2 font-semibold">{slide.title}</p>
-                <p className={`mt-1 text-sm ${selectedSlide.id === slide.id ? 'text-slate-300' : 'text-slate-500'}`}>
-                  {slide.tag}
-                </p>
-              </button>
-            ))}
+          <div className="hidden flex-1 items-center gap-3 md:flex">
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
+              <div className="h-full rounded-full bg-cyan-300 transition-all" style={{ width: `${progress}%` }} />
+            </div>
+            <span className="text-sm font-semibold text-cyan-200">{progress}%</span>
           </div>
-
-          <article className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="rounded-full bg-indigo-50 px-3 py-1 text-sm font-semibold text-indigo-700">
-                Slide {selectedSlide.id}
-              </span>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">
-                {selectedSlide.tag}
-              </span>
-              <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
-                {selectedSlide.time}
-              </span>
-            </div>
-
-            <h3 className="mt-6 text-4xl font-bold tracking-tight">{selectedSlide.title}</h3>
-            <p className="mt-3 text-xl text-slate-600">{selectedSlide.subtitle}</p>
-
-            <div className="mt-8 rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">
-              <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">Objective</p>
-              <p className="mt-2 text-slate-800">{selectedSlide.objective}</p>
-            </div>
-
-            <div className="mt-8">
-              <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">Slide content</p>
-              <ul className="mt-4 space-y-3">
-                {selectedSlide.bullets.map((bullet) => (
-                  <li key={bullet} className="flex gap-3 text-lg text-slate-800">
-                    <span className="mt-2 h-2 w-2 flex-none rounded-full bg-indigo-500" />
-                    <span>{bullet}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-8 rounded-2xl bg-amber-50 p-5 ring-1 ring-amber-200">
-              <p className="text-sm font-semibold uppercase tracking-wide text-amber-800">Speaker note</p>
-              <p className="mt-2 text-amber-950">{selectedSlide.speakerNote}</p>
-            </div>
-          </article>
+          <div className="flex gap-2">
+            <button onClick={goPrev} className="rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold ring-1 ring-white/10 hover:bg-white/15 disabled:opacity-40" disabled={currentIndex === 0}>Previous</button>
+            <button onClick={goNext} className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-cyan-200 disabled:opacity-40" disabled={currentIndex === slides.length - 1}>Next</button>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section id="exercises" className="mx-auto max-w-7xl px-6 pb-12 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-2">
-          <ExerciseCard
-            title="Exercise 1 — Use AI on your own Excel file"
-            description="Participants use a real file from their daily work and ask AI to summarize, clean, analyze, or automate part of it."
-            prompts={[
-              'Summarize this file and tell me the 5 most important insights.',
-              'Find anomalies, duplicates, or missing data.',
-              'Create formulas that would help me automate this report.',
-              'Build a KPI summary for management.',
-              'Explain what this report is showing in simple language.'
-            ]}
-          />
-          <ExerciseCard
-            title="Exercise 2 — Design your AI Agent"
-            description="Participants imagine an agent that would run automatically for their team."
-            prompts={[
-              'What should the agent monitor?',
-              'How often should it run?',
-              'Which source should it check?',
-              'Who should receive the output?',
-              'What should the final email or report look like?'
-            ]}
+      <section className="mx-auto grid min-h-[calc(100vh-70px)] max-w-7xl grid-cols-1 gap-6 px-5 py-6 lg:grid-cols-[1fr_330px]">
+        <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-8 shadow-2xl md:p-12">
+          <SlideRenderer
+            slide={currentSlide}
+            revealed={revealed[currentSlide.id]}
+            onReveal={() => toggleReveal(currentSlide.id)}
+            selectedTransformation={selectedTransformation}
+            setSelectedTransformation={setSelectedTransformation}
           />
         </div>
-      </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-16 lg:px-8">
-        <div className="rounded-3xl bg-slate-950 p-8 text-white shadow-sm">
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-indigo-300">Resources</p>
-              <h2 className="mt-2 text-3xl font-bold">To add below the training page</h2>
-              <p className="mt-4 text-slate-300">
-                These resources should make the session useful after the live training and help teams reuse the examples.
-              </p>
-            </div>
-            <ul className="space-y-3">
-              {resources.map((resource) => (
-                <li key={resource} className="rounded-2xl bg-white/10 px-4 py-3 text-slate-100 ring-1 ring-white/10">
-                  {resource}
-                </li>
+        <aside className="flex flex-col gap-4">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-semibold uppercase tracking-wide text-cyan-300">Speaker note</p>
+            <p className="mt-3 text-base leading-7 text-slate-200">{currentSlide.speakerNote}</p>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-semibold uppercase tracking-wide text-cyan-300">Deck map</p>
+            <div className="mt-4 grid max-h-[420px] grid-cols-3 gap-2 overflow-auto pr-1">
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.id}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`rounded-xl px-3 py-2 text-sm font-bold transition ${index === currentIndex ? 'bg-cyan-300 text-slate-950' : 'bg-white/10 text-slate-300 hover:bg-white/15'}`}
+                  title={slide.title}
+                >
+                  {slide.id}
+                </button>
               ))}
-            </ul>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-semibold uppercase tracking-wide text-cyan-300">Session rhythm</p>
+            <div className="mt-4 space-y-3 text-sm text-slate-300">
+              <RhythmItem label="Speech" value="Short explanation" />
+              <RhythmItem label="Quiz" value="Click to reveal" />
+              <RhythmItem label="Demo" value="Real business case" />
+              <RhythmItem label="Exercise" value="Participants apply it" />
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 pb-12">
+        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Prompt library</p>
+              <h2 className="mt-2 text-4xl font-black">Copy/paste prompts for after the session</h2>
+            </div>
+            <p className="max-w-xl text-slate-300">These prompts make the training useful after the live session. Each team can adapt them to its own daily work.</p>
+          </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+            {promptLibrary.map((item) => (
+              <div key={item.title} className="rounded-3xl bg-white p-5 text-slate-950 shadow-xl">
+                <p className="text-lg font-black">{item.title}</p>
+                <p className="mt-4 text-sm leading-6 text-slate-700">“{item.prompt}”</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -458,28 +390,294 @@ export default function AICustomerServiceTraining() {
   );
 }
 
-function AgendaItem({ time, title, text }) {
+function SlideRenderer({ slide, revealed, onReveal, selectedTransformation, setSelectedTransformation }) {
+  if (slide.type === 'quiz') {
+    return <QuizSlide slide={slide} revealed={revealed} onReveal={onReveal} />;
+  }
+  if (slide.type === 'flow') {
+    return <FlowSlide slide={slide} />;
+  }
+  if (slide.type === 'poll') {
+    return <PollSlide slide={slide} />;
+  }
+  if (slide.type === 'toolkit') {
+    return <ToolkitSlide slide={slide} />;
+  }
+  if (slide.type === 'demo') {
+    return <DemoSlide slide={slide} />;
+  }
+  if (slide.type === 'interactiveDemo') {
+    return <InteractiveDemoSlide slide={slide} selected={selectedTransformation} setSelected={setSelectedTransformation} />;
+  }
+  if (slide.type === 'exercise') {
+    return <ExerciseSlide slide={slide} />;
+  }
+  if (slide.type === 'agentBuilder') {
+    return <AgentBuilderSlide slide={slide} />;
+  }
+  if (slide.type === 'hub') {
+    return <HubSlide slide={slide} />;
+  }
+  if (slide.type === 'closing') {
+    return <ClosingSlide slide={slide} />;
+  }
+  return <SpeechSlide slide={slide} />;
+}
+
+function SlideHeader({ slide }) {
   return (
-    <div className="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">
-      <p className="text-sm font-semibold text-indigo-600">{time}</p>
-      <h3 className="mt-2 text-lg font-bold">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+    <div>
+      <p className="text-base font-bold uppercase tracking-[0.25em] text-cyan-300">{slide.eyebrow}</p>
+      <h1 className="mt-5 max-w-5xl text-5xl font-black leading-[1.02] tracking-tight md:text-7xl">{slide.title}</h1>
+      {slide.subtitle && <p className="mt-6 max-w-4xl text-2xl leading-9 text-slate-300 md:text-3xl">{slide.subtitle}</p>}
     </div>
   );
 }
 
-function ExerciseCard({ title, description, prompts }) {
+function SpeechSlide({ slide }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-      <h2 className="text-2xl font-bold">{title}</h2>
-      <p className="mt-3 text-slate-600">{description}</p>
-      <div className="mt-6 space-y-3">
-        {prompts.map((prompt) => (
-          <div key={prompt} className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-800 ring-1 ring-slate-200">
-            “{prompt}”
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
+        {slide.keyMessage && (
+          <div className="rounded-3xl bg-cyan-300 p-8 text-slate-950 shadow-xl">
+            <p className="text-sm font-black uppercase tracking-wide">Key message</p>
+            <p className="mt-4 text-3xl font-black leading-tight">{slide.keyMessage}</p>
+          </div>
+        )}
+        <div className="grid gap-4 sm:grid-cols-2">
+          {slide.bullets?.map((bullet) => (
+            <div key={bullet} className="rounded-3xl bg-white/10 p-6 text-2xl font-bold text-white ring-1 ring-white/10">
+              {bullet}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QuizSlide({ slide, revealed, onReveal }) {
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-8 rounded-3xl bg-white p-8 text-slate-950 shadow-2xl">
+        <p className="text-3xl font-black">{slide.question}</p>
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          {slide.options.map((option) => (
+            <div key={option} className={`rounded-2xl border-2 p-5 text-xl font-bold ${revealed && option === slide.answer ? 'border-emerald-500 bg-emerald-50 text-emerald-950' : 'border-slate-200 bg-slate-50'}`}>
+              {option}
+            </div>
+          ))}
+        </div>
+        <button onClick={onReveal} className="mt-8 rounded-2xl bg-slate-950 px-8 py-4 text-xl font-black text-white hover:bg-slate-800">
+          {revealed ? 'Hide answer' : 'Reveal answer'}
+        </button>
+        {revealed && (
+          <div className="mt-6 rounded-3xl bg-emerald-100 p-6 text-emerald-950">
+            <p className="text-2xl font-black">{slide.revealTitle}</p>
+            <p className="mt-2 text-xl leading-8">{slide.revealText}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FlowSlide({ slide }) {
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-10 grid gap-4 md:grid-cols-3">
+        {slide.steps.map((step, index) => (
+          <div key={step} className="rounded-3xl bg-white p-6 text-slate-950 shadow-xl">
+            <p className="text-sm font-black uppercase tracking-wide text-cyan-700">Step {index + 1}</p>
+            <p className="mt-4 text-3xl font-black leading-tight">{step}</p>
           </div>
         ))}
       </div>
+      <div className="mt-8 rounded-3xl bg-cyan-300 p-8 text-slate-950">
+        <p className="text-3xl font-black">{slide.keyMessage}</p>
+      </div>
+    </div>
+  );
+}
+
+function PollSlide({ slide }) {
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {slide.pollOptions.map((option) => (
+          <div key={option} className="rounded-3xl bg-white/10 p-8 text-center text-3xl font-black ring-1 ring-white/10">
+            {option}
+          </div>
+        ))}
+      </div>
+      <p className="mt-8 text-center text-2xl font-bold text-cyan-200">Vote by hand. We will use the answers to choose the most relevant demos.</p>
+    </div>
+  );
+}
+
+function ToolkitSlide({ slide }) {
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-10 grid gap-4 lg:grid-cols-5">
+        {slide.tools.map((tool) => (
+          <div key={tool.name} className="rounded-3xl bg-white p-6 text-slate-950 shadow-xl">
+            <p className="text-3xl font-black">{tool.name}</p>
+            <p className="mt-4 text-lg font-bold text-slate-600">Best for</p>
+            <p className="text-2xl font-black">{tool.use}</p>
+            <p className="mt-4 text-lg font-bold text-slate-600">Example</p>
+            <p className="text-xl font-bold text-cyan-700">{tool.example}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DemoSlide({ slide }) {
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
+        <div className="rounded-3xl bg-white p-8 text-slate-950 shadow-xl">
+          <p className="text-sm font-black uppercase tracking-wide text-cyan-700">Demo goal</p>
+          <p className="mt-4 text-3xl font-black leading-tight">{slide.demoGoal}</p>
+          {slide.promptBox && (
+            <div className="mt-8 rounded-2xl bg-slate-100 p-5 text-lg font-semibold text-slate-800">
+              “{slide.promptBox}”
+            </div>
+          )}
+        </div>
+        <div className="grid gap-4">
+          {slide.bullets.map((bullet) => (
+            <div key={bullet} className="rounded-3xl bg-white/10 p-6 text-2xl font-bold ring-1 ring-white/10">
+              {bullet}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InteractiveDemoSlide({ slide, selected, setSelected }) {
+  const current = slide.transformations[selected];
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="rounded-3xl bg-red-100 p-8 text-red-950 shadow-xl">
+          <p className="text-sm font-black uppercase tracking-wide">Original customer message</p>
+          <p className="mt-5 text-4xl font-black leading-tight">“{slide.originalText}”</p>
+        </div>
+        <div className="rounded-3xl bg-white p-8 text-slate-950 shadow-xl">
+          <div className="flex flex-wrap gap-2">
+            {slide.transformations.map((item, index) => (
+              <button key={item.label} onClick={() => setSelected(index)} className={`rounded-xl px-4 py-3 text-sm font-black ${selected === index ? 'bg-cyan-300 text-slate-950' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}>
+                {item.label}
+              </button>
+            ))}
+          </div>
+          <div className="mt-8 rounded-3xl bg-slate-950 p-8 text-white">
+            <p className="text-sm font-black uppercase tracking-wide text-cyan-300">{current.label} version</p>
+            <p className="mt-5 text-3xl font-black leading-tight">“{current.text}”</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExerciseSlide({ slide }) {
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-8 rounded-3xl bg-cyan-300 p-8 text-slate-950 shadow-xl">
+        <p className="text-sm font-black uppercase tracking-wide">Challenge</p>
+        <p className="mt-3 text-3xl font-black">{slide.challenge}</p>
+      </div>
+      <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {slide.cards.map((card) => (
+          <div key={card.title} className="rounded-3xl bg-white p-6 text-slate-950 shadow-xl">
+            <p className="text-2xl font-black">{card.title}</p>
+            <p className="mt-3 text-lg font-semibold leading-7 text-slate-700">{card.text}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-6 rounded-3xl bg-white/10 p-6 text-2xl font-bold ring-1 ring-white/10">Prompt to try: “{slide.promptBox}”</div>
+    </div>
+  );
+}
+
+function AgentBuilderSlide({ slide }) {
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1fr]">
+        <div className="rounded-3xl bg-white p-8 text-slate-950 shadow-xl">
+          <p className="text-sm font-black uppercase tracking-wide text-cyan-700">Agent recipe</p>
+          <div className="mt-5 space-y-3">
+            {slide.fields.map((field) => (
+              <div key={field} className="rounded-2xl bg-slate-100 p-4 text-xl font-black">{field}</div>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-3xl bg-white/10 p-8 ring-1 ring-white/10">
+          <p className="text-sm font-black uppercase tracking-wide text-cyan-300">Examples</p>
+          <div className="mt-5 space-y-4">
+            {slide.examples.map((example) => (
+              <div key={example} className="rounded-2xl bg-white/10 p-5 text-2xl font-bold">{example}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HubSlide({ slide }) {
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-10 grid gap-5 md:grid-cols-2">
+        {slide.blocks.map((block) => (
+          <div key={block.title} className="rounded-3xl bg-white p-8 text-slate-950 shadow-xl">
+            <p className="text-3xl font-black">{block.title}</p>
+            <p className="mt-4 text-xl font-semibold leading-8 text-slate-700">{block.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ClosingSlide({ slide }) {
+  return (
+    <div className="flex min-h-[680px] flex-col justify-between">
+      <SlideHeader slide={slide} />
+      <div className="mt-8 grid gap-4 md:grid-cols-5">
+        {slide.bullets.map((bullet) => (
+          <div key={bullet} className="rounded-3xl bg-white p-6 text-center text-2xl font-black text-slate-950 shadow-xl">
+            {bullet}
+          </div>
+        ))}
+      </div>
+      <div className="mt-8 rounded-3xl bg-cyan-300 p-10 text-center text-slate-950 shadow-xl">
+        <p className="text-4xl font-black leading-tight md:text-5xl">{slide.finalQuote}</p>
+      </div>
+    </div>
+  );
+}
+
+function RhythmItem({ label, value }) {
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-2xl bg-white/10 px-4 py-3">
+      <span className="font-bold text-white">{label}</span>
+      <span>{value}</span>
     </div>
   );
 }
