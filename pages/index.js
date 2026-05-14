@@ -1401,7 +1401,7 @@ export default function Home() {
         </div>
       </>}
 
-      {page === "Training" && <TrainingSlides />}
+      {page === "Training" && <TrainingMenu />}
 
       {page === "Yves Rocher Reporting" && <>
         <h1 style={{ fontSize:40 }}>Yves Rocher Reporting</h1>
