@@ -123,11 +123,11 @@ const slides = [
     time: '6 min',
     originalText: 'where is my order i wait since 2 weeks no answer this is unacceptable',
     transformations: [
-      { label: 'Professional', text: 'I’m sorry for the delay and I understand your frustration. I’ll check your order status and get back to you with a clear update as soon as possible.' },
+      { label: 'Professional', text: 'I am sorry for the delay and I understand your frustration. I will check your order status and get back to you with a clear update as soon as possible.' },
       { label: 'Empathetic', text: 'I completely understand how disappointing it is to wait without a clear update. Let me look into this right away and make sure you receive a precise answer.' },
-      { label: 'Luxury tone', text: 'Thank you for your patience. I’m truly sorry for the wait and will personally review your order to provide you with a clear and reassuring update.' },
-      { label: 'Short', text: 'I’m sorry for the delay. I’ll check your order now and send you an update as quickly as possible.' },
-      { label: 'French', text: 'Je suis désolé pour ce délai et je comprends votre frustration. Je vais vérifier votre commande et revenir vers vous rapidement avec une réponse claire.' },
+      { label: 'Luxury tone', text: 'Thank you for your patience. I am truly sorry for the wait and will personally review your order to provide you with a clear and reassuring update.' },
+      { label: 'Short', text: 'I am sorry for the delay. I will check your order now and send you an update as quickly as possible.' },
+      { label: 'French', text: 'Je suis desole pour ce delai et je comprends votre frustration. Je vais verifier votre commande et revenir vers vous rapidement avec une reponse claire.' },
     ],
     speakerNote: 'Click each tone and show that the same input can become different outputs depending on the business need.',
   },
@@ -154,7 +154,7 @@ const slides = [
     demoGoal: 'Show that AI can process files when the rules are clear.',
     bullets: ['Upload raw operational data', 'Apply exact classification rules', 'Generate comments and summaries', 'Create Excel output and CSV exports', 'Reduce manual work and errors'],
     promptBox: 'You are my data processor. Run the Late Supplier pipeline exactly as specified. Do not ask questions. Execute the steps verbatim.',
-    speakerNote: 'Key message: this is not coding. This is Bruno’s operational expertise structured so AI can execute it.',
+    speakerNote: 'Key message: this is not coding. This is Bruno operational expertise structured so AI can execute it.',
   },
   {
     id: 12,
@@ -188,7 +188,7 @@ const slides = [
     options: ['Analyze this file', 'Make something useful', 'Summarize this file, identify anomalies, explain the main KPIs, and suggest 3 actions', 'Do AI on this'],
     answer: 'Summarize this file, identify anomalies, explain the main KPIs, and suggest 3 actions',
     revealTitle: 'Better prompt = clearer mission.',
-    revealText: 'AI works better when you give context, objective, output format and constraints. You do not need technical skills — just clarity.',
+    revealText: 'AI works better when you give context, objective, output format and constraints. You do not need technical skills, just clarity.',
     speakerNote: 'This is a practical teaching moment. Keep it short and memorable.',
   },
   {
@@ -200,13 +200,7 @@ const slides = [
     subtitle: 'If you had one autonomous teammate, what should it do?',
     time: '7 min',
     fields: ['Trigger: when should it run?', 'Sources: what should it check?', 'Task: what should it do?', 'Output: what should it send?', 'Audience: who should receive it?'],
-    examples: [
-      'Daily review monitor for brand reputation',
-      'Weekly factory risk summary',
-      'Competitor promotion tracker',
-      'Customer complaint escalation detector',
-      'Ecommerce trend digest',
-    ],
+    examples: ['Daily review monitor for brand reputation', 'Weekly factory risk summary', 'Competitor promotion tracker', 'Customer complaint escalation detector', 'Ecommerce trend digest'],
     speakerNote: 'Ask people to design one agent in pairs. No technical details. Just workflow thinking.',
   },
   {
@@ -221,7 +215,7 @@ const slides = [
       { title: 'For onboarding', text: 'New people can find processes faster.' },
       { title: 'For support', text: 'Teams can search SOPs and policies.' },
       { title: 'For training', text: 'This presentation becomes a reusable resource.' },
-      { title: 'For scale', text: 'Knowledge stops living only in people’s heads.' },
+      { title: 'For scale', text: 'Knowledge stops living only in people heads.' },
     ],
     speakerNote: 'Show the live Hub page. Mention that the page itself was built with AI support and will be improved after the session.',
   },
@@ -268,27 +262,159 @@ const slides = [
 ];
 
 const promptLibrary = [
-  {
-    title: 'Email',
-    prompt: 'Rewrite this email to be clear, professional and warm. Keep it short and suggest a better subject line.',
-  },
-  {
-    title: 'Excel',
-    prompt: 'Analyze this file. Identify the main KPIs, anomalies, missing data and 3 actions I should take.',
-  },
-  {
-    title: 'Planning',
-    prompt: 'Turn this objective into a simple action plan with owners, priorities and deadlines.',
-  },
-  {
-    title: 'Knowledge base',
-    prompt: 'Summarize this document into a short SOP with steps, risks and FAQs.',
-  },
-  {
-    title: 'Agent idea',
-    prompt: 'Design an AI Agent that monitors this topic daily and sends a short actionable email summary.',
-  },
+  { title: 'Email', prompt: 'Rewrite this email to be clear, professional and warm. Keep it short and suggest a better subject line.' },
+  { title: 'Excel', prompt: 'Analyze this file. Identify the main KPIs, anomalies, missing data and 3 actions I should take.' },
+  { title: 'Planning', prompt: 'Turn this objective into a simple action plan with owners, priorities and deadlines.' },
+  { title: 'Knowledge base', prompt: 'Summarize this document into a short SOP with steps, risks and FAQs.' },
+  { title: 'Agent idea', prompt: 'Design an AI Agent that monitors this topic daily and sends a short actionable email summary.' },
 ];
+
+const colors = {
+  bg: '#07111f',
+  panel: '#0f1f33',
+  panel2: '#132945',
+  text: '#ffffff',
+  muted: '#b8c7d9',
+  cyan: '#67e8f9',
+  cyanDark: '#0e7490',
+  yellow: '#facc15',
+  white: '#ffffff',
+  darkText: '#0f172a',
+  green: '#bbf7d0',
+  red: '#fee2e2',
+};
+
+const styles = {
+  page: {
+    minHeight: '100vh',
+    background: `radial-gradient(circle at 20% 0%, #164e63 0, transparent 36%), linear-gradient(135deg, ${colors.bg}, #020617)`,
+    color: colors.text,
+    fontFamily: 'Inter, Arial, Helvetica, sans-serif',
+  },
+  topBar: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 20,
+    background: 'rgba(7, 17, 31, 0.94)',
+    borderBottom: '1px solid rgba(255,255,255,0.12)',
+    backdropFilter: 'blur(10px)',
+  },
+  topInner: {
+    maxWidth: 1440,
+    margin: '0 auto',
+    padding: '12px 20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 20,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: 900,
+    textTransform: 'uppercase',
+    letterSpacing: 3,
+    color: colors.cyan,
+    margin: 0,
+  },
+  small: {
+    fontSize: 14,
+    color: colors.muted,
+    margin: '5px 0 0',
+  },
+  navButton: {
+    border: '1px solid rgba(255,255,255,0.18)',
+    background: 'rgba(255,255,255,0.08)',
+    color: '#fff',
+    padding: '10px 16px',
+    borderRadius: 14,
+    fontWeight: 800,
+    cursor: 'pointer',
+  },
+  navButtonPrimary: {
+    border: 'none',
+    background: colors.cyan,
+    color: colors.darkText,
+    padding: '10px 18px',
+    borderRadius: 14,
+    fontWeight: 900,
+    cursor: 'pointer',
+  },
+  layout: {
+    maxWidth: 1440,
+    minHeight: 'calc(100vh - 68px)',
+    margin: '0 auto',
+    padding: 24,
+    display: 'grid',
+    gridTemplateColumns: 'minmax(0, 1fr) 320px',
+    gap: 20,
+  },
+  slideCard: {
+    minHeight: 700,
+    borderRadius: 34,
+    padding: 48,
+    background: 'linear-gradient(145deg, rgba(15,31,51,0.98), rgba(19,41,69,0.96))',
+    border: '1px solid rgba(255,255,255,0.12)',
+    boxShadow: '0 24px 80px rgba(0,0,0,0.35)',
+  },
+  side: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+  },
+  sideCard: {
+    borderRadius: 24,
+    background: 'rgba(255,255,255,0.07)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    padding: 18,
+  },
+  title: {
+    fontSize: 'clamp(44px, 6vw, 80px)',
+    lineHeight: 1.02,
+    margin: '18px 0 0',
+    fontWeight: 950,
+    letterSpacing: -2,
+    maxWidth: 1100,
+  },
+  subtitle: {
+    fontSize: 'clamp(22px, 2.3vw, 34px)',
+    lineHeight: 1.25,
+    color: colors.muted,
+    margin: '22px 0 0',
+    maxWidth: 1040,
+  },
+  bigBox: {
+    borderRadius: 28,
+    padding: 28,
+    background: colors.cyan,
+    color: colors.darkText,
+    boxShadow: '0 18px 48px rgba(0,0,0,0.25)',
+  },
+  whiteBox: {
+    borderRadius: 28,
+    padding: 28,
+    background: colors.white,
+    color: colors.darkText,
+    boxShadow: '0 18px 48px rgba(0,0,0,0.25)',
+  },
+  glassBox: {
+    borderRadius: 26,
+    padding: 24,
+    background: 'rgba(255,255,255,0.09)',
+    border: '1px solid rgba(255,255,255,0.12)',
+  },
+  grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 22, marginTop: 44 },
+  grid3: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18, marginTop: 36 },
+  grid5: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 14, marginTop: 36 },
+  chip: {
+    borderRadius: 18,
+    padding: '18px 20px',
+    background: 'rgba(255,255,255,0.1)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    fontSize: 26,
+    fontWeight: 900,
+  },
+  footerSection: { maxWidth: 1440, margin: '0 auto', padding: '0 24px 44px' },
+};
 
 export default function AICustomerServiceTraining() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -302,28 +428,28 @@ export default function AICustomerServiceTraining() {
   const toggleReveal = (id) => setRevealed((state) => ({ ...state, [id]: !state[id] }));
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      <div className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3">
+    <main style={styles.page}>
+      <div style={styles.topBar}>
+        <div style={styles.topInner}>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">Tenengroup AI Training</p>
-            <p className="text-sm text-slate-300">Slide {currentSlide.id} / {slides.length} · {currentSlide.section} · {currentSlide.time}</p>
+            <p style={styles.label}>Tenengroup AI Training</p>
+            <p style={styles.small}>Slide {currentSlide.id} / {slides.length} - {currentSlide.section} - {currentSlide.time}</p>
           </div>
-          <div className="hidden flex-1 items-center gap-3 md:flex">
-            <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
-              <div className="h-full rounded-full bg-cyan-300 transition-all" style={{ width: `${progress}%` }} />
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, maxWidth: 460 }}>
+            <div style={{ height: 9, flex: 1, borderRadius: 999, overflow: 'hidden', background: 'rgba(255,255,255,0.14)' }}>
+              <div style={{ width: `${progress}%`, height: '100%', background: colors.cyan, borderRadius: 999 }} />
             </div>
-            <span className="text-sm font-semibold text-cyan-200">{progress}%</span>
+            <span style={{ color: colors.cyan, fontWeight: 900 }}>{progress}%</span>
           </div>
-          <div className="flex gap-2">
-            <button onClick={goPrev} className="rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold ring-1 ring-white/10 hover:bg-white/15 disabled:opacity-40" disabled={currentIndex === 0}>Previous</button>
-            <button onClick={goNext} className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-cyan-200 disabled:opacity-40" disabled={currentIndex === slides.length - 1}>Next</button>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button onClick={goPrev} disabled={currentIndex === 0} style={{ ...styles.navButton, opacity: currentIndex === 0 ? 0.45 : 1 }}>Previous</button>
+            <button onClick={goNext} disabled={currentIndex === slides.length - 1} style={{ ...styles.navButtonPrimary, opacity: currentIndex === slides.length - 1 ? 0.45 : 1 }}>Next</button>
           </div>
         </div>
       </div>
 
-      <section className="mx-auto grid min-h-[calc(100vh-70px)] max-w-7xl grid-cols-1 gap-6 px-5 py-6 lg:grid-cols-[1fr_330px]">
-        <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-8 shadow-2xl md:p-12">
+      <section style={styles.layout}>
+        <div style={styles.slideCard}>
           <SlideRenderer
             slide={currentSlide}
             revealed={revealed[currentSlide.id]}
@@ -333,21 +459,29 @@ export default function AICustomerServiceTraining() {
           />
         </div>
 
-        <aside className="flex flex-col gap-4">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-semibold uppercase tracking-wide text-cyan-300">Speaker note</p>
-            <p className="mt-3 text-base leading-7 text-slate-200">{currentSlide.speakerNote}</p>
+        <aside style={styles.side}>
+          <div style={styles.sideCard}>
+            <p style={styles.label}>Speaker note</p>
+            <p style={{ ...styles.small, fontSize: 16, lineHeight: 1.6 }}>{currentSlide.speakerNote}</p>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-semibold uppercase tracking-wide text-cyan-300">Deck map</p>
-            <div className="mt-4 grid max-h-[420px] grid-cols-3 gap-2 overflow-auto pr-1">
+          <div style={styles.sideCard}>
+            <p style={styles.label}>Deck map</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginTop: 16 }}>
               {slides.map((slide, index) => (
                 <button
                   key={slide.id}
                   onClick={() => setCurrentIndex(index)}
-                  className={`rounded-xl px-3 py-2 text-sm font-bold transition ${index === currentIndex ? 'bg-cyan-300 text-slate-950' : 'bg-white/10 text-slate-300 hover:bg-white/15'}`}
                   title={slide.title}
+                  style={{
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '10px 0',
+                    fontWeight: 900,
+                    cursor: 'pointer',
+                    background: index === currentIndex ? colors.cyan : 'rgba(255,255,255,0.11)',
+                    color: index === currentIndex ? colors.darkText : colors.text,
+                  }}
                 >
                   {slide.id}
                 </button>
@@ -355,32 +489,26 @@ export default function AICustomerServiceTraining() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-semibold uppercase tracking-wide text-cyan-300">Session rhythm</p>
-            <div className="mt-4 space-y-3 text-sm text-slate-300">
-              <RhythmItem label="Speech" value="Short explanation" />
-              <RhythmItem label="Quiz" value="Click to reveal" />
-              <RhythmItem label="Demo" value="Real business case" />
-              <RhythmItem label="Exercise" value="Participants apply it" />
-            </div>
+          <div style={styles.sideCard}>
+            <p style={styles.label}>Session rhythm</p>
+            <RhythmItem label="Speech" value="Short" />
+            <RhythmItem label="Quiz" value="Reveal" />
+            <RhythmItem label="Demo" value="Concrete" />
+            <RhythmItem label="Exercise" value="Practice" />
           </div>
         </aside>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 pb-12">
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8">
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Prompt library</p>
-              <h2 className="mt-2 text-4xl font-black">Copy/paste prompts for after the session</h2>
-            </div>
-            <p className="max-w-xl text-slate-300">These prompts make the training useful after the live session. Each team can adapt them to its own daily work.</p>
-          </div>
-          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <section style={styles.footerSection}>
+        <div style={{ ...styles.glassBox, padding: 34 }}>
+          <p style={styles.label}>Prompt library</p>
+          <h2 style={{ fontSize: 42, lineHeight: 1.1, margin: '14px 0 10px', fontWeight: 950 }}>Copy/paste prompts for after the session</h2>
+          <p style={{ ...styles.small, fontSize: 18 }}>These prompts make the training useful after the live session. Each team can adapt them to its own daily work.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 14, marginTop: 26 }}>
             {promptLibrary.map((item) => (
-              <div key={item.title} className="rounded-3xl bg-white p-5 text-slate-950 shadow-xl">
-                <p className="text-lg font-black">{item.title}</p>
-                <p className="mt-4 text-sm leading-6 text-slate-700">“{item.prompt}”</p>
+              <div key={item.title} style={{ ...styles.whiteBox, padding: 20 }}>
+                <p style={{ fontSize: 21, margin: 0, fontWeight: 950 }}>{item.title}</p>
+                <p style={{ fontSize: 14, lineHeight: 1.5, color: '#334155', margin: '14px 0 0' }}>"{item.prompt}"</p>
               </div>
             ))}
           </div>
@@ -391,66 +519,42 @@ export default function AICustomerServiceTraining() {
 }
 
 function SlideRenderer({ slide, revealed, onReveal, selectedTransformation, setSelectedTransformation }) {
-  if (slide.type === 'quiz') {
-    return <QuizSlide slide={slide} revealed={revealed} onReveal={onReveal} />;
-  }
-  if (slide.type === 'flow') {
-    return <FlowSlide slide={slide} />;
-  }
-  if (slide.type === 'poll') {
-    return <PollSlide slide={slide} />;
-  }
-  if (slide.type === 'toolkit') {
-    return <ToolkitSlide slide={slide} />;
-  }
-  if (slide.type === 'demo') {
-    return <DemoSlide slide={slide} />;
-  }
-  if (slide.type === 'interactiveDemo') {
-    return <InteractiveDemoSlide slide={slide} selected={selectedTransformation} setSelected={setSelectedTransformation} />;
-  }
-  if (slide.type === 'exercise') {
-    return <ExerciseSlide slide={slide} />;
-  }
-  if (slide.type === 'agentBuilder') {
-    return <AgentBuilderSlide slide={slide} />;
-  }
-  if (slide.type === 'hub') {
-    return <HubSlide slide={slide} />;
-  }
-  if (slide.type === 'closing') {
-    return <ClosingSlide slide={slide} />;
-  }
+  if (slide.type === 'quiz') return <QuizSlide slide={slide} revealed={revealed} onReveal={onReveal} />;
+  if (slide.type === 'flow') return <FlowSlide slide={slide} />;
+  if (slide.type === 'poll') return <PollSlide slide={slide} />;
+  if (slide.type === 'toolkit') return <ToolkitSlide slide={slide} />;
+  if (slide.type === 'demo') return <DemoSlide slide={slide} />;
+  if (slide.type === 'interactiveDemo') return <InteractiveDemoSlide slide={slide} selected={selectedTransformation} setSelected={setSelectedTransformation} />;
+  if (slide.type === 'exercise') return <ExerciseSlide slide={slide} />;
+  if (slide.type === 'agentBuilder') return <AgentBuilderSlide slide={slide} />;
+  if (slide.type === 'hub') return <HubSlide slide={slide} />;
+  if (slide.type === 'closing') return <ClosingSlide slide={slide} />;
   return <SpeechSlide slide={slide} />;
 }
 
 function SlideHeader({ slide }) {
   return (
     <div>
-      <p className="text-base font-bold uppercase tracking-[0.25em] text-cyan-300">{slide.eyebrow}</p>
-      <h1 className="mt-5 max-w-5xl text-5xl font-black leading-[1.02] tracking-tight md:text-7xl">{slide.title}</h1>
-      {slide.subtitle && <p className="mt-6 max-w-4xl text-2xl leading-9 text-slate-300 md:text-3xl">{slide.subtitle}</p>}
+      <p style={styles.label}>{slide.eyebrow}</p>
+      <h1 style={styles.title}>{slide.title}</h1>
+      {slide.subtitle && <p style={styles.subtitle}>{slide.subtitle}</p>}
     </div>
   );
 }
 
 function SpeechSlide({ slide }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
       <SlideHeader slide={slide} />
-      <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
+      <div style={styles.grid2}>
         {slide.keyMessage && (
-          <div className="rounded-3xl bg-cyan-300 p-8 text-slate-950 shadow-xl">
-            <p className="text-sm font-black uppercase tracking-wide">Key message</p>
-            <p className="mt-4 text-3xl font-black leading-tight">{slide.keyMessage}</p>
+          <div style={styles.bigBox}>
+            <p style={{ margin: 0, fontSize: 13, fontWeight: 950, textTransform: 'uppercase', letterSpacing: 2 }}>Key message</p>
+            <p style={{ margin: '16px 0 0', fontSize: 34, lineHeight: 1.1, fontWeight: 950 }}>{slide.keyMessage}</p>
           </div>
         )}
-        <div className="grid gap-4 sm:grid-cols-2">
-          {slide.bullets?.map((bullet) => (
-            <div key={bullet} className="rounded-3xl bg-white/10 p-6 text-2xl font-bold text-white ring-1 ring-white/10">
-              {bullet}
-            </div>
-          ))}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          {slide.bullets?.map((bullet) => <div key={bullet} style={styles.chip}>{bullet}</div>)}
         </div>
       </div>
     </div>
@@ -459,24 +563,33 @@ function SpeechSlide({ slide }) {
 
 function QuizSlide({ slide, revealed, onReveal }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-8 rounded-3xl bg-white p-8 text-slate-950 shadow-2xl">
-        <p className="text-3xl font-black">{slide.question}</p>
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div style={{ ...styles.whiteBox, marginTop: 34 }}>
+        <p style={{ fontSize: 32, fontWeight: 950, margin: 0 }}>{slide.question}</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 24 }}>
           {slide.options.map((option) => (
-            <div key={option} className={`rounded-2xl border-2 p-5 text-xl font-bold ${revealed && option === slide.answer ? 'border-emerald-500 bg-emerald-50 text-emerald-950' : 'border-slate-200 bg-slate-50'}`}>
+            <div key={option} style={{
+              borderRadius: 20,
+              padding: 22,
+              border: revealed && option === slide.answer ? '3px solid #16a34a' : '2px solid #e2e8f0',
+              background: revealed && option === slide.answer ? colors.green : '#f8fafc',
+              color: '#0f172a',
+              fontSize: 22,
+              fontWeight: 900,
+              lineHeight: 1.25,
+            }}>
               {option}
             </div>
           ))}
         </div>
-        <button onClick={onReveal} className="mt-8 rounded-2xl bg-slate-950 px-8 py-4 text-xl font-black text-white hover:bg-slate-800">
+        <button onClick={onReveal} style={{ marginTop: 28, border: 'none', borderRadius: 18, background: '#0f172a', color: 'white', padding: '16px 26px', fontSize: 21, fontWeight: 950, cursor: 'pointer' }}>
           {revealed ? 'Hide answer' : 'Reveal answer'}
         </button>
         {revealed && (
-          <div className="mt-6 rounded-3xl bg-emerald-100 p-6 text-emerald-950">
-            <p className="text-2xl font-black">{slide.revealTitle}</p>
-            <p className="mt-2 text-xl leading-8">{slide.revealText}</p>
+          <div style={{ marginTop: 22, borderRadius: 24, background: colors.green, padding: 24 }}>
+            <p style={{ fontSize: 28, fontWeight: 950, margin: 0 }}>{slide.revealTitle}</p>
+            <p style={{ fontSize: 21, lineHeight: 1.45, margin: '8px 0 0' }}>{slide.revealText}</p>
           </div>
         )}
       </div>
@@ -486,18 +599,18 @@ function QuizSlide({ slide, revealed, onReveal }) {
 
 function FlowSlide({ slide }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
+      <div style={styles.grid3}>
         {slide.steps.map((step, index) => (
-          <div key={step} className="rounded-3xl bg-white p-6 text-slate-950 shadow-xl">
-            <p className="text-sm font-black uppercase tracking-wide text-cyan-700">Step {index + 1}</p>
-            <p className="mt-4 text-3xl font-black leading-tight">{step}</p>
+          <div key={step} style={styles.whiteBox}>
+            <p style={{ margin: 0, fontSize: 13, fontWeight: 950, color: colors.cyanDark, textTransform: 'uppercase', letterSpacing: 2 }}>Step {index + 1}</p>
+            <p style={{ margin: '14px 0 0', fontSize: 32, lineHeight: 1.1, fontWeight: 950 }}>{step}</p>
           </div>
         ))}
       </div>
-      <div className="mt-8 rounded-3xl bg-cyan-300 p-8 text-slate-950">
-        <p className="text-3xl font-black">{slide.keyMessage}</p>
+      <div style={{ ...styles.bigBox, marginTop: 28 }}>
+        <p style={{ margin: 0, fontSize: 34, lineHeight: 1.1, fontWeight: 950 }}>{slide.keyMessage}</p>
       </div>
     </div>
   );
@@ -505,32 +618,28 @@ function FlowSlide({ slide }) {
 
 function PollSlide({ slide }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {slide.pollOptions.map((option) => (
-          <div key={option} className="rounded-3xl bg-white/10 p-8 text-center text-3xl font-black ring-1 ring-white/10">
-            {option}
-          </div>
-        ))}
+      <div style={styles.grid3}>
+        {slide.pollOptions.map((option) => <div key={option} style={{ ...styles.glassBox, fontSize: 32, textAlign: 'center', fontWeight: 950 }}>{option}</div>)}
       </div>
-      <p className="mt-8 text-center text-2xl font-bold text-cyan-200">Vote by hand. We will use the answers to choose the most relevant demos.</p>
+      <p style={{ marginTop: 34, textAlign: 'center', color: colors.cyan, fontSize: 28, fontWeight: 950 }}>Vote by hand. We will use the answers to choose the most relevant demos.</p>
     </div>
   );
 }
 
 function ToolkitSlide({ slide }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-10 grid gap-4 lg:grid-cols-5">
+      <div style={styles.grid5}>
         {slide.tools.map((tool) => (
-          <div key={tool.name} className="rounded-3xl bg-white p-6 text-slate-950 shadow-xl">
-            <p className="text-3xl font-black">{tool.name}</p>
-            <p className="mt-4 text-lg font-bold text-slate-600">Best for</p>
-            <p className="text-2xl font-black">{tool.use}</p>
-            <p className="mt-4 text-lg font-bold text-slate-600">Example</p>
-            <p className="text-xl font-bold text-cyan-700">{tool.example}</p>
+          <div key={tool.name} style={{ ...styles.whiteBox, padding: 20 }}>
+            <p style={{ fontSize: 32, fontWeight: 950, margin: 0 }}>{tool.name}</p>
+            <p style={{ fontSize: 15, fontWeight: 900, color: '#64748b', margin: '20px 0 4px' }}>Best for</p>
+            <p style={{ fontSize: 24, fontWeight: 950, margin: 0 }}>{tool.use}</p>
+            <p style={{ fontSize: 15, fontWeight: 900, color: '#64748b', margin: '20px 0 4px' }}>Example</p>
+            <p style={{ fontSize: 20, fontWeight: 900, color: colors.cyanDark, margin: 0 }}>{tool.example}</p>
           </div>
         ))}
       </div>
@@ -540,24 +649,16 @@ function ToolkitSlide({ slide }) {
 
 function DemoSlide({ slide }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
-        <div className="rounded-3xl bg-white p-8 text-slate-950 shadow-xl">
-          <p className="text-sm font-black uppercase tracking-wide text-cyan-700">Demo goal</p>
-          <p className="mt-4 text-3xl font-black leading-tight">{slide.demoGoal}</p>
-          {slide.promptBox && (
-            <div className="mt-8 rounded-2xl bg-slate-100 p-5 text-lg font-semibold text-slate-800">
-              “{slide.promptBox}”
-            </div>
-          )}
+      <div style={styles.grid2}>
+        <div style={styles.whiteBox}>
+          <p style={{ margin: 0, fontSize: 13, fontWeight: 950, color: colors.cyanDark, textTransform: 'uppercase', letterSpacing: 2 }}>Demo goal</p>
+          <p style={{ margin: '18px 0 0', fontSize: 34, lineHeight: 1.1, fontWeight: 950 }}>{slide.demoGoal}</p>
+          {slide.promptBox && <div style={{ marginTop: 28, borderRadius: 18, background: '#f1f5f9', padding: 20, fontSize: 18, fontWeight: 800, color: '#334155' }}>"{slide.promptBox}"</div>}
         </div>
-        <div className="grid gap-4">
-          {slide.bullets.map((bullet) => (
-            <div key={bullet} className="rounded-3xl bg-white/10 p-6 text-2xl font-bold ring-1 ring-white/10">
-              {bullet}
-            </div>
-          ))}
+        <div style={{ display: 'grid', gap: 14 }}>
+          {slide.bullets.map((bullet) => <div key={bullet} style={styles.chip}>{bullet}</div>)}
         </div>
       </div>
     </div>
@@ -567,24 +668,24 @@ function DemoSlide({ slide }) {
 function InteractiveDemoSlide({ slide, selected, setSelected }) {
   const current = slide.transformations[selected];
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="rounded-3xl bg-red-100 p-8 text-red-950 shadow-xl">
-          <p className="text-sm font-black uppercase tracking-wide">Original customer message</p>
-          <p className="mt-5 text-4xl font-black leading-tight">“{slide.originalText}”</p>
+      <div style={{ display: 'grid', gridTemplateColumns: '0.9fr 1.1fr', gap: 24, marginTop: 34 }}>
+        <div style={{ ...styles.whiteBox, background: colors.red, color: '#7f1d1d' }}>
+          <p style={{ margin: 0, fontSize: 13, fontWeight: 950, textTransform: 'uppercase', letterSpacing: 2 }}>Original customer message</p>
+          <p style={{ margin: '22px 0 0', fontSize: 40, lineHeight: 1.1, fontWeight: 950 }}>"{slide.originalText}"</p>
         </div>
-        <div className="rounded-3xl bg-white p-8 text-slate-950 shadow-xl">
-          <div className="flex flex-wrap gap-2">
+        <div style={styles.whiteBox}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
             {slide.transformations.map((item, index) => (
-              <button key={item.label} onClick={() => setSelected(index)} className={`rounded-xl px-4 py-3 text-sm font-black ${selected === index ? 'bg-cyan-300 text-slate-950' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}>
+              <button key={item.label} onClick={() => setSelected(index)} style={{ border: 'none', borderRadius: 14, padding: '12px 15px', fontWeight: 950, cursor: 'pointer', background: selected === index ? colors.cyan : '#e2e8f0', color: colors.darkText }}>
                 {item.label}
               </button>
             ))}
           </div>
-          <div className="mt-8 rounded-3xl bg-slate-950 p-8 text-white">
-            <p className="text-sm font-black uppercase tracking-wide text-cyan-300">{current.label} version</p>
-            <p className="mt-5 text-3xl font-black leading-tight">“{current.text}”</p>
+          <div style={{ marginTop: 28, borderRadius: 24, background: colors.bg, padding: 28, color: colors.white }}>
+            <p style={{ ...styles.label, margin: 0 }}>{current.label} version</p>
+            <p style={{ margin: '18px 0 0', fontSize: 32, lineHeight: 1.18, fontWeight: 950 }}>"{current.text}"</p>
           </div>
         </div>
       </div>
@@ -594,44 +695,40 @@ function InteractiveDemoSlide({ slide, selected, setSelected }) {
 
 function ExerciseSlide({ slide }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-8 rounded-3xl bg-cyan-300 p-8 text-slate-950 shadow-xl">
-        <p className="text-sm font-black uppercase tracking-wide">Challenge</p>
-        <p className="mt-3 text-3xl font-black">{slide.challenge}</p>
+      <div style={{ ...styles.bigBox, marginTop: 30 }}>
+        <p style={{ margin: 0, fontSize: 13, fontWeight: 950, textTransform: 'uppercase', letterSpacing: 2 }}>Challenge</p>
+        <p style={{ margin: '12px 0 0', fontSize: 34, fontWeight: 950 }}>{slide.challenge}</p>
       </div>
-      <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div style={styles.grid3}>
         {slide.cards.map((card) => (
-          <div key={card.title} className="rounded-3xl bg-white p-6 text-slate-950 shadow-xl">
-            <p className="text-2xl font-black">{card.title}</p>
-            <p className="mt-3 text-lg font-semibold leading-7 text-slate-700">{card.text}</p>
+          <div key={card.title} style={{ ...styles.whiteBox, padding: 22 }}>
+            <p style={{ margin: 0, fontSize: 28, fontWeight: 950 }}>{card.title}</p>
+            <p style={{ margin: '12px 0 0', fontSize: 18, lineHeight: 1.45, color: '#334155', fontWeight: 750 }}>{card.text}</p>
           </div>
         ))}
       </div>
-      <div className="mt-6 rounded-3xl bg-white/10 p-6 text-2xl font-bold ring-1 ring-white/10">Prompt to try: “{slide.promptBox}”</div>
+      <div style={{ ...styles.glassBox, marginTop: 24, fontSize: 24, fontWeight: 900 }}>Prompt to try: "{slide.promptBox}"</div>
     </div>
   );
 }
 
 function AgentBuilderSlide({ slide }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1fr]">
-        <div className="rounded-3xl bg-white p-8 text-slate-950 shadow-xl">
-          <p className="text-sm font-black uppercase tracking-wide text-cyan-700">Agent recipe</p>
-          <div className="mt-5 space-y-3">
-            {slide.fields.map((field) => (
-              <div key={field} className="rounded-2xl bg-slate-100 p-4 text-xl font-black">{field}</div>
-            ))}
+      <div style={styles.grid2}>
+        <div style={styles.whiteBox}>
+          <p style={{ margin: 0, fontSize: 13, fontWeight: 950, color: colors.cyanDark, textTransform: 'uppercase', letterSpacing: 2 }}>Agent recipe</p>
+          <div style={{ display: 'grid', gap: 12, marginTop: 20 }}>
+            {slide.fields.map((field) => <div key={field} style={{ borderRadius: 18, background: '#f1f5f9', padding: 18, fontSize: 22, fontWeight: 950 }}>{field}</div>)}
           </div>
         </div>
-        <div className="rounded-3xl bg-white/10 p-8 ring-1 ring-white/10">
-          <p className="text-sm font-black uppercase tracking-wide text-cyan-300">Examples</p>
-          <div className="mt-5 space-y-4">
-            {slide.examples.map((example) => (
-              <div key={example} className="rounded-2xl bg-white/10 p-5 text-2xl font-bold">{example}</div>
-            ))}
+        <div style={styles.glassBox}>
+          <p style={styles.label}>Examples</p>
+          <div style={{ display: 'grid', gap: 14, marginTop: 20 }}>
+            {slide.examples.map((example) => <div key={example} style={styles.chip}>{example}</div>)}
           </div>
         </div>
       </div>
@@ -641,13 +738,13 @@ function AgentBuilderSlide({ slide }) {
 
 function HubSlide({ slide }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-10 grid gap-5 md:grid-cols-2">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginTop: 40 }}>
         {slide.blocks.map((block) => (
-          <div key={block.title} className="rounded-3xl bg-white p-8 text-slate-950 shadow-xl">
-            <p className="text-3xl font-black">{block.title}</p>
-            <p className="mt-4 text-xl font-semibold leading-8 text-slate-700">{block.text}</p>
+          <div key={block.title} style={styles.whiteBox}>
+            <p style={{ margin: 0, fontSize: 34, fontWeight: 950 }}>{block.title}</p>
+            <p style={{ margin: '14px 0 0', fontSize: 22, lineHeight: 1.35, color: '#334155', fontWeight: 750 }}>{block.text}</p>
           </div>
         ))}
       </div>
@@ -657,17 +754,13 @@ function HubSlide({ slide }) {
 
 function ClosingSlide({ slide }) {
   return (
-    <div className="flex min-h-[680px] flex-col justify-between">
+    <div style={{ minHeight: 680 }}>
       <SlideHeader slide={slide} />
-      <div className="mt-8 grid gap-4 md:grid-cols-5">
-        {slide.bullets.map((bullet) => (
-          <div key={bullet} className="rounded-3xl bg-white p-6 text-center text-2xl font-black text-slate-950 shadow-xl">
-            {bullet}
-          </div>
-        ))}
+      <div style={styles.grid5}>
+        {slide.bullets.map((bullet) => <div key={bullet} style={{ ...styles.whiteBox, padding: 20, textAlign: 'center', fontSize: 24, fontWeight: 950 }}>{bullet}</div>)}
       </div>
-      <div className="mt-8 rounded-3xl bg-cyan-300 p-10 text-center text-slate-950 shadow-xl">
-        <p className="text-4xl font-black leading-tight md:text-5xl">{slide.finalQuote}</p>
+      <div style={{ ...styles.bigBox, marginTop: 34, textAlign: 'center', padding: 42 }}>
+        <p style={{ margin: 0, fontSize: 46, lineHeight: 1.08, fontWeight: 950 }}>{slide.finalQuote}</p>
       </div>
     </div>
   );
@@ -675,9 +768,9 @@ function ClosingSlide({ slide }) {
 
 function RhythmItem({ label, value }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl bg-white/10 px-4 py-3">
-      <span className="font-bold text-white">{label}</span>
-      <span>{value}</span>
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, borderRadius: 16, background: 'rgba(255,255,255,0.09)', padding: '11px 14px', marginTop: 10 }}>
+      <span style={{ fontWeight: 900 }}>{label}</span>
+      <span style={{ color: colors.muted }}>{value}</span>
     </div>
   );
 }
