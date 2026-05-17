@@ -10,17 +10,19 @@ const slides = [
   },
   {
     type: "quiz",
-    title: "You already experienced an AI Agent",
-    subtitle: "The countdown emails before this training were part of the demo.",
-    question: "What did the AI Agent do?",
-    options: [
-      "Only drafted text manually copied by Bruno",
-      "Read a Google Sheet, wrote personalized emails and sent them automatically",
-      "Only corrected spelling",
-      "Only created this presentation",
-    ],
-    answer: 1,
-    explanation: "Exactly. It was a real autonomous workflow: source → logic → personalized email → automatic sending.",
+  title: "You already experienced an AI Agent",
+  subtitle: "The countdown emails before this training were part of the demo.",
+  image: "/agent-demo.png",
+  question: "What did the AI Agent do?",
+  options: [
+    "Only drafted text manually copied by Bruno",
+    "Read a Google Sheet, wrote personalized emails and sent them automatically",
+    "Only corrected spelling",
+    "Only created this presentation",
+  ],
+  answer: 1,
+  explanation:
+    "Exactly. It was a real autonomous workflow: source → logic → personalized email → automatic sending.",
   },
   {
     type: "agent",
@@ -139,6 +141,7 @@ export default function AICustomerServiceTraining() {
   const [i, setI] = useState(0);
   const [show, setShow] = useState(false);
   const [version, setVersion] = useState(0);
+  const [modalImage, setModalImage] = useState(null);
   const s = slides[i];
 
   const next = () => {
@@ -182,7 +185,33 @@ export default function AICustomerServiceTraining() {
         {s.type === "exercise" && <Prompt s={s} />}
         {s.type === "next" && <Cards cards={s.cards} />}
       </section>
-    </main>
+    {modalImage && (
+  <div
+    onClick={() => setModalImage(null)}
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,.92)",
+      zIndex: 9999,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 40,
+      cursor: "pointer",
+    }}
+  >
+    <img
+      src={modalImage}
+      alt="fullscreen"
+      style={{
+        maxWidth: "100%",
+        maxHeight: "100%",
+        borderRadius: 20,
+      }}
+    />
+  </div>
+)}
+          </main>
   );
 }
 
@@ -198,6 +227,37 @@ function Intro({ s }) {
 function Quiz({ s, show, setShow }) {
   return (
     <div style={styles.white}>
+    {s.image && (
+  <div
+    style={{
+      marginBottom: 24,
+      cursor: "pointer",
+      textAlign: "center",
+    }}
+    onClick={() => setModalImage(s.image)}
+  >
+    <img
+      src={s.image}
+      alt="AI Agent"
+      style={{
+        width: "100%",
+        maxHeight: 260,
+        objectFit: "cover",
+        borderRadius: 20,
+        border: "3px solid #67e8f9",
+      }}
+    />
+    <p
+      style={{
+        marginTop: 10,
+        color: "#0e7490",
+        fontWeight: 900,
+      }}
+    >
+      Click to open fullscreen
+    </p>
+  </div>
+)}
       <h2>{s.question}</h2>
       <div style={styles.grid2}>
         {s.options.map((o, idx) => (
