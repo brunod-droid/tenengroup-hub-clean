@@ -1,224 +1,286 @@
 import { useState } from "react";
 
+const COLORS = {
+  agent: "#f97316",
+  chat: "#3b82f6",
+  project: "#8b5cf6",
+  gpt: "#22c55e",
+  hub: "#06b6d4",
+};
+
 const slides = [
   {
     type: "intro",
+    section: "intro",
     title: "AI at Work",
-    subtitle: "How AI removes friction from everyday work",
-    text: "All examples today are done with ChatGPT Enterprise because we work with customer and company data. Be careful: do not paste sensitive data into random AI tools.",
+    subtitle:
+      "AI is not replacing expertise. AI removes friction.",
+    text:
+      "All examples today are done with ChatGPT Enterprise because we work with customer and company data. Be careful: do not paste sensitive data into random AI tools.",
     bullets: [
       "GDPR matters",
-      "Use approved tools",
-      "Practical demos",
+      "Use approved AI tools",
+      "Practical business cases",
       "One useful idea for tomorrow",
     ],
   },
 
   {
-    type: "quiz",
-    title: "You already experienced an AI Agent",
-    subtitle:
-      "The countdown emails before this training were part of the demo.",
-    image: "/agent-demo.png",
-    question: "What did the AI Agent do?",
-    options: [
-      "Only drafted text manually copied by Bruno",
-      "Read a Google Sheet, wrote personalized emails and sent them automatically",
-      "Only corrected spelling",
-      "Only created this presentation",
-    ],
-    answer: 1,
-    explanation:
-      "Exactly. It was a real autonomous workflow: source → logic → personalized email → automatic sending.",
-  },
-
-  {
-    type: "agent",
-    title: "What can an AI Agent do?",
-    subtitle:
-      "Agents are useful when a task repeats and needs information.",
-    bullets: [
-      "Send daily reminders",
-      "Search Google and summarize",
-      "Monitor competitors",
-      "Send CX alerts",
-      "Prepare daily digests",
-      "Follow operational risks",
-    ],
-  },
-
-  {
-    type: "poll",
-    title: "Where do you lose the most time?",
-    subtitle:
-      "Vote by hand. We will prioritize the most relevant demos.",
-    cards: [
-      ["Brand", "Customer feedback"],
-      ["Factory", "Operational delays"],
-      ["Operations", "Weekly reports"],
-      ["Dev", "Requirements / documentation"],
-      ["Customer Service", "Tickets and replies"],
-      ["Ecommerce", "Trends and KPIs"],
-    ],
-  },
-
-  {
-    type: "tools",
+    type: "formats",
+    section: "intro",
     title: "Choose the right AI format",
     subtitle:
-      "Different needs require different AI setups.",
+      "Different business problems require different AI setups.",
     cards: [
-      ["Chat", "Quick help", "Rewrite, summarize, explain"],
-      ["Project", "Shared workspace", "Files + chats + context"],
-      ["GPT", "Repeatable expert", "Same rules, same output"],
-      ["Agent", "Autonomous workflow", "Runs, searches, sends"],
-      ["Hub", "Company knowledge", "Reusable documentation"],
+      [
+        "Agent",
+        "Autonomous workflow",
+        "Orange",
+      ],
+      [
+        "Chat",
+        "Quick assistance",
+        "Blue",
+      ],
+      [
+        "Project",
+        "Shared workspace",
+        "Purple",
+      ],
+      [
+        "GPT",
+        "Repeatable expert",
+        "Green",
+      ],
+      [
+        "Hub",
+        "Company knowledge",
+        "Cyan",
+      ],
     ],
   },
 
   {
-    type: "case",
-    title: "AI can improve customer communication",
+    type: "painpoints",
+    section: "intro",
+    title: "Where do teams lose the most time?",
     subtitle:
-      "AI understands both the facts and the emotional priority.",
-    leftTitle: "Customer message",
-    left:
-      "Sentimental locket. Unexpected delay. Customer asks us to push production and get a clear new arrival date.",
-    rightTitle: "AI-assisted answer",
-    right:
-      "Empathy, ownership, reassurance, clear next step, professional tone.",
+      "This is exactly where AI can help.",
+    cards: [
+      [
+        "Customer Service",
+        "Repetitive replies & ticket analysis",
+      ],
+      [
+        "Factory",
+        "Supplier delays & monitoring",
+      ],
+      [
+        "Operations",
+        "Weekly reporting & consolidation",
+      ],
+      [
+        "Brand",
+        "Searching competitor information",
+      ],
+      [
+        "Developers",
+        "Documentation & requirements",
+      ],
+      [
+        "Ecommerce",
+        "KPIs & trends consolidation",
+      ],
+    ],
+  },
+
+  {
+    type: "agent_intro",
+    section: "agent",
+    title: "AI Agent",
+    subtitle:
+      "An AI Agent can execute workflows autonomously.",
+    image: "/agent-demo.png",
+    text:
+      "Before this session, an AI Agent automatically sent personalized countdown emails to participants.",
+  },
+
+  {
+    type: "agent_usecases",
+    section: "agent",
+    title: "AI Agent use cases",
+    subtitle:
+      "Examples for different departments.",
     bullets: [
-      "Empathy",
-      "Clarity",
-      "Ownership",
-      "Consistency",
+      "Customer Service → backlog alerts",
+      "Factory → delay monitoring",
+      "Brand → competitor watch",
+      "Operations → KPI digest",
+      "Developers → ticket summaries",
+      "Management → automated reminders",
     ],
   },
 
   {
-    type: "rewrite",
-    title: "One message. Five useful versions.",
+    type: "chat",
+    section: "chat",
+    title: "Chat AI",
     subtitle:
-      "Same input, different business need.",
+      "The fastest way to improve daily communication.",
     original:
       "where is my order i wait since 2 weeks no answer this is unacceptable",
     versions: [
       [
         "Professional",
+        "Clear structure and reassurance",
         "I am sorry for the delay and I understand your frustration. I will check your order status and get back to you with a clear update as soon as possible.",
       ],
+
       [
         "Empathetic",
+        "Emotion and understanding",
         "I completely understand how disappointing it is to wait without a clear update. Let me look into this right away.",
       ],
+
       [
-        "Luxury tone",
+        "Luxury",
+        "Elegant and premium tone",
         "Thank you for your patience. I am truly sorry for the wait and will personally review your order to provide a clear update.",
       ],
+
       [
         "Short",
-        "I am sorry for the delay. I will check your order now and send you an update as quickly as possible.",
-      ],
-      [
-        "French",
-        "Je suis désolé pour ce délai et je comprends votre frustration. Je vais vérifier votre commande et revenir vers vous rapidement.",
+        "Efficiency and speed",
+        "I am sorry for the delay. I will check your order now and send you an update quickly.",
       ],
     ],
   },
 
   {
-    type: "excel",
+    type: "project",
+    section: "project",
+    title: "Projects",
+    subtitle:
+      "Projects are shared AI workspaces with files, chats and context.",
+    bullets: [
+      "Shared team context",
+      "Keep all files together",
+      "Collaborative workflows",
+      "Operational follow-up",
+      "Persistent memory",
+      "Perfect for recurring business cases",
+    ],
+  },
+
+  {
+    type: "excel_intro",
+    section: "gpt",
     title: "Everyone has an Excel file that hurts",
     subtitle:
       "The 37-tab file. The mystery formula. The weekly copy-paste ritual.",
+    image: "/big-excel.png",
     bullets: [
-      "Clean data",
       "Find duplicates",
       "Explain blank cells",
-      "Create formulas",
       "Detect anomalies",
+      "Generate formulas",
       "Summarize KPIs",
+      "Suggest automation",
     ],
   },
 
   {
     type: "gpt",
+    section: "gpt",
     title:
-      "Late Supplier: complex rules, simple execution",
+      "GPT = operational expertise translated into AI instructions",
     subtitle:
-      "A GPT is ideal when the process is stable and repeatable.",
-    image: "/guidelines-preview.png",
+      "The AI follows stable business logic repeatedly.",
+    image: "/Guideline.png",
     bullets: [
       "Remove irrelevant rows",
-      "Deduplicate by ID",
-      "Parse dates",
-      "Apply classification rules",
-      "Create summary",
-      "Export Excel and CSV",
+      "Deduplicate data",
+      "Apply operational rules",
+      "Create classifications",
+      "Generate summaries",
+      "Export final files",
     ],
     text:
-      "This is not coding. This is operational expertise translated into instructions that AI can execute repeatedly.",
+      "This is not coding. This is business expertise translated into AI logic.",
   },
 
   {
     type: "exercise",
-    title: "Exercise: improve one real Excel file",
+    section: "gpt",
+    title: "Exercise",
     subtitle:
-      "Ask AI to go one step further.",
+      "Ask AI to improve a real operational file.",
     prompt:
       "Analyze this file. Identify duplicates, blank cells and inconsistent values. Explain why they matter. Suggest formulas or concatenations to improve it. Then propose 3 automation opportunities.",
   },
 
   {
-    type: "agentbuild",
-    title: "Design your own AI Agent",
+    type: "hub",
+    section: "hub",
+    title: "Hub AI",
     subtitle:
-      "Even without paid access, everyone can design the workflow.",
+      "The final layer: reusable company knowledge.",
     bullets: [
-      "Trigger: when should it run?",
-      "Sources: what should it check?",
-      "Task: what should it do?",
-      "Output: what should it send?",
-      "Audience: who receives it?",
+      "Turn documents into pages",
+      "Structure company knowledge",
+      "Create navigation",
+      "Centralize training",
+      "Share operational expertise",
+      "Build internal AI knowledge",
     ],
   },
 
   {
-    type: "hub",
-    title: "Live Hub build",
+    type: "hub_demo",
+    section: "hub",
+    title: "Live Hub Demo",
     subtitle:
-      "Give me a department document. We turn it into a Hub category in 5 minutes.",
+      "Give me any department document.",
     bullets: [
-      "Summarize the document",
-      "Create a menu category",
-      "Structure the page",
-      "Add actions and FAQs",
-      "Publish reusable knowledge",
+      "AI summarizes it",
+      "AI structures categories",
+      "AI creates pages",
+      "AI creates actions",
+      "AI builds navigation",
+      "Integrated live into the Hub",
     ],
   },
 
   {
     type: "next",
+    section: "intro",
     title: "What should you try next?",
     subtitle:
-      "Pick one format and one task.",
+      "Start small. Save time tomorrow.",
     cards: [
-      ["Chat", "Rewrite this email professionally."],
+      [
+        "Chat",
+        "Rewrite an important email",
+      ],
+
       [
         "Project",
-        "Summarize files and list next actions.",
+        "Create a shared AI workspace",
       ],
+
       [
         "GPT",
-        "Analyze this report every week with the same rules.",
+        "Automate a repetitive process",
       ],
+
       [
         "Agent",
-        "Monitor this topic daily and email me a digest.",
+        "Create a monitoring workflow",
       ],
+
       [
         "Hub",
-        "Turn this document into a training page.",
+        "Transform documents into knowledge",
       ],
     ],
   },
@@ -226,30 +288,36 @@ const slides = [
 
 export default function AICustomerServiceTraining() {
   const [i, setI] = useState(0);
-  const [show, setShow] = useState(false);
   const [version, setVersion] = useState(0);
-  const [modalImage, setModalImage] = useState(null);
+  const [modalImage, setModalImage] =
+    useState(null);
 
   const s = slides[i];
 
   const next = () => {
-    setShow(false);
     setVersion(0);
     setI(Math.min(i + 1, slides.length - 1));
   };
 
   const prev = () => {
-    setShow(false);
     setVersion(0);
     setI(Math.max(i - 1, 0));
   };
+
+  const currentColor =
+    COLORS[s.section] || "#67e8f9";
 
   return (
     <main style={styles.page}>
       <header style={styles.header}>
         <div>
-          <div style={styles.kicker}>
-            Tenengroup AI Training
+          <div
+            style={{
+              ...styles.kicker,
+              color: currentColor,
+            }}
+          >
+            {s.section.toUpperCase()}
           </div>
 
           <div style={styles.progress}>
@@ -258,12 +326,18 @@ export default function AICustomerServiceTraining() {
         </div>
 
         <div style={styles.nav}>
-          <button style={styles.btn} onClick={prev}>
+          <button
+            style={styles.btn}
+            onClick={prev}
+          >
             Previous
           </button>
 
           <button
-            style={styles.btnPrimary}
+            style={{
+              ...styles.btnPrimary,
+              background: currentColor,
+            }}
             onClick={next}
           >
             Next
@@ -272,49 +346,67 @@ export default function AICustomerServiceTraining() {
       </header>
 
       <section style={styles.slide}>
-        <div style={styles.kicker}>{s.type}</div>
+        <div
+          style={{
+            ...styles.kicker,
+            color: currentColor,
+          }}
+        >
+          {s.section}
+        </div>
 
-        <h1 style={styles.title}>{s.title}</h1>
+        <h1 style={styles.title}>
+          {s.title}
+        </h1>
 
         <p style={styles.subtitle}>
           {s.subtitle}
         </p>
 
-        {s.type === "intro" && <Intro s={s} />}
+        {s.type === "intro" && (
+          <Intro s={s} color={currentColor} />
+        )}
 
-        {s.type === "quiz" && (
-          <Quiz
+        {s.type === "formats" && (
+          <Formats s={s} />
+        )}
+
+        {s.type === "painpoints" && (
+          <Cards cards={s.cards} />
+        )}
+
+        {s.type === "agent_intro" && (
+          <AgentIntro
             s={s}
-            show={show}
-            setShow={setShow}
             setModalImage={setModalImage}
           />
         )}
 
-        {["agent", "excel", "agentbuild", "hub"].includes(
-          s.type
-        ) && <Bullets s={s} />}
-
-        {s.type === "poll" && (
-          <Cards cards={s.cards} />
+        {s.type === "agent_usecases" && (
+          <Bullets s={s} />
         )}
 
-        {s.type === "tools" && (
-          <Cards cards={s.cards} big />
-        )}
-
-        {s.type === "case" && <Case s={s} />}
-
-        {s.type === "rewrite" && (
-          <Rewrite
+        {s.type === "chat" && (
+          <ChatSlide
             s={s}
             version={version}
             setVersion={setVersion}
           />
         )}
 
+        {s.type === "project" && (
+          <Bullets s={s} />
+        )}
+
+        {s.type === "excel_intro" && (
+          <ExcelIntro
+            s={s}
+            setModalImage={setModalImage}
+          />
+        )}
+
         {s.type === "gpt" && (
-          <Gpt
+          <GptSlide
             s={s}
             setModalImage={setModalImage}
           />
@@ -324,6 +416,14 @@ export default function AICustomerServiceTraining() {
           <Prompt s={s} />
         )}
 
+        {s.type === "hub" && (
+          <Bullets s={s} />
+        )}
+
+        {s.type === "hub_demo" && (
+          <Bullets s={s} />
+        )}
+
         {s.type === "next" && (
           <Cards cards={s.cards} />
         )}
@@ -331,8 +431,10 @@ export default function AICustomerServiceTraining() {
 
       {modalImage && (
         <div
-          onClick={() => setModalImage(null)}
           style={styles.modal}
+          onClick={() =>
+            setModalImage(null)
+          }
         >
           <img
             src={modalImage}
@@ -345,10 +447,15 @@ export default function AICustomerServiceTraining() {
   );
 }
 
-function Intro({ s }) {
+function Intro({ s, color }) {
   return (
     <div style={styles.twoCols}>
-      <div style={styles.highlight}>
+      <div
+        style={{
+          ...styles.highlight,
+          background: color,
+        }}
+      >
         {s.text}
       </div>
 
@@ -357,134 +464,64 @@ function Intro({ s }) {
   );
 }
 
-function Quiz({
+function Formats({ s }) {
+  return (
+    <div style={styles.grid5}>
+      {s.cards.map((c) => (
+        <div
+          key={c[0]}
+          style={{
+            ...styles.white,
+            borderTop: `8px solid ${c[2].toLowerCase()}`,
+          }}
+        >
+          <h2>{c[0]}</h2>
+
+          <p style={styles.cardText}>
+            {c[1]}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function AgentIntro({
   s,
-  show,
-  setShow,
   setModalImage,
 }) {
   return (
-    <div style={styles.white}>
-      {s.image && (
-        <div
-          onClick={() => setModalImage(s.image)}
-          style={{
-            marginBottom: 24,
-            cursor: "pointer",
-            textAlign: "center",
-          }}
-        >
-          <img
-            src={s.image}
-            alt="AI Agent"
-            style={styles.previewImage}
-          />
+    <div style={styles.twoCols}>
+      <div style={styles.white}>
+        <img
+          src={s.image}
+          alt="agent"
+          style={styles.previewImage}
+          onClick={() =>
+            setModalImage(s.image)
+          }
+        />
 
-          <p style={styles.previewText}>
-            Click to open fullscreen
-          </p>
-        </div>
-      )}
-
-      <h2>{s.question}</h2>
-
-      <div style={styles.grid2}>
-        {s.options.map((o, idx) => (
-          <div
-            key={o}
-            style={{
-              ...styles.option,
-              background:
-                show && idx === s.answer
-                  ? "#bbf7d0"
-                  : "#f8fafc",
-            }}
-          >
-            {o}
-          </div>
-        ))}
+        <p style={styles.previewText}>
+          Click to open fullscreen
+        </p>
       </div>
 
-      <button
-        style={styles.darkBtn}
-        onClick={() => setShow(!show)}
+      <div
+        style={{
+          ...styles.highlight,
+          background: COLORS.agent,
+        }}
       >
-        {show ? "Hide answer" : "Reveal answer"}
-      </button>
-
-      {show && (
-        <div style={styles.answer}>
-          {s.explanation}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Bullets({ s }) {
-  return (
-    <div style={styles.grid3}>
-      {s.bullets.map((b) => (
-        <div key={b} style={styles.card}>
-          {b}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function Cards({ cards, big }) {
-  return (
-    <div style={big ? styles.grid5 : styles.grid3}>
-      {cards.map((c) => (
-        <div key={c[0]} style={styles.white}>
-          <h2>{c[0]}</h2>
-
-          <p style={styles.cardText}>{c[1]}</p>
-
-          {c[2] && (
-            <p style={styles.smallText}>
-              {c[2]}
-            </p>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function Case({ s }) {
-  return (
-    <>
-      <div style={styles.twoCols}>
-        <div
-          style={{
-            ...styles.white,
-            background: "#fef3c7",
-          }}
-        >
-          <div style={styles.kickerDark}>
-            {s.leftTitle}
-          </div>
-
-          <p style={styles.bigText}>{s.left}</p>
-        </div>
-
-        <div style={styles.white}>
-          <div style={styles.kickerDark}>
-            {s.rightTitle}
-          </div>
-
-          <p style={styles.bigText}>{s.right}</p>
-        </div>
+        <p style={styles.bigText}>
+          {s.text}
+        </p>
       </div>
-
-      <Bullets s={s} />
-    </>
+    </div>
   );
 }
 
-function Rewrite({
+function ChatSlide({
   s,
   version,
   setVersion,
@@ -498,7 +535,7 @@ function Rewrite({
         }}
       >
         <div style={styles.kickerDark}>
-          Original
+          Customer message
         </div>
 
         <p style={styles.bigText}>
@@ -516,77 +553,103 @@ function Rewrite({
                   ? styles.tabActive
                   : styles.tab
               }
-              onClick={() => setVersion(idx)}
+              onClick={() =>
+                setVersion(idx)
+              }
             >
               {v[0]}
             </button>
           ))}
         </div>
 
+        <div
+          style={{
+            background: "#dbeafe",
+            padding: 14,
+            borderRadius: 16,
+            marginBottom: 18,
+            color: "#1e3a8a",
+            fontWeight: 900,
+          }}
+        >
+          {s.versions[version][1]}
+        </div>
+
         <p style={styles.bigText}>
-          “{s.versions[version][1]}”
+          “{s.versions[version][2]}”
         </p>
       </div>
     </div>
   );
 }
 
-function Gpt({ s, setModalImage }) {
+function ExcelIntro({
+  s,
+  setModalImage,
+}) {
+  return (
+    <div style={styles.twoCols}>
+      <div>
+        <img
+          src={s.image}
+          alt="excel"
+          style={styles.previewImage}
+          onClick={() =>
+            setModalImage(s.image)
+          }
+        />
+
+        <p style={styles.previewText}>
+          Click to open fullscreen
+        </p>
+      </div>
+
+      <Bullets s={s} />
+    </div>
+  );
+}
+
+function GptSlide({
+  s,
+  setModalImage,
+}) {
   return (
     <div style={styles.twoCols}>
       <div>
         <Bullets s={s} />
 
-        {s.image && (
-          <div
-            onClick={() => setModalImage(s.image)}
-            style={{
-              marginTop: 20,
-              cursor: "pointer",
-            }}
-          >
-            <img
-              src={s.image}
-              alt="Guidelines"
-              style={styles.previewImage}
-            />
+        <img
+          src={s.image}
+          alt="guidelines"
+          style={styles.previewImage}
+          onClick={() =>
+            setModalImage(s.image)
+          }
+        />
 
-            <p style={styles.previewText}>
-              Click to open full Guidelines
-            </p>
-          </div>
-        )}
+        <a
+          href="/Guideline.png"
+          target="_blank"
+          style={styles.link}
+        >
+          Open full Guidelines
+        </a>
       </div>
 
-      <div style={styles.highlight}>
-        <div style={styles.kickerDark}>
-          Operational expertise
-        </div>
-
+      <div
+        style={{
+          ...styles.highlight,
+          background: COLORS.gpt,
+        }}
+      >
         <p style={styles.bigText}>
           {s.text}
         </p>
 
-        <div
-          style={{
-            marginTop: 24,
-            background:
-              "rgba(255,255,255,.25)",
-            borderRadius: 20,
-            padding: 20,
-          }}
-        >
-          <p
-            style={{
-              margin: 0,
-              fontSize: 22,
-              fontWeight: 900,
-            }}
-          >
-            “AI is not magic.
-            <br />
-            It follows business logic.”
-          </p>
+        <div style={styles.quote}>
+          AI is not magic.
+          <br />
+          It follows business logic.
         </div>
       </div>
     </div>
@@ -595,14 +658,49 @@ function Gpt({ s, setModalImage }) {
 
 function Prompt({ s }) {
   return (
-    <div style={styles.highlight}>
-      <div style={styles.kickerDark}>
-        Prompt to try
-      </div>
-
+    <div
+      style={{
+        ...styles.highlight,
+        background: COLORS.gpt,
+      }}
+    >
       <p style={styles.bigText}>
         “{s.prompt}”
       </p>
+    </div>
+  );
+}
+
+function Bullets({ s }) {
+  return (
+    <div style={styles.grid3}>
+      {s.bullets.map((b) => (
+        <div
+          key={b}
+          style={styles.card}
+        >
+          {b}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Cards({ cards }) {
+  return (
+    <div style={styles.grid3}>
+      {cards.map((c) => (
+        <div
+          key={c[0]}
+          style={styles.white}
+        >
+          <h2>{c[0]}</h2>
+
+          <p style={styles.cardText}>
+            {c[1]}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
@@ -631,7 +729,6 @@ const styles = {
   },
 
   kicker: {
-    color: "#67e8f9",
     textTransform: "uppercase",
     letterSpacing: 3,
     fontSize: 13,
@@ -672,7 +769,6 @@ const styles = {
     padding: "10px 16px",
     borderRadius: 12,
     border: "none",
-    background: "#67e8f9",
     color: "#0f172a",
     fontWeight: 900,
     cursor: "pointer",
@@ -682,8 +778,6 @@ const styles = {
     maxWidth: 1280,
     margin: "0 auto",
     padding: "42px 34px",
-    minHeight:
-      "calc(100vh - 80px)",
   },
 
   title: {
@@ -692,7 +786,6 @@ const styles = {
     lineHeight: 1,
     margin: "18px 0",
     fontWeight: 950,
-    letterSpacing: -2,
   },
 
   subtitle: {
@@ -711,14 +804,6 @@ const styles = {
     marginTop: 34,
   },
 
-  grid2: {
-    display: "grid",
-    gridTemplateColumns:
-      "1fr 1fr",
-    gap: 16,
-    marginTop: 20,
-  },
-
   grid3: {
     display: "grid",
     gridTemplateColumns:
@@ -735,67 +820,27 @@ const styles = {
     marginTop: 34,
   },
 
-  card: {
-    background:
-      "rgba(255,255,255,.1)",
-    border:
-      "1px solid rgba(255,255,255,.15)",
-    borderRadius: 24,
-    padding: 24,
-    fontSize: 26,
-    fontWeight: 900,
-  },
-
   white: {
     background: "white",
     color: "#0f172a",
     borderRadius: 28,
     padding: 28,
-    boxShadow:
-      "0 20px 50px rgba(0,0,0,.25)",
   },
 
   highlight: {
-    background: "#67e8f9",
     color: "#0f172a",
     borderRadius: 28,
     padding: 30,
-    fontSize: 30,
-    lineHeight: 1.2,
-    fontWeight: 950,
-    boxShadow:
-      "0 20px 50px rgba(0,0,0,.25)",
-  },
-
-  option: {
-    border:
-      "2px solid #e2e8f0",
-    borderRadius: 18,
-    padding: 20,
-    fontSize: 21,
     fontWeight: 900,
   },
 
-  darkBtn: {
-    marginTop: 24,
-    border: "none",
-    borderRadius: 16,
-    background: "#0f172a",
-    color: "white",
-    padding: "14px 24px",
-    fontSize: 18,
+  card: {
+    background:
+      "rgba(255,255,255,.1)",
+    borderRadius: 24,
+    padding: 24,
+    fontSize: 26,
     fontWeight: 900,
-    cursor: "pointer",
-  },
-
-  answer: {
-    marginTop: 18,
-    background: "#bbf7d0",
-    borderRadius: 20,
-    padding: 20,
-    fontSize: 22,
-    fontWeight: 900,
-    color: "#0f172a",
   },
 
   cardText: {
@@ -803,15 +848,24 @@ const styles = {
     fontWeight: 900,
   },
 
-  smallText: {
-    color: "#0e7490",
-    fontSize: 18,
-    fontWeight: 800,
-  },
-
   bigText: {
     fontSize: 28,
     lineHeight: 1.25,
+    fontWeight: 900,
+  },
+
+  previewImage: {
+    width: "100%",
+    borderRadius: 20,
+    cursor: "pointer",
+    border:
+      "3px solid rgba(255,255,255,.2)",
+  },
+
+  previewText: {
+    textAlign: "center",
+    marginTop: 10,
+    color: "#67e8f9",
     fontWeight: 900,
   },
 
@@ -835,24 +889,10 @@ const styles = {
     border: "none",
     borderRadius: 12,
     padding: "10px 14px",
-    background: "#67e8f9",
+    background: "#3b82f6",
+    color: "white",
     fontWeight: 900,
     cursor: "pointer",
-  },
-
-  previewImage: {
-    width: "100%",
-    borderRadius: 20,
-    border: "3px solid #67e8f9",
-    maxHeight: 260,
-    objectFit: "cover",
-  },
-
-  previewText: {
-    textAlign: "center",
-    marginTop: 10,
-    color: "#67e8f9",
-    fontWeight: 900,
   },
 
   modal: {
@@ -871,5 +911,22 @@ const styles = {
     maxWidth: "100%",
     maxHeight: "100%",
     borderRadius: 20,
+  },
+
+  quote: {
+    marginTop: 24,
+    background:
+      "rgba(255,255,255,.25)",
+    borderRadius: 20,
+    padding: 20,
+    fontSize: 24,
+  },
+
+  link: {
+    display: "block",
+    marginTop: 14,
+    color: "#67e8f9",
+    fontWeight: 900,
+    textAlign: "center",
   },
 };
