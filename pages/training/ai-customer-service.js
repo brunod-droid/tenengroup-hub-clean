@@ -175,7 +175,12 @@ export default function AICustomerServiceTraining() {
         <p style={styles.subtitle}>{s.subtitle}</p>
 
         {s.type === "intro" && <Intro s={s} />}
-        {s.type === "quiz" && <Quiz s={s} show={show} setShow={setShow} />}
+        {s.type === "quiz" && <Quiz
+  s={s}
+  show={show}
+  setShow={setShow}
+  setModalImage={setModalImage}
+/>}
         {["agent", "excel", "agentbuild", "hub"].includes(s.type) && <Bullets s={s} />}
         {s.type === "poll" && <Cards cards={s.cards} />}
         {s.type === "tools" && <Cards cards={s.cards} big />}
@@ -224,7 +229,7 @@ function Intro({ s }) {
   );
 }
 
-function Quiz({ s, show, setShow }) {
+function Quiz({ s, show, setShow, setModalImage }) {
   return (
     <div style={styles.white}>
     {s.image && (
