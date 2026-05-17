@@ -11,26 +11,11 @@ const COLORS = {
 
 const slides = [
   {
-    type: "wow_intro",
+    type: "hero_image",
     section: "intro",
     title: "AI AT WORK",
     subtitle: "Smarter tools. Stronger teams. Better results.",
-    text:
-      "The teams using AI today are not working the same way anymore.",
-    beforeAfter: [
-      ["Manual benchmark", "AI monitoring"],
-      ["Endless Excel work", "Automated analysis"],
-      ["Searching information", "Instant answers"],
-      ["Static documentation", "AI-powered Hub"],
-      ["Repetitive emails", "AI-assisted communication"],
-    ],
-    bullets: [
-      "Create an AI Agent",
-      "Build an AI Workspace",
-      "Automate an Excel workflow",
-      "Publish a live Hub page",
-      "Learn Copilot workflows",
-    ],
+    image: "/ai-work-hero.png",
   },
   {
     type: "formats",
@@ -328,6 +313,7 @@ export default function AICustomerServiceTraining() {
         <h1 style={styles.title}>{s.title}</h1>
         <p style={styles.subtitle}>{s.subtitle}</p>
 
+        {s.type === "hero_image" && <HeroImage s={s} />}
         {s.type === "wow_intro" && <WowIntro s={s} color={currentColor} />}
         {s.type === "intro" && <Intro s={s} color={currentColor} />}
         {s.type === "formats" && <Formats s={s} />}
@@ -358,67 +344,38 @@ export default function AICustomerServiceTraining() {
   );
 }
 
-function WowIntro({ s }) {
+
+function HeroImage({ s }) {
   return (
-    <div style={styles.heroOption3}>
-      <div style={styles.heroGlowOne} />
-      <div style={styles.heroGlowTwo} />
+    <div style={styles.heroImageWrap}>
+      <img src={s.image} alt="AI at Work" style={styles.heroImage} />
+    </div>
+  );
+}
 
-      <div style={styles.heroContent}>
-        <div style={styles.heroLeft}>
-          <div style={styles.heroBadge}>Interactive AI workshop</div>
-
-          <h1 style={styles.heroMegaTitle}>
-            AI
-            <br />
-            AT WORK
-          </h1>
-
-          <p style={styles.heroSubtitle}>
-            {s.subtitle}
-          </p>
-
-          <p style={styles.heroStatement}>
-            {s.text}
-          </p>
-
-          <div style={styles.heroGdpr}>
-            🔒 Enterprise-ready & GDPR-conscious workflows — use approved tools for customer and company data.
-          </div>
-        </div>
-
-        <div style={styles.heroRight}>
-          <div style={styles.heroOrb}>
-            <div style={styles.heroOrbInner}>AI</div>
-          </div>
-
-          <div style={styles.todayCard}>
-            <div style={styles.kickerDark}>Today we will</div>
-
-            <div style={styles.todayGrid}>
-              {s.bullets.map((b, idx) => (
-                <div key={b} style={styles.todayItem}>
-                  <span style={styles.todayIcon}>
-                    {["🤖", "📁", "📊", "🌐", "⚡"][idx]}
-                  </span>
-                  <span>{b}</span>
-                </div>
-              ))}
+function WowIntro({ s, color }) {
+  return (
+    <>
+      <div style={{ ...styles.highlight, background: color, marginTop: 28 }}>
+        {s.text}
+      </div>
+      <div style={styles.beforeAfterGrid}>
+        {s.beforeAfter.map((row) => (
+          <div key={row[0]} style={styles.beforeAfterCard}>
+            <div>
+              <div style={styles.kickerDark}>Yesterday</div>
+              <p style={styles.beforeText}>{row[0]}</p>
+            </div>
+            <div style={styles.arrow}>→</div>
+            <div>
+              <div style={styles.kickerDark}>Tomorrow</div>
+              <p style={styles.afterText}>{row[1]}</p>
             </div>
           </div>
-
-          <div style={styles.transformationCard}>
-            {s.beforeAfter.slice(0, 4).map((row) => (
-              <div key={row[0]} style={styles.transformationRow}>
-                <span style={styles.beforeMini}>{row[0]}</span>
-                <span style={styles.arrowMini}>→</span>
-                <span style={styles.afterMini}>{row[1]}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
-    </div>
+      <Bullets s={s} />
+    </>
   );
 }
 
@@ -662,199 +619,21 @@ const styles = {
   quote: { marginTop: 24, background: "rgba(255,255,255,.25)", borderRadius: 20, padding: 20, fontSize: 24 },
   link: { display: "block", marginTop: 14, color: "#67e8f9", fontWeight: 900, textAlign: "center" },
   quizCard: { background: "white", color: "#0f172a", borderRadius: 28, padding: 24, border: "none", cursor: "pointer", textAlign: "left", minHeight: 220, boxShadow: "0 18px 42px rgba(0,0,0,.22)" },
-  gdprBanner: { marginTop: 22, padding: "16px 20px", borderRadius: 18, background: "rgba(255,255,255,.12)", border: "1px solid rgba(255,255,255,.18)", color: "#e0f2fe", fontSize: 18, fontWeight: 900, textAlign: "center" },
 
-  heroOption3: {
-    position: "relative",
-    overflow: "hidden",
-    minHeight: "calc(100vh - 150px)",
-    borderRadius: 34,
-    padding: 44,
-    marginTop: 22,
-    background:
-      "linear-gradient(135deg, #fff7ed 0%, #fdf2f8 35%, #eef2ff 70%, #ecfeff 100%)",
-    color: "#111827",
-    boxShadow: "0 30px 90px rgba(0,0,0,.28)",
-    border: "1px solid rgba(255,255,255,.75)",
-  },
-  heroGlowOne: {
-    position: "absolute",
-    width: 440,
-    height: 440,
-    right: -120,
-    top: -140,
-    background: "radial-gradient(circle, rgba(139,92,246,.32), transparent 65%)",
-    borderRadius: "50%",
-  },
-  heroGlowTwo: {
-    position: "absolute",
-    width: 520,
-    height: 520,
-    left: -180,
-    bottom: -220,
-    background: "radial-gradient(circle, rgba(6,182,212,.24), transparent 65%)",
-    borderRadius: "50%",
-  },
-  heroContent: {
-    position: "relative",
-    zIndex: 2,
-    display: "grid",
-    gridTemplateColumns: "1.05fr .95fr",
-    gap: 38,
-    alignItems: "center",
-    minHeight: "calc(100vh - 240px)",
-  },
-  heroLeft: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  heroBadge: {
-    display: "inline-flex",
-    alignSelf: "flex-start",
-    padding: "10px 16px",
-    borderRadius: 999,
-    background: "rgba(255,255,255,.72)",
-    color: "#6d28d9",
-    fontSize: 14,
-    fontWeight: 950,
-    textTransform: "uppercase",
-    letterSpacing: 2,
-    boxShadow: "0 12px 30px rgba(109,40,217,.14)",
-  },
-  heroMegaTitle: {
-    margin: "22px 0 0",
-    fontSize: "clamp(78px, 11vw, 156px)",
-    lineHeight: .82,
-    fontWeight: 1000,
-    letterSpacing: -6,
-    color: "#111827",
-  },
-  heroSubtitle: {
-    margin: "24px 0 0",
-    maxWidth: 760,
-    fontSize: "clamp(26px, 3vw, 46px)",
-    lineHeight: 1.05,
-    fontWeight: 950,
-    color: "#4c1d95",
-  },
-  heroStatement: {
-    margin: "22px 0 0",
-    maxWidth: 680,
-    fontSize: 26,
-    lineHeight: 1.25,
-    fontWeight: 850,
-    color: "#374151",
-  },
-  heroGdpr: {
-    marginTop: 32,
-    padding: "16px 18px",
-    borderRadius: 18,
-    background: "rgba(255,255,255,.72)",
-    border: "1px solid rgba(124,58,237,.16)",
-    color: "#334155",
-    fontSize: 17,
-    fontWeight: 850,
-    boxShadow: "0 12px 30px rgba(0,0,0,.08)",
-  },
-  heroRight: {
-    position: "relative",
-    minHeight: 620,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  heroOrb: {
-    position: "absolute",
-    top: 20,
-    right: 45,
-    width: 210,
-    height: 210,
-    borderRadius: "50%",
-    background: "linear-gradient(135deg, #8b5cf6, #06b6d4)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: "0 30px 70px rgba(79,70,229,.32)",
-  },
-  heroOrbInner: {
-    width: 142,
-    height: 142,
-    borderRadius: "50%",
-    background: "rgba(255,255,255,.88)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 54,
-    fontWeight: 1000,
-    color: "#4c1d95",
-  },
-  todayCard: {
-    position: "absolute",
-    left: 5,
-    top: 130,
-    width: "82%",
-    borderRadius: 30,
-    padding: 28,
-    background: "rgba(255,255,255,.82)",
-    boxShadow: "0 30px 80px rgba(0,0,0,.16)",
-    backdropFilter: "blur(12px)",
-    border: "1px solid rgba(255,255,255,.8)",
-  },
-  todayGrid: {
-    display: "grid",
-    gap: 12,
-    marginTop: 16,
-  },
-  todayItem: {
-    display: "grid",
-    gridTemplateColumns: "42px 1fr",
-    alignItems: "center",
-    gap: 10,
-    padding: "12px 14px",
-    borderRadius: 18,
-    background: "linear-gradient(90deg, rgba(139,92,246,.10), rgba(6,182,212,.10))",
-    color: "#111827",
-    fontSize: 22,
-    lineHeight: 1.1,
-    fontWeight: 950,
-  },
-  todayIcon: {
-    fontSize: 26,
-  },
-  transformationCard: {
-    position: "absolute",
-    right: 0,
-    bottom: 30,
-    width: "92%",
+  heroImageWrap: {
+    marginTop: 26,
+    width: "100%",
     borderRadius: 28,
-    padding: 22,
-    background: "rgba(17,24,39,.92)",
-    color: "white",
-    boxShadow: "0 30px 80px rgba(0,0,0,.28)",
+    overflow: "hidden",
+    boxShadow: "0 30px 90px rgba(0,0,0,.45)",
+    border: "1px solid rgba(255,255,255,.18)",
+    background: "#020617",
   },
-  transformationRow: {
-    display: "grid",
-    gridTemplateColumns: "1fr 44px 1fr",
-    gap: 10,
-    alignItems: "center",
-    padding: "10px 0",
-    borderBottom: "1px solid rgba(255,255,255,.12)",
-  },
-  beforeMini: {
-    color: "#fecaca",
-    fontSize: 18,
-    fontWeight: 900,
-  },
-  arrowMini: {
-    color: "#67e8f9",
-    fontSize: 24,
-    fontWeight: 1000,
-    textAlign: "center",
-  },
-  afterMini: {
-    color: "#bbf7d0",
-    fontSize: 18,
-    fontWeight: 900,
+  heroImage: {
+    display: "block",
+    width: "100%",
+    height: "calc(100vh - 190px)",
+    minHeight: 640,
+    objectFit: "cover",
   },
 };
