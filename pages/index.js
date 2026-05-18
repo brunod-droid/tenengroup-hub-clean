@@ -12,14 +12,14 @@ const MENU = [
   "CRM",
   "Logistics",
   "Yves Rocher",
-  "Social Policy",
+  "Social",
+  "Debriefs",
+  "Prod Issues",
   "QA Team",
   "OCy",
   "AI Agents",
   "Q&A",
-  "Theograce Weekly Reporting",
-  "Training",
-  "Yves Rocher Reporting"
+  "Training"
 ];
 const QUICK_TOOLS = [
   { name: "Kustomer", url: "https://tenengroup.kustomerapp.com/" },
@@ -52,6 +52,9 @@ const COUNTRY_FLAGS = [
   ["at", "Austria"]
 ];
 
+const NAPOLEONCAT_SLIDES = Array.from({ length: 14 }, (_, i) => `/social/napoleoncat/slide-${String(i + 1).padStart(2, "0")}.jpg`);
+const DEBRIEF_SLIDES = Array.from({ length: 37 }, (_, i) => `/debriefs/customer/slide-${String(i + 1).padStart(2, "0")}.jpg`);
+
 const KPI_DEFINITIONS = [
   ["CSAT", "Customer Satisfaction Score", "Goal: 4.2"],
   ["SLA", "Service Level Agreement", "Goal: 10h"],
@@ -74,7 +77,7 @@ const BRANDS = [
       "The brand connects personalization with family joy, gifting and meaningful relationships."
     ],
     tone:["Elegant","Premium","Emotional","Family-oriented","Stylish","Nicky Hilton association"],
-    documents:[{label:"Open brand full source", url:"/docs/theograce-brand.pdf"}]
+    documents:[{label:"Open brand full source", url:"/docs/theograce-brand.pdf"}, {label:"Open Theograce Weekly Reporting", url:"/theograce/weekly-reporting"}]
   },
   {
     id:"oak-luna",
@@ -151,7 +154,7 @@ const BRANDS = [
       "Tone should be botanical, helpful, accessible and beauty-focused."
     ],
     tone:["Botanical","Helpful","Accessible","Beauty-focused","Clear and practical"],
-    documents:[{label:"Open Yves Rocher full source", url:"/docs/yves-rocher-training.pdf"}]
+    documents:[{label:"Open Yves Rocher full source", url:"/docs/yves-rocher-training.pdf"}, {label:"Open Yves Rocher Reporting", url:"/yves-rocher-reporting"}]
   }
 ];
 
@@ -300,6 +303,7 @@ const LOGISTICS = [
 ];
 
 const YVES_ROCHER = [
+  { id:"reporting", name:"Yves Rocher Reporting", short:"Weekly/monthly dashboards, upload, finance and drivers.", full:["Open the dedicated Yves Rocher reporting module.","Upload Gorgias, Shopify/order count and finance inputs.","Review weekly KPIs, agent drilldown, CSAT, SLA, orders, productivity and drivers."], documents:[{label:"Open Yves Rocher Reporting", url:"/yves-rocher-reporting"}] },
   { id:"overview", name:"Yves Rocher Overview", short:"U.S. Shopify store for plant-based beauty products.", full:["Official U.S. online store for Yves Rocher.","Core categories: skincare, haircare, body care and fragrance.","Operational stack: Shopify, Gorgias, Notch/Taylor and Staci."] },
   { id:"shopify", name:"Shopify", short:"Order management, tags, refunds and history.", full:["Search by order ID, name or email.","Shopify tags explain operational actions.","Before BC number, some order edits may still be possible.","After BC / packing stage, edits or cancellation are usually not possible."] },
   { id:"wismo", name:"Yves Rocher WISMO", short:"Wrong address, DNR, lost, returned to sender.", full:["Wrong address reship costs $19.","DNR: allow 7 business days even if status shows delivered.","Ask customer to sign Non-Receipt form.","Returned to sender: provide free reship and ask for different address."] },
@@ -1071,6 +1075,194 @@ function TrainingSlides() {
 
 
 
+
+function SlideDeck({ title, subtitle, slides, sourceUrl }) {
+  const [current, setCurrent] = useState(0);
+  const slide = slides[current];
+
+  return (
+    <Box>
+      <div style={{ display:"flex", justifyContent:"space-between", gap:18, alignItems:"flex-start", flexWrap:"wrap" }}>
+        <div>
+          <h2 style={{ fontSize:30, margin:"0 0 6px" }}>{title}</h2>
+          <div style={{ color:"#4b5563", lineHeight:1.7 }}>{subtitle}</div>
+        </div>
+        {sourceUrl && <a href={sourceUrl} target="_blank" rel="noreferrer" style={{ background:"#0f172a", color:"#fff", padding:"10px 14px", borderRadius:12, textDecoration:"none", fontWeight:900 }}>Open PPTX</a>}
+      </div>
+
+      <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginTop:18 }}>
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrent(index)}
+            style={{
+              border:"none",
+              borderRadius:999,
+              padding:"8px 12px",
+              cursor:"pointer",
+              fontWeight:900,
+              background: index === current ? "#1d4ed8" : "#e5e7eb",
+              color: index === current ? "#fff" : "#111827"
+            }}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ marginTop:22, background:"#111827", borderRadius:20, padding:14 }}>
+        <img src={slide} alt={`${title} slide ${current + 1}`} style={{ width:"100%", borderRadius:14, display:"block", background:"#fff" }} />
+      </div>
+
+      <div style={{ display:"flex", justifyContent:"space-between", gap:12, marginTop:16 }}>
+        <button onClick={() => setCurrent(Math.max(0, current - 1))} style={{ padding:"10px 14px", borderRadius:12, border:"none", background:"#e5e7eb", fontWeight:900, cursor:"pointer" }}>Previous</button>
+        <div style={{ fontWeight:900, color:"#4b5563", alignSelf:"center" }}>Slide {current + 1} / {slides.length}</div>
+        <button onClick={() => setCurrent(Math.min(slides.length - 1, current + 1))} style={{ padding:"10px 14px", borderRadius:12, border:"none", background:"#1d4ed8", color:"#fff", fontWeight:900, cursor:"pointer" }}>Next</button>
+      </div>
+    </Box>
+  );
+}
+
+function SocialPage() {
+  return (
+    <>
+      <h1 style={{ fontSize:40 }}>Social</h1>
+      <Box>
+        <div style={{ fontSize:28, fontWeight:900 }}>Social training & customer debrief</div>
+        <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
+          NapoleonCat is for public comments only. DMs and private case handling remain in Kustomer.
+        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(2, minmax(260px, 1fr))", gap:18, marginTop:22 }}>
+          <button onClick={() => document.getElementById("napoleoncat-training")?.scrollIntoView({ behavior:"smooth" })} style={{ background:"#0f766e", color:"#fff", border:"none", borderRadius:20, padding:24, textAlign:"left", cursor:"pointer", fontWeight:900 }}>
+            <div style={{ fontSize:24 }}>NapoleonCat Training</div>
+            <div style={{ marginTop:8, opacity:.9 }}>Public comments management</div>
+          </button>
+          <button onClick={() => setTimeout(() => window.dispatchEvent(new CustomEvent("openDebriefFromSocial")), 0)} style={{ background:"#7c3aed", color:"#fff", border:"none", borderRadius:20, padding:24, textAlign:"left", cursor:"pointer", fontWeight:900 }}>
+            <div style={{ fontSize:24 }}>Debrief from Customer Service</div>
+            <div style={{ marginTop:8, opacity:.9 }}>Open Debriefs menu</div>
+          </button>
+        </div>
+      </Box>
+      <div id="napoleoncat-training">
+        <SlideDeck title="NapoleonCat Training" subtitle="Public comments management for Theograce, Oak & Luna, MYKA, Lime & Lou" slides={NAPOLEONCAT_SLIDES} sourceUrl="/docs/NapoleonCat_Training_Public_Comments_EN_Updated.pptx" />
+      </div>
+    </>
+  );
+}
+
+function DebriefsPage() {
+  const [deck, setDeck] = useState("customer");
+  useEffect(() => {
+    const handler = () => setDeck("customer");
+    window.addEventListener("openDebriefFromSocial", handler);
+    return () => window.removeEventListener("openDebriefFromSocial", handler);
+  }, []);
+
+  const decks = [
+    { id:"customer", name:"Debriefs Customer", slides:DEBRIEF_SLIDES, sourceUrl:null, subtitle:"Event-by-event Customer Service debrief slides since 2024." }
+  ];
+  const selected = decks.find((item) => item.id === deck) || decks[0];
+
+  return (
+    <>
+      <h1 style={{ fontSize:40 }}>Debriefs</h1>
+      <Box>
+        <div style={{ fontSize:28, fontWeight:900 }}>Event debrief library</div>
+        <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
+          Keep all debrief decks in one place. Use the menu to switch between events/decks.
+        </div>
+        <div style={{ display:"flex", gap:10, flexWrap:"wrap", marginTop:18 }}>
+          {decks.map((item) => (
+            <button key={item.id} onClick={() => setDeck(item.id)} style={{ background:selected.id === item.id ? "#1d4ed8" : "#e5e7eb", color:selected.id === item.id ? "#fff" : "#111827", border:"none", borderRadius:999, padding:"10px 14px", fontWeight:900, cursor:"pointer" }}>
+              {item.name}
+            </button>
+          ))}
+        </div>
+      </Box>
+      <SlideDeck title={selected.name} subtitle={selected.subtitle} slides={selected.slides} sourceUrl={selected.sourceUrl} />
+    </>
+  );
+}
+
+function ProdIssuesPage() {
+  const [issues, setIssues] = useState([]);
+  const [date, setDate] = useState(new Date().toISOString().slice(0,10));
+  const [text, setText] = useState("");
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    try {
+      setIssues(JSON.parse(localStorage.getItem("prod_issues") || "[]"));
+    } catch {
+      setIssues([]);
+    }
+  }, []);
+
+  function saveIssues(next) {
+    setIssues(next);
+    localStorage.setItem("prod_issues", JSON.stringify(next));
+  }
+
+  function submitIssue() {
+    if (!date || !text.trim()) return;
+    const issue = { id: Date.now(), date, text: text.trim(), createdAt: new Date().toISOString() };
+    saveIssues([issue, ...issues]);
+    setText("");
+  }
+
+  function deleteIssue(id) {
+    saveIssues(issues.filter((issue) => issue.id !== id));
+  }
+
+  const filtered = issues.filter((issue) => {
+    const q = search.toLowerCase().trim();
+    if (!q) return true;
+    return issue.date.toLowerCase().includes(q) || issue.text.toLowerCase().includes(q);
+  });
+
+  return (
+    <>
+      <h1 style={{ fontSize:40 }}>Prod Issues</h1>
+      <Box>
+        <div style={{ fontSize:28, fontWeight:900 }}>Add production issue</div>
+        <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
+          Temporary internal memory for production issues. Data is stored in this browser for now.
+        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"220px 1fr", gap:14, marginTop:18 }}>
+          <div>
+            <div style={{ fontWeight:900, marginBottom:8 }}>Date</div>
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={{ width:"100%", padding:12, borderRadius:12, border:"1px solid #cbd5e1" }} />
+          </div>
+          <div>
+            <div style={{ fontWeight:900, marginBottom:8 }}>Problem description</div>
+            <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="Describe the production issue, impact, brand, supplier, workaround, customer impact, etc." style={{ width:"100%", minHeight:160, padding:14, borderRadius:12, border:"1px solid #cbd5e1", boxSizing:"border-box", lineHeight:1.6 }} />
+          </div>
+        </div>
+        <button onClick={submitIssue} style={{ marginTop:16, background:"#15803d", color:"#fff", border:"none", borderRadius:12, padding:"12px 18px", fontWeight:900, cursor:"pointer" }}>Submit issue</button>
+      </Box>
+
+      <Box>
+        <div style={{ fontSize:28, fontWeight:900 }}>Search issues</div>
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by keyword, brand, supplier, date..." style={{ marginTop:14, width:"100%", padding:14, borderRadius:12, border:"1px solid #cbd5e1", boxSizing:"border-box" }} />
+        <div style={{ marginTop:14, color:"#4b5563", fontWeight:900 }}>{filtered.length} result(s)</div>
+        <div style={{ marginTop:12 }}>
+          {filtered.map((issue) => (
+            <div key={issue.id} style={{ border:"1px solid #e5e7eb", borderRadius:16, padding:16, marginTop:12, background:"#fff" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", gap:12 }}>
+                <div style={{ fontWeight:900, color:"#1d4ed8" }}>{issue.date}</div>
+                <button onClick={() => deleteIssue(issue.id)} style={{ border:"none", background:"#fee2e2", color:"#991b1b", borderRadius:10, padding:"6px 10px", fontWeight:900, cursor:"pointer" }}>Delete</button>
+              </div>
+              <div style={{ marginTop:10, whiteSpace:"pre-wrap", lineHeight:1.7 }}>{issue.text}</div>
+            </div>
+          ))}
+          {!filtered.length && <div style={{ marginTop:16, color:"#6b7280" }}>No issue found.</div>}
+        </div>
+      </Box>
+    </>
+  );
+}
+
+
 function TrainingMenu() {
   return (
     <>
@@ -1310,7 +1502,7 @@ export default function Home() {
     CRM,
     Logistics: LOGISTICS,
     "Yves Rocher": YVES_ROCHER,
-    "Social Policy": SOCIAL_POLICY,
+    
     "QA Team": QA_TEAM,
     "AI Agents": AI_AGENTS
   };
@@ -1342,21 +1534,13 @@ export default function Home() {
       <div style={{ fontSize:22, fontWeight:800 }}>Tenengroup</div>
       <div style={{ marginTop:6, opacity:0.75 }}>Customer Care Hub</div>
       <div style={{ marginTop:28 }}>{MENU.map((m) => {
-          const special =
-  m === "Training" ||
-  m === "Yves Rocher Reporting" ||
-  m === "Theograce Weekly Reporting";
+          const special = m === "Training";
           const active = page === m;
-          const bg =
-  m === "Yves Rocher Reporting"
-    ? "#15803d"
-    : m === "Training"
-      ? "#7c3aed"
-      : m === "Theograce Weekly Reporting"
-        ? "#0f766e"
-        : active
-          ? "#1d4ed8"
-          : "transparent";
+          const bg = m === "Training"
+            ? "#7c3aed"
+            : active
+              ? "#1d4ed8"
+              : "transparent";
           const inactiveSpecialBg = m === "Yves Rocher Reporting"
             ? "rgba(21,128,61,.22)"
             : m === "Training"
@@ -1365,15 +1549,7 @@ export default function Home() {
           return (
             <div
               key={m}
-              onClick={() => {
-  if (m === "Yves Rocher Reporting") {
-    window.location.href = "/yves-rocher-reporting";
-  } else if (m === "Theograce Weekly Reporting") {
-    window.location.href = "/theograce/weekly-reporting";
-  } else {
-    setPage(m);
-  }
-}}
+              onClick={() => setPage(m)}}
               style={{
                 padding:"12px 14px",
                 borderRadius:10,
@@ -1424,7 +1600,10 @@ export default function Home() {
 
         <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:16, marginBottom:22 }}>
           <SmallCard title="Training" text="20-minute CS overview" onClick={() => setPage("Training")} />
-<SmallCard title="Brands" text="Logos, colors and tone of voice" onClick={() => setPage("Brands")} />
+<SmallCard title="Brands" text="Logos, colors, tone of voice and brand reporting" onClick={() => setPage("Brands")} />
+          <SmallCard title="Social" text="NapoleonCat training and public comments" onClick={() => setPage("Social")} />
+          <SmallCard title="Debriefs" text="Customer Service debrief decks" onClick={() => setPage("Debriefs")} />
+          <SmallCard title="Prod Issues" text="Log production issues and search history" onClick={() => setPage("Prod Issues")} />
 
 <SmallCard
   title="Yves Rocher Reporting"
@@ -1467,23 +1646,10 @@ export default function Home() {
         </div>
       </>}
 
+      {page === "Social" && <SocialPage />}
+      {page === "Debriefs" && <DebriefsPage />}
+      {page === "Prod Issues" && <ProdIssuesPage />}
       {page === "Training" && <TrainingMenu />}
-
-      {page === "Yves Rocher Reporting" && <>
-        <h1 style={{ fontSize:40 }}>Yves Rocher Reporting</h1>
-        <Box>
-          <div style={{ fontSize:24, fontWeight:900 }}>Reporting module</div>
-          <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
-            This module opens in its own route with CSV upload, weekly reports, monthly reports, history and settings.
-          </div>
-          <button
-            onClick={() => { window.location.href = "/yves-rocher-reporting"; }}
-            style={{ marginTop:16, background:"#15803d", color:"#fff", border:"none", borderRadius:12, padding:"12px 16px", fontWeight:900, cursor:"pointer" }}
-          >
-            Open Yves Rocher Reporting
-          </button>
-        </Box>
-      </>}
 
 
 
