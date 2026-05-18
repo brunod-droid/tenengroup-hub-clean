@@ -255,7 +255,7 @@ const slides = [
   },
   {
     type: "quiz_final",
-    section: "intro",
+    section: "Almost the end",
     title: "Final quiz: which AI format should you use?",
     subtitle: "Click a card to reveal the recommended format.",
     cards: [
