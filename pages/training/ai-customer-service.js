@@ -268,7 +268,7 @@ const slides = [
   },
   {
     type: "next",
-    section: "intro",
+    section: "Last word",
     title: "What should you try next?",
     subtitle: "Start small. Save time tomorrow.",
     cards: [
