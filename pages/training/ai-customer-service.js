@@ -11,11 +11,26 @@ const COLORS = {
 
 const slides = [
   {
-    type: "hero_image",
+    type: "wow_intro",
     section: "intro",
     title: "AI AT WORK",
     subtitle: "Smarter tools. Stronger teams. Better results.",
-    image: "/ai-work-hero.png",
+    text:
+      "The teams using AI today are not working the same way anymore.",
+    beforeAfter: [
+      ["Manual benchmark", "AI monitoring"],
+      ["Endless Excel work", "Automated analysis"],
+      ["Searching information", "Instant answers"],
+      ["Static documentation", "AI-powered Hub"],
+      ["Repetitive emails", "AI-assisted communication"],
+    ],
+    bullets: [
+      "Create an AI Agent",
+      "Build an AI Workspace",
+      "Automate an Excel workflow",
+      "Publish a live Hub page",
+      "Learn Copilot workflows",
+    ],
   },
   {
     type: "formats",
@@ -76,17 +91,18 @@ const slides = [
       "Monitor competitors automatically",
       "Track promotions and launches",
       "Summarize changes",
-      "Send daily digest by email",
+      "Draft a daily digest",
       "Centralize benchmark information",
       "Reduce repetitive manual work",
     ],
     resultCards: [
       ["Daily alert", "New promotion detected"],
       ["Benchmark table", "Price, offer, product focus"],
-      ["Action email", "Recommendation sent to the team"],
+      ["Draft email", "AI prepares the message"],
+      ["Manual final step", "Copy the output to Outlook or Teams"],
     ],
     prompt:
-      "Create a daily competitor benchmark digest for Theograce. Monitor Pandora, Kendra Scott, Mint&Lily, Tiny Tags, James Avery, GLDN, Made by Mary and Haverhill. Check promotions, new collections, messaging, pricing signals, gifting angles and customer-facing changes. Return a short table, 3 key insights and a ready-to-send email summary.",
+      "Create a daily competitor benchmark digest for Theograce. Monitor Pandora, Kendra Scott, Mint&Lily, Tiny Tags, James Avery, GLDN, Made by Mary and Haverhill. Check promotions, new collections, messaging, pricing signals, gifting angles and customer-facing changes. Return a short table, 3 key insights and a ready-to-send email summary. Important: in Copilot, stop at draft stage. The final sending step remains manual: copy the output to Outlook or Teams.",
   },
   {
     type: "copilot_steps",
@@ -99,7 +115,7 @@ const slides = [
       "Paste the competitor list",
       "Paste the benchmark prompt",
       "Ask for a table + email digest",
-      "Copy the output to Outlook or Teams",
+      "Manual final step: copy the output to Outlook or Teams",
     ],
     prompt:
       "Act as a competitor benchmark assistant. Compare Pandora, Kendra Scott, Mint&Lily, Tiny Tags, James Avery, GLDN, Made by Mary and Haverhill. Summarize promotions, launches, pricing signals, messaging and customer-facing changes. Return a table and a 5-line email digest.",
@@ -151,10 +167,10 @@ const slides = [
       "Attach the 3 Oak & Luna demo files",
       "Paste the full project prompt",
       "Ask for risks, insights and next actions",
-      "Save the output as a Copilot Page or document",
+      "Then ask for a board-ready version",
     ],
     prompt:
-      "Using these Oak & Luna files, create a launch workspace summary.\n\nAnalyze:\n- the launch objective,\n- the target customer,\n- customer feedback trends,\n- competitor positioning,\n- operational risks,\n- missing information,\n- and recommended next actions.\n\nUse:\n- the launch brief,\n- the competitor snapshot,\n- and the customer feedback CSV together.\n\nReturn:\n1. Executive summary\n2. Key risks\n3. Customer insights\n4. Competitor insights\n5. Recommended actions\n6. Suggested priorities for the launch team",
+      "STEP 1 - Intelligence summary:\nUsing these Oak & Luna files, create a launch workspace summary. Analyze the launch objective, target customer, customer feedback trends, competitor positioning, operational risks, missing information and recommended next actions. Use the launch brief, competitor snapshot and customer feedback CSV together. Return: executive summary, key risks, customer insights, competitor insights, recommended actions and suggested priorities for the launch team.\n\nSTEP 2 - Board-ready output:\nNow transform the analysis into a board-ready executive presentation. Keep only the top customer insights, main risks, competitor opportunities, launch priorities and recommended next actions. Use short executive language, bullet points, clear prioritization and concise business wording. Do not repeat raw operational details.",
   },
   {
     type: "excel_intro",
@@ -231,7 +247,7 @@ const slides = [
     type: "hub_demo",
     section: "hub",
     title: "Live Demo: Start a Lime & Lou Hub",
-    subtitle: "The GitHub repository is ready and deployed on Vercel. We only need files to add.",
+    subtitle: "The GitHub repository is already created and deployed on Vercel. We only need content/files to add.",
     bullets: [
       "Upload department document",
       "AI summarizes it",
@@ -241,7 +257,7 @@ const slides = [
       "Vercel deploys the page live",
     ],
     prompt:
-      "Transform this Lime & Lou document into a Hub page with overview, key process, FAQ, risks, escalation rules, owner actions and training summary.",
+      "STEP 1 - Hub structure:\nTransform this LL Hub document into a structured department Hub. Create a homepage summary, key business areas, operational documentation categories, FAQ, useful quick links, training section, escalation section and a suggested navigation menu. Use clean and professional wording.\n\nSTEP 2 - Make it practical:\nNow simplify the structure for non-technical employees. Make the Hub easy to navigate, visually clear, operational and fast to use during daily work.\n\nContext: the GitHub repository is already created and deployed on Vercel. We only need to add the files/content into GitHub and Vercel will publish the page live.",
   },
   {
     type: "quiz_final",
@@ -313,7 +329,6 @@ export default function AICustomerServiceTraining() {
         <h1 style={styles.title}>{s.title}</h1>
         <p style={styles.subtitle}>{s.subtitle}</p>
 
-        {s.type === "hero_image" && <HeroImage s={s} />}
         {s.type === "wow_intro" && <WowIntro s={s} color={currentColor} />}
         {s.type === "intro" && <Intro s={s} color={currentColor} />}
         {s.type === "formats" && <Formats s={s} />}
@@ -344,38 +359,67 @@ export default function AICustomerServiceTraining() {
   );
 }
 
-
-function HeroImage({ s }) {
+function WowIntro({ s }) {
   return (
-    <div style={styles.heroImageWrap}>
-      <img src={s.image} alt="AI at Work" style={styles.heroImage} />
-    </div>
-  );
-}
+    <div style={styles.heroOption3}>
+      <div style={styles.heroGlowOne} />
+      <div style={styles.heroGlowTwo} />
 
-function WowIntro({ s, color }) {
-  return (
-    <>
-      <div style={{ ...styles.highlight, background: color, marginTop: 28 }}>
-        {s.text}
-      </div>
-      <div style={styles.beforeAfterGrid}>
-        {s.beforeAfter.map((row) => (
-          <div key={row[0]} style={styles.beforeAfterCard}>
-            <div>
-              <div style={styles.kickerDark}>Yesterday</div>
-              <p style={styles.beforeText}>{row[0]}</p>
-            </div>
-            <div style={styles.arrow}>→</div>
-            <div>
-              <div style={styles.kickerDark}>Tomorrow</div>
-              <p style={styles.afterText}>{row[1]}</p>
+      <div style={styles.heroContent}>
+        <div style={styles.heroLeft}>
+          <div style={styles.heroBadge}>Interactive AI workshop</div>
+
+          <h1 style={styles.heroMegaTitle}>
+            AI
+            <br />
+            AT WORK
+          </h1>
+
+          <p style={styles.heroSubtitle}>
+            {s.subtitle}
+          </p>
+
+          <p style={styles.heroStatement}>
+            {s.text}
+          </p>
+
+          <div style={styles.heroGdpr}>
+            🔒 Enterprise-ready & GDPR-conscious workflows — use approved tools for customer and company data.
+          </div>
+        </div>
+
+        <div style={styles.heroRight}>
+          <div style={styles.heroOrb}>
+            <div style={styles.heroOrbInner}>AI</div>
+          </div>
+
+          <div style={styles.todayCard}>
+            <div style={styles.kickerDark}>Today we will</div>
+
+            <div style={styles.todayGrid}>
+              {s.bullets.map((b, idx) => (
+                <div key={b} style={styles.todayItem}>
+                  <span style={styles.todayIcon}>
+                    {["🤖", "📁", "📊", "🌐", "⚡"][idx]}
+                  </span>
+                  <span>{b}</span>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
+
+          <div style={styles.transformationCard}>
+            {s.beforeAfter.slice(0, 4).map((row) => (
+              <div key={row[0]} style={styles.transformationRow}>
+                <span style={styles.beforeMini}>{row[0]}</span>
+                <span style={styles.arrowMini}>→</span>
+                <span style={styles.afterMini}>{row[1]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <Bullets s={s} />
-    </>
+    </div>
   );
 }
 
@@ -424,12 +468,15 @@ function CompetitorAgent({ s }) {
         {s.bullets.map((b) => <div key={b} style={{ ...styles.card, borderTop: `6px solid ${COLORS.agent}` }}>{b}</div>)}
       </div>
       <div style={styles.grid3}>
-        {s.resultCards.map((c) => (
-          <div key={c[0]} style={styles.white}>
-            <h2>{c[0]}</h2>
-            <p style={styles.cardText}>{c[1]}</p>
-          </div>
-        ))}
+        {s.resultCards.map((c) => {
+          const isManual = c[0].toLowerCase().includes("manual");
+          return (
+            <div key={c[0]} style={isManual ? styles.redWarningCard : styles.white}>
+              <h2>{c[0]}</h2>
+              <p style={styles.cardText}>{c[1]}</p>
+            </div>
+          );
+        })}
       </div>
       <div style={{ ...styles.highlight, background: COLORS.agent, marginTop: 18 }}>
         <div style={styles.kickerDark}>Agent prompt</div>
@@ -561,7 +608,14 @@ function Prompt({ s, color }) {
 function Bullets({ s }) {
   return (
     <div style={styles.grid3}>
-      {s.bullets.map((b) => <div key={b} style={styles.card}>{b}</div>)}
+      {s.bullets.map((b) => {
+        const isManual = String(b).toLowerCase().includes("manual final step");
+        return (
+          <div key={b} style={isManual ? styles.redWarningCard : styles.card}>
+            {b}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -619,21 +673,201 @@ const styles = {
   quote: { marginTop: 24, background: "rgba(255,255,255,.25)", borderRadius: 20, padding: 20, fontSize: 24 },
   link: { display: "block", marginTop: 14, color: "#67e8f9", fontWeight: 900, textAlign: "center" },
   quizCard: { background: "white", color: "#0f172a", borderRadius: 28, padding: 24, border: "none", cursor: "pointer", textAlign: "left", minHeight: 220, boxShadow: "0 18px 42px rgba(0,0,0,.22)" },
+  gdprBanner: { marginTop: 22, padding: "16px 20px", borderRadius: 18, background: "rgba(255,255,255,.12)", border: "1px solid rgba(255,255,255,.18)", color: "#e0f2fe", fontSize: 18, fontWeight: 900, textAlign: "center" },
 
-  heroImageWrap: {
-    marginTop: 26,
-    width: "100%",
-    borderRadius: 28,
+  heroOption3: {
+    position: "relative",
     overflow: "hidden",
-    boxShadow: "0 30px 90px rgba(0,0,0,.45)",
-    border: "1px solid rgba(255,255,255,.18)",
-    background: "#020617",
+    minHeight: "calc(100vh - 150px)",
+    borderRadius: 34,
+    padding: 44,
+    marginTop: 22,
+    background:
+      "linear-gradient(135deg, #fff7ed 0%, #fdf2f8 35%, #eef2ff 70%, #ecfeff 100%)",
+    color: "#111827",
+    boxShadow: "0 30px 90px rgba(0,0,0,.28)",
+    border: "1px solid rgba(255,255,255,.75)",
   },
-  heroImage: {
-    display: "block",
-    width: "100%",
-    height: "calc(100vh - 190px)",
-    minHeight: 640,
-    objectFit: "cover",
+  heroGlowOne: {
+    position: "absolute",
+    width: 440,
+    height: 440,
+    right: -120,
+    top: -140,
+    background: "radial-gradient(circle, rgba(139,92,246,.32), transparent 65%)",
+    borderRadius: "50%",
   },
+  heroGlowTwo: {
+    position: "absolute",
+    width: 520,
+    height: 520,
+    left: -180,
+    bottom: -220,
+    background: "radial-gradient(circle, rgba(6,182,212,.24), transparent 65%)",
+    borderRadius: "50%",
+  },
+  heroContent: {
+    position: "relative",
+    zIndex: 2,
+    display: "grid",
+    gridTemplateColumns: "1.05fr .95fr",
+    gap: 38,
+    alignItems: "center",
+    minHeight: "calc(100vh - 240px)",
+  },
+  heroLeft: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  heroBadge: {
+    display: "inline-flex",
+    alignSelf: "flex-start",
+    padding: "10px 16px",
+    borderRadius: 999,
+    background: "rgba(255,255,255,.72)",
+    color: "#6d28d9",
+    fontSize: 14,
+    fontWeight: 950,
+    textTransform: "uppercase",
+    letterSpacing: 2,
+    boxShadow: "0 12px 30px rgba(109,40,217,.14)",
+  },
+  heroMegaTitle: {
+    margin: "22px 0 0",
+    fontSize: "clamp(78px, 11vw, 156px)",
+    lineHeight: .82,
+    fontWeight: 1000,
+    letterSpacing: -6,
+    color: "#111827",
+  },
+  heroSubtitle: {
+    margin: "24px 0 0",
+    maxWidth: 760,
+    fontSize: "clamp(26px, 3vw, 46px)",
+    lineHeight: 1.05,
+    fontWeight: 950,
+    color: "#4c1d95",
+  },
+  heroStatement: {
+    margin: "22px 0 0",
+    maxWidth: 680,
+    fontSize: 26,
+    lineHeight: 1.25,
+    fontWeight: 850,
+    color: "#374151",
+  },
+  heroGdpr: {
+    marginTop: 32,
+    padding: "16px 18px",
+    borderRadius: 18,
+    background: "rgba(255,255,255,.72)",
+    border: "1px solid rgba(124,58,237,.16)",
+    color: "#334155",
+    fontSize: 17,
+    fontWeight: 850,
+    boxShadow: "0 12px 30px rgba(0,0,0,.08)",
+  },
+  heroRight: {
+    position: "relative",
+    minHeight: 620,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heroOrb: {
+    position: "absolute",
+    top: 20,
+    right: 45,
+    width: 210,
+    height: 210,
+    borderRadius: "50%",
+    background: "linear-gradient(135deg, #8b5cf6, #06b6d4)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 30px 70px rgba(79,70,229,.32)",
+  },
+  heroOrbInner: {
+    width: 142,
+    height: 142,
+    borderRadius: "50%",
+    background: "rgba(255,255,255,.88)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 54,
+    fontWeight: 1000,
+    color: "#4c1d95",
+  },
+  todayCard: {
+    position: "absolute",
+    left: 5,
+    top: 130,
+    width: "82%",
+    borderRadius: 30,
+    padding: 28,
+    background: "rgba(255,255,255,.82)",
+    boxShadow: "0 30px 80px rgba(0,0,0,.16)",
+    backdropFilter: "blur(12px)",
+    border: "1px solid rgba(255,255,255,.8)",
+  },
+  todayGrid: {
+    display: "grid",
+    gap: 12,
+    marginTop: 16,
+  },
+  todayItem: {
+    display: "grid",
+    gridTemplateColumns: "42px 1fr",
+    alignItems: "center",
+    gap: 10,
+    padding: "12px 14px",
+    borderRadius: 18,
+    background: "linear-gradient(90deg, rgba(139,92,246,.10), rgba(6,182,212,.10))",
+    color: "#111827",
+    fontSize: 22,
+    lineHeight: 1.1,
+    fontWeight: 950,
+  },
+  todayIcon: {
+    fontSize: 26,
+  },
+  transformationCard: {
+    position: "absolute",
+    right: 0,
+    bottom: 30,
+    width: "92%",
+    borderRadius: 28,
+    padding: 22,
+    background: "rgba(17,24,39,.92)",
+    color: "white",
+    boxShadow: "0 30px 80px rgba(0,0,0,.28)",
+  },
+  transformationRow: {
+    display: "grid",
+    gridTemplateColumns: "1fr 44px 1fr",
+    gap: 10,
+    alignItems: "center",
+    padding: "10px 0",
+    borderBottom: "1px solid rgba(255,255,255,.12)",
+  },
+  beforeMini: {
+    color: "#fecaca",
+    fontSize: 18,
+    fontWeight: 900,
+  },
+  arrowMini: {
+    color: "#67e8f9",
+    fontSize: 24,
+    fontWeight: 1000,
+    textAlign: "center",
+  },
+  afterMini: {
+    color: "#bbf7d0",
+    fontSize: 18,
+    fontWeight: 900,
+  },
+
+  redWarningCard: { background: "#fee2e2", color: "#991b1b", borderRadius: 24, padding: 24, fontSize: 25, fontWeight: 950, border: "3px solid #ef4444", boxShadow: "0 18px 42px rgba(127,29,29,.25)" },
 };
