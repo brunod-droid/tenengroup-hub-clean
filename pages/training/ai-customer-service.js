@@ -17,6 +17,15 @@ const slides = [
     subtitle: "Smarter tools. Stronger teams. Better results.",
     image: "/ai-work-hero.png",
   },
+
+  {
+    type: "commandments_image",
+    section: "intro",
+    title: "The 10 Commandments",
+    subtitle: "For an amazing training experience.",
+    image: "/10-commandments-ai.png",
+  },
+
   {
     type: "formats",
     section: "intro",
@@ -315,6 +324,7 @@ export default function AICustomerServiceTraining() {
         <p style={styles.subtitle}>{s.subtitle}</p>
 
         {s.type === "hero_image" && <HeroImage s={s} />}
+        {s.type === "commandments_image" && <HeroImage s={s} />}  
         {s.type === "wow_intro" && <WowIntro s={s} color={currentColor} />}
         {s.type === "intro" && <Intro s={s} color={currentColor} />}
         {s.type === "formats" && <Formats s={s} />}
