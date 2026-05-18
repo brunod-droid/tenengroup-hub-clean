@@ -11,26 +11,11 @@ const COLORS = {
 
 const slides = [
   {
-    type: "wow_intro",
+    type: "hero_image",
     section: "intro",
     title: "AI AT WORK",
     subtitle: "Smarter tools. Stronger teams. Better results.",
-    text:
-      "The teams using AI today are not working the same way anymore.",
-    beforeAfter: [
-      ["Manual benchmark", "AI monitoring"],
-      ["Endless Excel work", "Automated analysis"],
-      ["Searching information", "Instant answers"],
-      ["Static documentation", "AI-powered Hub"],
-      ["Repetitive emails", "AI-assisted communication"],
-    ],
-    bullets: [
-      "Create an AI Agent",
-      "Build an AI Workspace",
-      "Automate an Excel workflow",
-      "Publish a live Hub page",
-      "Learn Copilot workflows",
-    ],
+    image: "/ai-work-hero.png",
   },
   {
     type: "formats",
@@ -102,7 +87,7 @@ const slides = [
       ["Manual final step", "Copy the output to Outlook or Teams"],
     ],
     prompt:
-      "Create a daily competitor benchmark digest for Theograce. Monitor Pandora, Kendra Scott, Mint&Lily, Tiny Tags, James Avery, GLDN, Made by Mary and Haverhill. Check promotions, new collections, messaging, pricing signals, gifting angles and customer-facing changes. Return a short table, 3 key insights and a ready-to-send email summary. Important: in Copilot, stop at draft stage. The final sending step remains manual: copy the output to Outlook or Teams.",
+      "Create a daily competitor benchmark digest for Theograce. Monitor Pandora, Kendra Scott, Mint&Lily, Tiny Tags, James Avery, GLDN, Made by Mary and Haverhill. Check promotions, new collections, messaging, pricing signals, gifting angles and customer-facing changes. Return a short table, 3 key insights and a ready-to-send email summary. Important: in Copilot Chat, stop at draft stage. The final sending step remains manual: copy the output to Outlook or Teams.",
   },
   {
     type: "copilot_steps",
@@ -167,10 +152,10 @@ const slides = [
       "Attach the 3 Oak & Luna demo files",
       "Paste the full project prompt",
       "Ask for risks, insights and next actions",
-      "Then ask for a board-ready version",
+      "Create a Copilot Page or paste the board-ready output into Word/PowerPoint",
     ],
     prompt:
-      "STEP 1 - Intelligence summary:\nUsing these Oak & Luna files, create a launch workspace summary. Analyze the launch objective, target customer, customer feedback trends, competitor positioning, operational risks, missing information and recommended next actions. Use the launch brief, competitor snapshot and customer feedback CSV together. Return: executive summary, key risks, customer insights, competitor insights, recommended actions and suggested priorities for the launch team.\n\nSTEP 2 - Board-ready output:\nNow transform the analysis into a board-ready executive presentation. Keep only the top customer insights, main risks, competitor opportunities, launch priorities and recommended next actions. Use short executive language, bullet points, clear prioritization and concise business wording. Do not repeat raw operational details.",
+      "STEP 1 - Intelligence summary:\nUsing these Oak & Luna files, create a launch workspace summary. Analyze the launch objective, target customer, customer feedback trends, competitor positioning, operational risks, missing information and recommended next actions. Use the launch brief, competitor snapshot and customer feedback CSV together.\n\nSTEP 2 - Board-ready output:\nNow transform the analysis into a board-ready executive presentation. Keep only the top customer insights, main risks, competitor opportunities, launch priorities and recommended next actions. Use short executive language, bullet points, clear prioritization and concise business wording. Do not repeat raw operational details.\n\nSTEP 3 - Create the document:\nCreate a Copilot Page from this response if the button is available. If not, format the answer so I can paste it into Word or PowerPoint with: title, executive summary, 3 insight cards, risk table, priorities and next actions.",
   },
   {
     type: "excel_intro",
@@ -190,26 +175,26 @@ const slides = [
   {
     type: "gpt",
     section: "gpt",
-    title: "Chat vs Project vs GPT",
-    subtitle: "The Late Supplier process started in Chat. GPT is better when we want to standardize it.",
+    title: "Chat vs Project vs Copilot Workflow",
+    subtitle: "The Late Supplier process started in Chat. In Copilot, we translate the GPT concept into a standardized workflow.",
     image: "/Guideline.png",
     fileLink: "/Guideline.png",
     bullets: [
       "Chat = test the task manually",
       "Project = collaborate with files and context",
-      "GPT = standardize the same process",
+      "Copilot workflow = reuse the same process",
       "Same instructions every time",
       "Stable outputs",
       "Usable by anyone",
     ],
     text:
-      "If I repeat the same prompt every week, I should turn it into a GPT or a standardized Copilot workflow. The value is consistency: same rules, same output, less manual risk.",
+      "If I repeat the same prompt every week, I should turn it into a standardized Copilot workflow. The value is consistency: same rules, same output, less manual risk.",
   },
   {
     type: "gpt_path",
     section: "gpt",
-    title: "Copilot path: repeatable process",
-    subtitle: "Copilot may not work exactly like a GPT, but the logic is the same: standardize the prompt and reuse it.",
+    title: "Copilot Workflow: repeatable process",
+    subtitle: "Copilot does not always offer custom GPTs to everyone. The practical equivalent is a reusable Copilot workflow: same files, same prompt, same output format.",
     bullets: [
       "Open Microsoft 365 Copilot Chat",
       "Attach the file or type / to reference work files",
@@ -329,6 +314,7 @@ export default function AICustomerServiceTraining() {
         <h1 style={styles.title}>{s.title}</h1>
         <p style={styles.subtitle}>{s.subtitle}</p>
 
+        {s.type === "hero_image" && <HeroImage s={s} />}
         {s.type === "wow_intro" && <WowIntro s={s} color={currentColor} />}
         {s.type === "intro" && <Intro s={s} color={currentColor} />}
         {s.type === "formats" && <Formats s={s} />}
@@ -356,6 +342,15 @@ export default function AICustomerServiceTraining() {
         </div>
       )}
     </main>
+  );
+}
+
+
+function HeroImage({ s }) {
+  return (
+    <div style={styles.heroImageWrap}>
+      <img src={s.image} alt="AI at Work" style={styles.heroImage} />
+    </div>
   );
 }
 
@@ -564,7 +559,7 @@ function GptSlide({ s, setModalImage }) {
         <p style={styles.bigText}>{s.text}</p>
         <div style={styles.quote}>
           Chat tests the task.<br />
-          GPT standardizes the task.
+          Copilot workflow standardizes the task.
         </div>
       </div>
     </div>
@@ -868,6 +863,9 @@ const styles = {
     fontSize: 18,
     fontWeight: 900,
   },
+
+  heroImageWrap: { marginTop: 26, width: "100%", borderRadius: 28, overflow: "hidden", boxShadow: "0 30px 90px rgba(0,0,0,.45)", border: "1px solid rgba(255,255,255,.18)", background: "#020617" },
+  heroImage: { display: "block", width: "100%", height: "calc(100vh - 190px)", minHeight: 640, objectFit: "cover" },
 
   redWarningCard: { background: "#fee2e2", color: "#991b1b", borderRadius: 24, padding: 24, fontSize: 25, fontWeight: 950, border: "3px solid #ef4444", boxShadow: "0 18px 42px rgba(127,29,29,.25)" },
 };
