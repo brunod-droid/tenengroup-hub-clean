@@ -1549,7 +1549,7 @@ export default function Home() {
           return (
             <div
               key={m}
-              onClick={() => setPage(m)}}
+              onClick={() => setPage(m)}
               style={{
                 padding:"12px 14px",
                 borderRadius:10,
