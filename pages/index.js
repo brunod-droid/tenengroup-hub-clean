@@ -1185,74 +1185,232 @@ function DebriefsPage() {
 }
 
 function ProdIssuesPage() {
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const ADMIN_PASSWORD = "YRFinance";
+
   const [issues, setIssues] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().slice(0,10));
+  const [author, setAuthor] = useState("");
+  const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  const [attachment, setAttachment] = useState(null);
   const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [adminInput, setAdminInput] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    try {
-      setIssues(JSON.parse(localStorage.getItem("prod_issues") || "[]"));
-    } catch {
-      setIssues([]);
-    }
+    const savedAuthor = typeof window !== "undefined" ? localStorage.getItem("prod_issues_author") || "" : "";
+    setAuthor(savedAuthor);
+    loadIssues();
   }, []);
 
-  function saveIssues(next) {
-    setIssues(next);
-    localStorage.setItem("prod_issues", JSON.stringify(next));
+  async function supabaseRequest(path, options = {}) {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      throw new Error("Missing Vercel env vars NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY");
+    }
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      ...options,
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+        ...(options.headers || {})
+      }
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+    if (res.status === 204) return null;
+    return res.json();
   }
 
-  function submitIssue() {
-    if (!date || !text.trim()) return;
-    const issue = { id: Date.now(), date, text: text.trim(), createdAt: new Date().toISOString() };
-    saveIssues([issue, ...issues]);
-    setText("");
+  async function loadIssues() {
+    try {
+      setStatus("Loading shared issues...");
+      const rows = await supabaseRequest("prod_issues?select=*&order=issue_date.desc,created_at.desc");
+      setIssues(Array.isArray(rows) ? rows : []);
+      setStatus("");
+    } catch (error) {
+      setStatus("Load failed: " + error.message);
+    }
   }
 
-  function deleteIssue(id) {
-    saveIssues(issues.filter((issue) => issue.id !== id));
+  async function uploadAttachment(file) {
+    if (!file) return null;
+
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path = `${Date.now()}-${safeName}`;
+
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/prod-issues/${path}`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": file.type || "application/octet-stream",
+        "x-upsert": "false"
+      },
+      body: file
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+    return { attachment_name: file.name, attachment_path: path };
+  }
+
+  function attachmentUrl(path) {
+    if (!path || !SUPABASE_URL) return "";
+    return `${SUPABASE_URL}/storage/v1/object/public/prod-issues/${path}`;
+  }
+
+  async function submitIssue() {
+    if (!date || !text.trim()) {
+      setStatus("Date and problem description are required.");
+      return;
+    }
+
+    try {
+      setStatus("Saving shared issue...");
+      if (typeof window !== "undefined") localStorage.setItem("prod_issues_author", author || "");
+
+      const uploaded = await uploadAttachment(attachment);
+
+      await supabaseRequest("prod_issues", {
+        method: "POST",
+        body: JSON.stringify({
+          issue_date: date,
+          author: author || "Unknown",
+          title: title || "",
+          description: text.trim(),
+          attachment_name: uploaded?.attachment_name || null,
+          attachment_path: uploaded?.attachment_path || null
+        })
+      });
+
+      setTitle("");
+      setText("");
+      setAttachment(null);
+      setStatus("Issue saved and shared with everyone.");
+      await loadIssues();
+    } catch (error) {
+      setStatus("Save failed: " + error.message);
+    }
+  }
+
+  async function deleteIssue(id) {
+    if (!isAdmin) return;
+    if (!window.confirm("Delete this issue?")) return;
+
+    try {
+      setStatus("Deleting issue...");
+      await supabaseRequest(`prod_issues?id=eq.${id}`, { method: "DELETE" });
+      setIssues((prev) => prev.filter((issue) => issue.id !== id));
+      setStatus("Issue deleted.");
+    } catch (error) {
+      setStatus("Delete failed: " + error.message);
+    }
+  }
+
+  function loginAdmin() {
+    if (adminInput === ADMIN_PASSWORD) {
+      setIsAdmin(true);
+      setAdminInput("");
+      setStatus("Admin mode enabled.");
+    } else {
+      setStatus("Wrong admin password.");
+    }
   }
 
   const filtered = issues.filter((issue) => {
     const q = search.toLowerCase().trim();
     if (!q) return true;
-    return issue.date.toLowerCase().includes(q) || issue.text.toLowerCase().includes(q);
+    return [issue.issue_date, issue.author, issue.title, issue.description, issue.attachment_name].some((value) => String(value || "").toLowerCase().includes(q));
   });
 
   return (
     <>
       <h1 style={{ fontSize:40 }}>Prod Issues</h1>
+
       <Box>
         <div style={{ fontSize:28, fontWeight:900 }}>Add production issue</div>
         <div style={{ marginTop:10, color:"#4b5563", lineHeight:1.7 }}>
-          Temporary internal memory for production issues. Data is stored in this browser for now.
+          Shared production memory. Everyone sees the same issues because data is stored in Supabase.
         </div>
+
         <div style={{ display:"grid", gridTemplateColumns:"220px 1fr", gap:14, marginTop:18 }}>
           <div>
             <div style={{ fontWeight:900, marginBottom:8 }}>Date</div>
             <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={{ width:"100%", padding:12, borderRadius:12, border:"1px solid #cbd5e1" }} />
           </div>
           <div>
-            <div style={{ fontWeight:900, marginBottom:8 }}>Problem description</div>
-            <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="Describe the production issue, impact, brand, supplier, workaround, customer impact, etc." style={{ width:"100%", minHeight:160, padding:14, borderRadius:12, border:"1px solid #cbd5e1", boxSizing:"border-box", lineHeight:1.6 }} />
+            <div style={{ fontWeight:900, marginBottom:8 }}>Your name</div>
+            <input value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Example: Bruno" style={{ width:"100%", padding:12, borderRadius:12, border:"1px solid #cbd5e1", boxSizing:"border-box" }} />
           </div>
         </div>
-        <button onClick={submitIssue} style={{ marginTop:16, background:"#15803d", color:"#fff", border:"none", borderRadius:12, padding:"12px 18px", fontWeight:900, cursor:"pointer" }}>Submit issue</button>
+
+        <div style={{ marginTop:14 }}>
+          <div style={{ fontWeight:900, marginBottom:8 }}>Short title</div>
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Example: wrong ETA on PDP" style={{ width:"100%", padding:12, borderRadius:12, border:"1px solid #cbd5e1", boxSizing:"border-box" }} />
+        </div>
+
+        <div style={{ marginTop:14 }}>
+          <div style={{ fontWeight:900, marginBottom:8 }}>Problem description</div>
+          <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="Describe the production issue, impact, brand, supplier, workaround, customer impact, etc." style={{ width:"100%", minHeight:190, padding:14, borderRadius:12, border:"1px solid #cbd5e1", boxSizing:"border-box", lineHeight:1.6 }} />
+        </div>
+
+        <div style={{ marginTop:14 }}>
+          <div style={{ fontWeight:900, marginBottom:8 }}>Attachment</div>
+          <input type="file" onChange={(e) => setAttachment(e.target.files?.[0] || null)} style={{ width:"100%", padding:12, borderRadius:12, border:"1px solid #cbd5e1", boxSizing:"border-box", background:"#f8fafc" }} />
+        </div>
+
+        <button onClick={submitIssue} style={{ marginTop:16, background:"#15803d", color:"#fff", border:"none", borderRadius:12, padding:"12px 18px", fontWeight:900, cursor:"pointer" }}>
+          Submit issue
+        </button>
+
+        {status && <div style={{ marginTop:14, color:status.includes("failed") || status.includes("Wrong") ? "#b91c1c" : "#15803d", fontWeight:900 }}>{status}</div>}
       </Box>
 
       <Box>
-        <div style={{ fontSize:28, fontWeight:900 }}>Search issues</div>
+        <div style={{ display:"flex", justifyContent:"space-between", gap:14, flexWrap:"wrap", alignItems:"center" }}>
+          <div style={{ fontSize:28, fontWeight:900 }}>Search issues</div>
+          <div style={{ display:"flex", gap:8, alignItems:"center" }}>
+            {isAdmin ? (
+              <div style={{ color:"#15803d", fontWeight:900 }}>Admin mode</div>
+            ) : (
+              <>
+                <input type="password" value={adminInput} onChange={(e) => setAdminInput(e.target.value)} placeholder="Admin password" style={{ padding:10, borderRadius:10, border:"1px solid #cbd5e1" }} />
+                <button onClick={loginAdmin} style={{ background:"#0f172a", color:"#fff", border:"none", borderRadius:10, padding:"10px 12px", fontWeight:900, cursor:"pointer" }}>Admin</button>
+              </>
+            )}
+          </div>
+        </div>
+
         <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by keyword, brand, supplier, date..." style={{ marginTop:14, width:"100%", padding:14, borderRadius:12, border:"1px solid #cbd5e1", boxSizing:"border-box" }} />
         <div style={{ marginTop:14, color:"#4b5563", fontWeight:900 }}>{filtered.length} result(s)</div>
+
         <div style={{ marginTop:12 }}>
           {filtered.map((issue) => (
             <div key={issue.id} style={{ border:"1px solid #e5e7eb", borderRadius:16, padding:16, marginTop:12, background:"#fff" }}>
               <div style={{ display:"flex", justifyContent:"space-between", gap:12 }}>
-                <div style={{ fontWeight:900, color:"#1d4ed8" }}>{issue.date}</div>
-                <button onClick={() => deleteIssue(issue.id)} style={{ border:"none", background:"#fee2e2", color:"#991b1b", borderRadius:10, padding:"6px 10px", fontWeight:900, cursor:"pointer" }}>Delete</button>
+                <div>
+                  <div style={{ fontWeight:900, color:"#1d4ed8" }}>{issue.issue_date} · {issue.author || "Unknown"}</div>
+                  <div style={{ marginTop:6, fontSize:22, fontWeight:900 }}>{issue.title || "Untitled issue"}</div>
+                </div>
+                {isAdmin && (
+                  <button onClick={() => deleteIssue(issue.id)} style={{ border:"none", background:"#fee2e2", color:"#991b1b", borderRadius:10, padding:"6px 10px", fontWeight:900, cursor:"pointer", height:"fit-content" }}>
+                    Delete
+                  </button>
+                )}
               </div>
-              <div style={{ marginTop:10, whiteSpace:"pre-wrap", lineHeight:1.7 }}>{issue.text}</div>
+
+              <div style={{ marginTop:10, whiteSpace:"pre-wrap", lineHeight:1.7 }}>{issue.description}</div>
+
+              {issue.attachment_path && (
+                <a href={attachmentUrl(issue.attachment_path)} target="_blank" rel="noreferrer" style={{ display:"inline-block", marginTop:12, color:"#2563eb", fontWeight:900 }}>
+                  Open attachment: {issue.attachment_name || "file"}
+                </a>
+              )}
             </div>
           ))}
           {!filtered.length && <div style={{ marginTop:16, color:"#6b7280" }}>No issue found.</div>}
