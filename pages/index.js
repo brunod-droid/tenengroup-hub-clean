@@ -1192,6 +1192,7 @@ function ProdIssuesPage() {
   const [issues, setIssues] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().slice(0,10));
   const [author, setAuthor] = useState("");
+  const [creatorKey, setCreatorKey] = useState("");
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [attachment, setAttachment] = useState(null);
@@ -1199,10 +1200,20 @@ function ProdIssuesPage() {
   const [status, setStatus] = useState("");
   const [adminInput, setAdminInput] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({ issue_date:"", author:"", title:"", description:"" });
 
   useEffect(() => {
     const savedAuthor = typeof window !== "undefined" ? localStorage.getItem("prod_issues_author") || "" : "";
+    let savedCreatorKey = typeof window !== "undefined" ? localStorage.getItem("prod_issues_creator_key") || "" : "";
+
+    if (!savedCreatorKey && typeof window !== "undefined") {
+      savedCreatorKey = "creator-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+      localStorage.setItem("prod_issues_creator_key", savedCreatorKey);
+    }
+
     setAuthor(savedAuthor);
+    setCreatorKey(savedCreatorKey);
     loadIssues();
   }, []);
 
@@ -1264,6 +1275,10 @@ function ProdIssuesPage() {
     return `${SUPABASE_URL}/storage/v1/object/public/prod-issues/${path}`;
   }
 
+  function canEdit(issue) {
+    return isAdmin || (issue.creator_key && creatorKey && issue.creator_key === creatorKey);
+  }
+
   async function submitIssue() {
     if (!date || !text.trim()) {
       setStatus("Date and problem description are required.");
@@ -1281,6 +1296,7 @@ function ProdIssuesPage() {
         body: JSON.stringify({
           issue_date: date,
           author: author || "Unknown",
+          creator_key: creatorKey,
           title: title || "",
           description: text.trim(),
           attachment_name: uploaded?.attachment_name || null,
@@ -1295,6 +1311,52 @@ function ProdIssuesPage() {
       await loadIssues();
     } catch (error) {
       setStatus("Save failed: " + error.message);
+    }
+  }
+
+  function startEdit(issue) {
+    if (!canEdit(issue)) return;
+    setEditingId(issue.id);
+    setEditForm({
+      issue_date: issue.issue_date || "",
+      author: issue.author || "",
+      title: issue.title || "",
+      description: issue.description || ""
+    });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setEditForm({ issue_date:"", author:"", title:"", description:"" });
+  }
+
+  async function saveEdit(issue) {
+    if (!canEdit(issue)) return;
+
+    if (!editForm.issue_date || !editForm.description.trim()) {
+      setStatus("Date and problem description are required.");
+      return;
+    }
+
+    try {
+      setStatus("Updating issue...");
+
+      await supabaseRequest(`prod_issues?id=eq.${issue.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          issue_date: editForm.issue_date,
+          author: editForm.author || "Unknown",
+          title: editForm.title || "",
+          description: editForm.description.trim(),
+          updated_at: new Date().toISOString()
+        })
+      });
+
+      setStatus("Issue updated.");
+      cancelEdit();
+      await loadIssues();
+    } catch (error) {
+      setStatus("Update failed: " + error.message);
     }
   }
 
@@ -1362,6 +1424,7 @@ function ProdIssuesPage() {
         <div style={{ marginTop:14 }}>
           <div style={{ fontWeight:900, marginBottom:8 }}>Attachment</div>
           <input type="file" onChange={(e) => setAttachment(e.target.files?.[0] || null)} style={{ width:"100%", padding:12, borderRadius:12, border:"1px solid #cbd5e1", boxSizing:"border-box", background:"#f8fafc" }} />
+          <div style={{ marginTop:6, color:"#64748b", fontSize:13 }}>Attachments can be added on creation. To replace an attachment later, create a new issue or ask admin.</div>
         </div>
 
         <button onClick={submitIssue} style={{ marginTop:16, background:"#15803d", color:"#fff", border:"none", borderRadius:12, padding:"12px 18px", fontWeight:900, cursor:"pointer" }}>
@@ -1390,29 +1453,77 @@ function ProdIssuesPage() {
         <div style={{ marginTop:14, color:"#4b5563", fontWeight:900 }}>{filtered.length} result(s)</div>
 
         <div style={{ marginTop:12 }}>
-          {filtered.map((issue) => (
-            <div key={issue.id} style={{ border:"1px solid #e5e7eb", borderRadius:16, padding:16, marginTop:12, background:"#fff" }}>
-              <div style={{ display:"flex", justifyContent:"space-between", gap:12 }}>
-                <div>
-                  <div style={{ fontWeight:900, color:"#1d4ed8" }}>{issue.issue_date} · {issue.author || "Unknown"}</div>
-                  <div style={{ marginTop:6, fontSize:22, fontWeight:900 }}>{issue.title || "Untitled issue"}</div>
-                </div>
-                {isAdmin && (
-                  <button onClick={() => deleteIssue(issue.id)} style={{ border:"none", background:"#fee2e2", color:"#991b1b", borderRadius:10, padding:"6px 10px", fontWeight:900, cursor:"pointer", height:"fit-content" }}>
-                    Delete
-                  </button>
+          {filtered.map((issue) => {
+            const editing = editingId === issue.id;
+            const editable = canEdit(issue);
+
+            return (
+              <div key={issue.id} style={{ border:"1px solid #e5e7eb", borderRadius:16, padding:16, marginTop:12, background:"#fff" }}>
+                {editing ? (
+                  <>
+                    <div style={{ display:"grid", gridTemplateColumns:"220px 1fr", gap:12 }}>
+                      <div>
+                        <div style={{ fontWeight:900, marginBottom:6 }}>Date</div>
+                        <input type="date" value={editForm.issue_date} onChange={(e) => setEditForm({ ...editForm, issue_date:e.target.value })} style={{ width:"100%", padding:10, borderRadius:10, border:"1px solid #cbd5e1" }} />
+                      </div>
+                      <div>
+                        <div style={{ fontWeight:900, marginBottom:6 }}>Author</div>
+                        <input value={editForm.author} onChange={(e) => setEditForm({ ...editForm, author:e.target.value })} style={{ width:"100%", padding:10, borderRadius:10, border:"1px solid #cbd5e1", boxSizing:"border-box" }} />
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop:12 }}>
+                      <div style={{ fontWeight:900, marginBottom:6 }}>Title</div>
+                      <input value={editForm.title} onChange={(e) => setEditForm({ ...editForm, title:e.target.value })} style={{ width:"100%", padding:10, borderRadius:10, border:"1px solid #cbd5e1", boxSizing:"border-box" }} />
+                    </div>
+
+                    <div style={{ marginTop:12 }}>
+                      <div style={{ fontWeight:900, marginBottom:6 }}>Description</div>
+                      <textarea value={editForm.description} onChange={(e) => setEditForm({ ...editForm, description:e.target.value })} style={{ width:"100%", minHeight:150, padding:12, borderRadius:10, border:"1px solid #cbd5e1", boxSizing:"border-box", lineHeight:1.6 }} />
+                    </div>
+
+                    <div style={{ display:"flex", gap:10, marginTop:12 }}>
+                      <button onClick={() => saveEdit(issue)} style={{ border:"none", background:"#15803d", color:"#fff", borderRadius:10, padding:"8px 12px", fontWeight:900, cursor:"pointer" }}>Save update</button>
+                      <button onClick={cancelEdit} style={{ border:"none", background:"#e5e7eb", color:"#111827", borderRadius:10, padding:"8px 12px", fontWeight:900, cursor:"pointer" }}>Cancel</button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ display:"flex", justifyContent:"space-between", gap:12 }}>
+                      <div>
+                        <div style={{ fontWeight:900, color:"#1d4ed8" }}>{issue.issue_date} · {issue.author || "Unknown"}</div>
+                        <div style={{ marginTop:6, fontSize:22, fontWeight:900 }}>{issue.title || "Untitled issue"}</div>
+                        {issue.updated_at && <div style={{ marginTop:5, color:"#64748b", fontSize:12, fontWeight:800 }}>Updated</div>}
+                      </div>
+
+                      <div style={{ display:"flex", gap:8, height:"fit-content" }}>
+                        {editable && (
+                          <button onClick={() => startEdit(issue)} style={{ border:"none", background:"#dbeafe", color:"#1d4ed8", borderRadius:10, padding:"6px 10px", fontWeight:900, cursor:"pointer" }}>
+                            Update
+                          </button>
+                        )}
+
+                        {isAdmin && (
+                          <button onClick={() => deleteIssue(issue.id)} style={{ border:"none", background:"#fee2e2", color:"#991b1b", borderRadius:10, padding:"6px 10px", fontWeight:900, cursor:"pointer" }}>
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop:10, whiteSpace:"pre-wrap", lineHeight:1.7 }}>{issue.description}</div>
+
+                    {issue.attachment_path && (
+                      <a href={attachmentUrl(issue.attachment_path)} target="_blank" rel="noreferrer" style={{ display:"inline-block", marginTop:12, color:"#2563eb", fontWeight:900 }}>
+                        Open attachment: {issue.attachment_name || "file"}
+                      </a>
+                    )}
+                  </>
                 )}
               </div>
+            );
+          })}
 
-              <div style={{ marginTop:10, whiteSpace:"pre-wrap", lineHeight:1.7 }}>{issue.description}</div>
-
-              {issue.attachment_path && (
-                <a href={attachmentUrl(issue.attachment_path)} target="_blank" rel="noreferrer" style={{ display:"inline-block", marginTop:12, color:"#2563eb", fontWeight:900 }}>
-                  Open attachment: {issue.attachment_name || "file"}
-                </a>
-              )}
-            </div>
-          ))}
           {!filtered.length && <div style={{ marginTop:16, color:"#6b7280" }}>No issue found.</div>}
         </div>
       </Box>
