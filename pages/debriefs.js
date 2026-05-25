@@ -30,32 +30,32 @@ const leakItems = [
   {
     code: "01",
     title: "SYSTEM INTERACTION",
-    text: "Orders not shipped in OM, integration delay, missing contact person 7/7."
+    bullets: ["Orders not shipped in OM", "Integration delay", "Missing contact person 7/7"]
   },
   {
     code: "02",
     title: "MISSING LATE SUPPLIER INFO",
-    text: "A lot of late supplier cases with no reliable or structured information."
+    bullets: ["A lot of Late Supplier cases", "No reliable information", "No structured owner follow-up"]
   },
   {
     code: "03",
     title: "MISSING SHIPPING INFO",
-    text: "Late delivery, shipping issues, no monitoring and no proactive alerts."
+    bullets: ["Late delivery", "Shipping issues", "No monitoring / no proactive alerts"]
   },
   {
     code: "04",
     title: "MISSING POLICIES",
-    text: "Compensation policy, change policy and not-satisfied policy are not yet adapted to every partner."
+    bullets: ["Compensation policy", "Change policy", "Not satisfied policy"]
   }
 ];
 
 const systemExamples = [
-  "Shipping Monitoring: unlimited actions and files generation",
-  "Product configuration: LMP with two flows, personalized and non-personalized",
-  "Drop Shipping configuration: design a complete partner workflow",
-  "New material strategy: effects on customers, reorder and future engraving",
-  "Last-minute communications and urgent actions for customers",
-  "IT assistance during peak, week-end and live moderation on Trustpilot"
+  { title: "Shipping Monitoring", text: "Unlimited actions and files generation." },
+  { title: "Product Configuration", text: "LMP with two flows: personalized and non-personalized." },
+  { title: "Drop Shipping Workflow", text: "A complete workflow must exist before scaling a partner." },
+  { title: "New Material Strategy", text: "Customer impact: reorder, future engraving and expectation management." },
+  { title: "Last Minute Comms", text: "Urgent communication and action flows during peak event pressure." },
+  { title: "Peak Support Layer", text: "IT assistance during peak, week-end and live Trustpilot moderation." }
 ];
 
 const costRows = [
@@ -115,12 +115,19 @@ function Header({ timer }) {
   );
 }
 
+function goToSlide(id, setCurrent) {
+  setCurrent(id);
+  if (typeof window !== "undefined") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
 function SideNav({ current, setCurrent }) {
   return (
     <aside className="side">
       <div className="sideTitle">MOTHER DAY<br />DEBRIEF 2026</div>
       {slides.map((s) => (
-        <button key={s.id} onClick={() => setCurrent(s.id)} className={current === s.id ? "nav activeNav" : "nav"}>
+        <button key={s.id} onClick={() => goToSlide(s.id, setCurrent)} className={current === s.id ? "nav activeNav" : "nav"}>
           <span>{s.code}</span>
           <b>{s.title}</b>
         </button>
@@ -149,7 +156,7 @@ function Slide0({ setCurrent }) {
         <div className="eyebrow">SLIDE 00 // MISSION ACCESS</div>
         <h1>MOTHER DAY<br /><span>DEBRIEF 2026</span></h1>
         <p>Peak-event operational review: KPI, dropshipping exposure, system complexity, compensation recovery and C-Team multiplier effect.</p>
-        <button className="primaryBtn" onClick={() => setCurrent(1)}>ENTER DEBRIEF</button>
+        <button className="primaryBtn" onClick={() => goToSlide(1, setCurrent)}>ENTER DEBRIEF</button>
       </div>
 
       <div className="trustPanel">
@@ -159,7 +166,7 @@ function Slide0({ setCurrent }) {
 
       <div className="slideCards">
         {slides.slice(1).map((s) => (
-          <button key={s.id} className="slideCard" onClick={() => setCurrent(s.id)}>
+          <button key={s.id} className="slideCard" onClick={() => goToSlide(s.id, setCurrent)}>
             <span>{s.code}</span>
             <b>{s.title}</b>
           </button>
@@ -203,19 +210,35 @@ function Slide1() {
       </div>
 
       <div className="conclusionGrid">
-        <div className="goodBlock"><b>VERY GOOD</b><p>Notch really increased share of messages. Big decrease of order cost.</p></div>
-        <div className="badBlock"><b>LESS GOOD</b><p>Longer SLA due to less agents. Lower CSAT: expectations and root cause must be debriefed deeper.</p></div>
+        <div className="goodBlock">
+          <b>VERY GOOD</b>
+          <ul>
+            <li>Notch really increased share of messages.</li>
+            <li>Big decrease of order cost.</li>
+          </ul>
+        </div>
+        <div className="badBlock">
+          <b>LESS GOOD</b>
+          <ul>
+            <li>Longer SLA due to less agents.</li>
+            <li>Lower CSAT: expectations and root cause must be debriefed deeper.</li>
+          </ul>
+        </div>
       </div>
     </section>
   );
 }
 
-function RevealBox({ code, title, text, className = "" }) {
+function RevealBox({ code, title, bullets, className = "" }) {
   const [open, setOpen] = useState(false);
   return (
     <button className={`revealBox ${className} ${open ? "open" : ""}`} onClick={() => setOpen(!open)}>
       <div><span>{code}</span><b>{title}</b></div>
-      {open ? <p>{text}</p> : <em>CLICK TO REVEAL</em>}
+      {open ? (
+        <ul>
+          {bullets.map((item) => <li key={item}>{item}</li>)}
+        </ul>
+      ) : <em>CLICK TO REVEAL</em>}
     </button>
   );
 }
@@ -244,7 +267,7 @@ function Slide2() {
       </div>
 
       <div className="revealGrid">
-        {leakItems.map((x) => <RevealBox key={x.code} code={x.code} title={x.title} text={x.text} />)}
+        {leakItems.map((x) => <RevealBox key={x.code} code={x.code} title={x.title} bullets={x.bullets} />)}
       </div>
 
       <div className="actionGrid">
@@ -271,23 +294,31 @@ function Slide3() {
       </div>
 
       <div className="systemIntro">
-        <p>Our operating model became powerful, but fragile: every extra brand, partner, product flow and event layer adds another human decision point.</p>
+        <p>Our system is powerful, but every new brand, partner, product flow and peak-event rule adds one more operational layer.</p>
       </div>
 
-      <div className="complexityWeb">
-        <div className="centerNode">TENENGROUP<br />GROWTH ENGINE</div>
-        {systemExamples.map((x, i) => (
-          <div key={x} className={`webNode web${i}`}>{x}</div>
+      <div className="systemClearGrid">
+        {systemExamples.map((item, index) => (
+          <div key={item.title} className={`systemCard sc${index}`}>
+            <span>0{index + 1}</span>
+            <b>{item.title}</b>
+            <p>{item.text}</p>
+          </div>
         ))}
       </div>
 
       <button className={showStrategy ? "strategyReveal open" : "strategyReveal"} onClick={() => setShowStrategy(!showStrategy)}>
         <b>STRATEGIC IMPERATIVE</b>
         {showStrategy ? (
-          <p>
-            Move faster to more automation, more AI and the right tools to support Tenengroup growth across brands, partners and development strategy.
-            This will reduce human errors, increase speed, reduce cost and create more revenue.
-          </p>
+          <div className="strategyPoints">
+            <p>Move faster to more automation, more AI and the right tools to support Tenengroup growth across brands, partners and development strategy.</p>
+            <ul>
+              <li>Less human errors</li>
+              <li>More speed</li>
+              <li>Lower cost</li>
+              <li>More revenue</li>
+            </ul>
+          </div>
         ) : (
           <em>CLICK TO REVEAL THE NEXT OPERATING MODEL</em>
         )}
@@ -295,6 +326,7 @@ function Slide3() {
     </section>
   );
 }
+
 
 function Slide4() {
   const [work, setWork] = useState(false);
@@ -320,23 +352,23 @@ function Slide4() {
         <button className={work ? "compReveal open" : "compReveal"} onClick={() => setWork(!work)}>
           <b>WHAT WORKED WELL</b>
           {work ? (
-            <ul>
-              <li>Proactive campaign / communication: 4,100 emails in 2026 vs 6,425 in 2025.</li>
-              <li>First time offering a physical replacement gift instead of coupon/gift option.</li>
-              <li>Gift compensation cost: <span className="greenText">$20 after event vs $15 on time.</span></li>
-            </ul>
+            <div className="bigBulletList">
+              <div><span>01</span><p>Proactive campaign / communication: <b>4,100 emails</b> in 2026 vs 6,425 in 2025.</p></div>
+              <div><span>02</span><p>First time offering a <b>physical replacement gift</b> instead of coupon/gift option.</p></div>
+              <div><span>03</span><p>Gift compensation cost: <b className="greenText">$20 after event vs $15 on time.</b></p></div>
+            </div>
           ) : <em>CLICK TO REVEAL</em>}
         </button>
 
         <button className={improve ? "compReveal bad open" : "compReveal bad"} onClick={() => setImprove(!improve)}>
           <b>NEEDS IMPROVEMENT</b>
           {improve ? (
-            <ul>
-              <li>Offer a more Mother’s Day-oriented compensation item.</li>
-              <li>Find a more appealing product.</li>
-              <li>Compensation based on order value vs same gift for all.</li>
-              <li>First-time operation was complex and challenging — use AI.</li>
-            </ul>
+            <div className="bigBulletList badList">
+              <div><span>01</span><p>Offer a more <b>Mother’s Day-oriented</b> compensation item.</p></div>
+              <div><span>02</span><p>Find a more appealing product.</p></div>
+              <div><span>03</span><p>Compensation based on <b>order value</b> vs same gift for all.</p></div>
+              <div><span>04</span><p>First-time operation was complex and challenging — <b>use AI.</b></p></div>
+            </div>
           ) : <em>CLICK TO REVEAL OPTIONS + COST MATRIX</em>}
         </button>
       </div>
@@ -436,22 +468,28 @@ export default function Debriefs() {
         .yearRow b{font-size:28px;color:#ffd700}.yearRow strong{font-size:34px;color:#fff6df}.yearRow span{font-size:25px;font-weight:900}.headerRow{background:#393528;border-left-color:#ffd700}.redLine{border-left-color:#ff5540}.redLine span{color:#ff5540}.greenLine{border-left-color:#48d13a}.greenLine span{color:#48d13a}.neutralLine{border-left-color:#00dbe8}
         .brandKpiPanel{margin-top:28px}.brandKpiGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}.brandKpi{background:#110e05;border:2px solid #4d4732;padding:18px;display:grid;gap:12px;min-height:240px}
         .brandKpi img{height:80px;width:100%;object-fit:contain;background:#fff;padding:8px}.brandKpi b{font-size:23px;color:#ffd700}.brandKpi p{font-size:24px;margin:6px 0}.brandKpi strong{font-size:34px;color:#fff}.brandKpi.danger{border-color:#ff5540}.brandKpi.good{border-color:#48d13a}.brandKpi.ok{border-color:#00dbe8}.brandKpi.warn{border-color:#ffd700}
-        .conclusionGrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}.goodBlock{border-left:8px solid #48d13a!important}.badBlock{border-left:8px solid #ff5540!important}.goodBlock b{color:#48d13a;font-size:30px}.badBlock b{color:#ff5540;font-size:30px}
+        .conclusionGrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}.goodBlock{border-left:8px solid #48d13a!important}.badBlock{border-left:8px solid #ff5540!important}.goodBlock b{color:#48d13a;font-size:34px}.badBlock b{color:#ff5540;font-size:34px}.conclusionGrid ul{margin:16px 0 0;padding-left:30px}.conclusionGrid li{font-size:30px;margin-bottom:12px}
         .partnerHeader{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}.partnerCopy b{font-size:38px;color:#ffd700}.partnerCopy p{font-size:32px}.logoPair{display:grid;grid-template-columns:1fr 1fr;gap:16px}.logoPair img{background:#fff;width:100%;height:140px;object-fit:contain;padding:20px}
-        .revealGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px}.revealBox,.actionReveal,.strategyReveal,.compReveal{text-align:left;color:#eae2cf;cursor:pointer;min-height:250px}.revealBox span{display:block;color:#ff5540;font-size:56px;font-weight:900}.revealBox b,.actionReveal b,.strategyReveal b,.compReveal b{display:block;color:#ffd700;font-size:30px;margin-bottom:18px}.revealBox em,.actionReveal em,.strategyReveal em,.compReveal em{font-style:normal;color:#999077;font-size:20px;font-weight:900}.revealBox.open,.actionReveal.open,.strategyReveal.open,.compReveal.open{border-color:#ffd700;box-shadow:inset 0 0 0 2px rgba(255,215,0,.25)}
+        .revealGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px}.revealBox,.actionReveal,.strategyReveal,.compReveal{text-align:left;color:#eae2cf;cursor:pointer;min-height:250px;display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch}.revealBox span{display:block;color:#ff5540;font-size:56px;font-weight:900}.revealBox b,.actionReveal b,.strategyReveal b,.compReveal b{display:block;color:#ffd700;font-size:30px;margin-bottom:18px}.revealBox em,.actionReveal em,.strategyReveal em,.compReveal em{font-style:normal;color:#999077;font-size:20px;font-weight:900;margin-top:18px}.revealBox ul{margin:10px 0 0;padding-left:26px}.revealBox li{font-size:28px;margin-bottom:12px;line-height:1.25}.revealBox.open,.actionReveal.open,.strategyReveal.open,.compReveal.open{border-color:#ffd700;box-shadow:inset 0 0 0 2px rgba(255,215,0,.25)}
         .actionGrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px}.actionReveal{min-height:190px;background:#15647c}.actionReveal p{font-size:33px}
-        .systemIntro p{font-size:38px;color:#fff6df}.complexityWeb{margin-top:28px;min-height:720px;position:relative;border:1px dashed #4d4732;background:radial-gradient(circle,rgba(255,215,0,.14),transparent 60%)}
-        .centerNode{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:300px;height:300px;border-radius:50%;border:5px solid #ffd700;display:flex;align-items:center;justify-content:center;text-align:center;color:#ffd700;font-size:34px;font-weight:900;background:#110e05}
-        .webNode{position:absolute;width:360px;min-height:120px;background:#1f1b10;border:2px solid #4d4732;padding:18px;font-size:25px;font-weight:900;line-height:1.25}
-        .web0{left:3%;top:4%;border-color:#48d13a}.web1{left:38%;top:2%}.web2{right:3%;top:16%;border-color:#ffd700}.web3{left:2%;top:42%;border-color:#ff5540}.web4{right:2%;top:48%;border-color:#ff5540}.web5{left:34%;bottom:4%;border-color:#00dbe8}
-        .strategyReveal{margin-top:28px;min-height:210px;border-left:10px solid #48d13a}.strategyReveal p{font-size:36px;color:#c9ffc4}
+        .systemIntro p{font-size:42px;color:#fff6df}.systemClearGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:28px}
+        .systemCard{background:#1f1b10;border:2px solid #4d4732;border-left:10px solid #ffd700;padding:24px;min-height:250px}
+        .systemCard span{color:#ff5540;font-size:34px;font-weight:900}
+        .systemCard b{display:block;color:#ffd700;font-size:34px;margin:12px 0}
+        .systemCard p{font-size:29px;margin:0;color:#eae2cf;line-height:1.3}
+        .sc0,.sc2{border-left-color:#48d13a}.sc3,.sc4{border-left-color:#ff5540}.sc5{border-left-color:#00dbe8}
+        .strategyReveal{margin-top:32px;min-height:230px;border-left:12px solid #48d13a}
+        .strategyReveal p{font-size:38px;color:#c9ffc4}
+        .strategyPoints ul{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:22px 0 0;padding:0;list-style:none}
+        .strategyPoints li{background:#10230e;border:2px solid #48d13a;color:#c9ffc4;font-size:32px;font-weight:900;text-align:center;padding:18px}
         .compTop{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:center}.compTop h3{color:#ffd700;font-size:66px}.earrings{width:100%;background:#fff;object-fit:contain}.greenText{color:#48d13a}.redText{color:#ff5540!important}
         .compRevealGrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px}.compReveal{min-height:260px;border-left:8px solid #48d13a}.compReveal.bad{border-left-color:#ff5540}.compReveal li{font-size:29px}
+        .bigBulletList{display:grid;gap:14px}.bigBulletList div{display:grid;grid-template-columns:70px 1fr;gap:14px;align-items:start;background:#110e05;border-left:6px solid #48d13a;padding:14px}.badList div{border-left-color:#ff5540}.bigBulletList span{color:#ffd700;font-size:32px;font-weight:900}.bigBulletList p{font-size:29px;margin:0;line-height:1.28}
         .improveVisuals{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px}.improveVisuals img{width:100%;background:#fff;object-fit:contain}.costTable{background:#fff;color:#111;font-size:19px}.tableTitle{background:#7dd3fc;font-weight:900;padding:10px}.costRow{display:grid;grid-template-columns:1.4fr .8fr .8fr .5fr;gap:8px;padding:9px 10px}.r1{background:#f9d8c8}.r2{background:#c8f7c5}.r3{background:#fff1a8}.r4{background:#efc1ef}.r5{background:#8fd3f4;font-weight:900}
         .cteam{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}.cteam h2{font-size:128px}.cteam p{font-size:42px;border-left:7px solid #ffd700;padding-left:28px}.videoBox{min-height:620px;border:5px solid #ffd700;background:repeating-linear-gradient(45deg,#111 0,#111 22px,#1f1b10 22px,#1f1b10 44px);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#ffd700;text-decoration:none}.play{width:130px;height:130px;border:5px solid #ffd700;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:58px;padding-left:10px;margin-bottom:28px}.videoBox b{font-size:36px}.videoBox span{margin-top:14px;color:#999077;font-size:18px}
         footer{display:flex;justify-content:space-between;padding:16px 32px;border-top:4px solid #ffd700;color:#ffd700;font-weight:900;letter-spacing:.16em;font-size:16px}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
-        @media(max-width:1200px){.shell{grid-template-columns:1fr}.side{position:relative;top:0;min-height:0}.menuSlide,.partnerHeader,.compTop,.cteam,.improveVisuals{grid-template-columns:1fr}.slideCards,.brandKpiGrid,.revealGrid{grid-template-columns:1fr 1fr}.yearRow{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:flex-start}.sideTitle{font-size:42px}}
+        @media(max-width:1200px){.shell{grid-template-columns:1fr}.side{position:relative;top:0;min-height:0}.menuSlide,.partnerHeader,.compTop,.cteam,.improveVisuals{grid-template-columns:1fr}.slideCards,.brandKpiGrid,.revealGrid,.systemClearGrid{grid-template-columns:1fr 1fr}.yearRow{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:flex-start}.sideTitle{font-size:42px}.strategyPoints ul{grid-template-columns:1fr 1fr}}
       `}</style>
     </div>
   );
