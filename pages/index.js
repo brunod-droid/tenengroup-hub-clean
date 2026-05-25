@@ -1853,7 +1853,7 @@ export default function Home() {
             <div style={{ marginTop:18, lineHeight:1.7, fontSize:18, color:"#374151" }}>Policies, event playbooks, CRM definitions, brand tone of voice, logistics, social handling, Yves Rocher training, QA, OCy / ShineOn and new employee orientation.</div>
           </div>
         </div>
-
+ 
 
         <Box>
           <div style={{ fontSize:24, fontWeight:900 }}>⚡ Agent quick actions</div>
