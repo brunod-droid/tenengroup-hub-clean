@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import styles from '../../styles/MotherDayDebrief.module.css';
+import styles from '../styles/MotherDayDebrief.module.css';
 
 const slides = [
   {
