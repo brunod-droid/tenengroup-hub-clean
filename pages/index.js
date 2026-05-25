@@ -1178,6 +1178,13 @@ function DebriefsPage() {
             </button>
           ))}
         </div>
+      <div style={{ marginTop:18, padding:18, borderRadius:18, background:"#0f172a", color:"#fff", border:"2px solid #ffd700" }}>
+          <div style={{ fontSize:26, fontWeight:950, color:"#ffd700" }}>Mother Day Debrief 2026</div>
+          <div style={{ marginTop:8, opacity:.9, lineHeight:1.6 }}>Open the new tactical debrief experience.</div>
+          <button onClick={() => { window.location.href = "/debriefs"; }} style={{ marginTop:14, background:"#ffd700", color:"#111827", border:"none", borderRadius:12, padding:"12px 16px", fontWeight:950, cursor:"pointer" }}>
+            Open Mother Day Debrief 2026
+          </button>
+        </div>
       </Box>
       <SlideDeck title={selected.name} subtitle={selected.subtitle} slides={selected.slides} sourceUrl={selected.sourceUrl} />
     </>
@@ -1818,7 +1825,7 @@ export default function Home() {
           return (
             <div
               key={m}
-              onClick={() => setPage(m)}
+              onClick={() => { if (m === "Debriefs") { window.location.href = "/debriefs"; return; } setPage(m); }}
               style={{
                 padding:"12px 14px",
                 borderRadius:10,
@@ -1853,7 +1860,7 @@ export default function Home() {
             <div style={{ marginTop:18, lineHeight:1.7, fontSize:18, color:"#374151" }}>Policies, event playbooks, CRM definitions, brand tone of voice, logistics, social handling, Yves Rocher training, QA, OCy / ShineOn and new employee orientation.</div>
           </div>
         </div>
- 
+
 
         <Box>
           <div style={{ fontSize:24, fontWeight:900 }}>⚡ Agent quick actions</div>
@@ -1871,7 +1878,7 @@ export default function Home() {
           <SmallCard title="Training" text="20-minute CS overview" onClick={() => setPage("Training")} />
 <SmallCard title="Brands" text="Logos, colors, tone of voice and brand reporting" onClick={() => setPage("Brands")} />
           <SmallCard title="Social" text="NapoleonCat training and public comments" onClick={() => setPage("Social")} />
-          <SmallCard title="Debriefs" text="Customer Service debrief decks" onClick={() => setPage("Debriefs")} />
+          <SmallCard title="Debriefs" text="Customer Service debrief decks" onClick={() => { window.location.href = "/debriefs"; }} />
           <SmallCard title="Prod Issues" text="Log production issues and search history" onClick={() => setPage("Prod Issues")} />
 
 <SmallCard
