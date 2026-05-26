@@ -70,7 +70,7 @@ const costRows = [
 
 function useCountdown() {
   const [active, setActive] = useState(false);
-  const [seconds, setSeconds] = useState(15 * 60);
+  const [seconds, setSeconds] = useState(10 * 60);
   useEffect(() => {
     if (!active || seconds <= 0) return;
     const id = setInterval(() => setSeconds((s) => Math.max(0, s - 1)), 1000);
@@ -86,7 +86,7 @@ function useCountdown() {
     label: seconds === 0 ? "MISSION COMPLETE" : `${mm}:${ss}`,
     toggle: () => {
       if (seconds === 0) {
-        setSeconds(15 * 60);
+        setSeconds(10 * 60);
         setActive(true);
       } else {
         setActive((x) => !x);
@@ -94,7 +94,7 @@ function useCountdown() {
     },
     reset: () => {
       setActive(false);
-      setSeconds(15 * 60);
+      setSeconds(10 * 60);
     }
   };
 }
