@@ -191,7 +191,7 @@ function Slide1() {
           <b>SLA AUTOMATION</b>
           <strong>36%</strong>
           <strong>39%</strong>
-          <span>39% get an answer in few minutes — 15K from Notch</span>
+          <span>+8%</span>
         </div>
 
         <div className="yearRow redLine">
