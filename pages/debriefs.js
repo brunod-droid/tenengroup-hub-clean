@@ -11,11 +11,11 @@ const slides = [
 ];
 
 const trustBrands = [
-  { name: "Lime & Lou", domain: "limeandlou.com", rating: "4.4", reviews: "3040", logo: "/brand/lime-lou.jpg" },
-  { name: "Theo Grace", domain: "theograce.com", rating: "4.6", reviews: "358", logo: "/brand/theograce.jpg" },
-  { name: "Oak & Luna", domain: "oakandluna.com", rating: "4.4", reviews: "10681", logo: "/brand/oak-luna.jpg" },
-  { name: "MYKA", domain: "myka.com", rating: "4.3", reviews: "73202", logo: "/brand/myka.jpg" },
-  { name: "Israel Blessing", domain: "israelblessing.com", rating: "4.7", reviews: "919", logo: "/brand/israel-blessing.jpg" }
+  { name: "Lime & Lou", domain: "limeandlou.com", rating: "4.4", reviews: "3040", logo: "/brand/lime-lou.jpg", note: "Stays 4.4 — mission accomplished" },
+  { name: "Theo Grace", domain: "theograce.com", rating: "4.6", reviews: "358", logo: "/brand/theograce.jpg", note: "Started from 2.4 with 9 reviews on 18/03 — big team work — mission exceeded" },
+  { name: "Oak & Luna", domain: "oakandluna.com", rating: "4.4", reviews: "10681", logo: "/brand/oak-luna.jpg", note: "Stays 4.4 — mission accomplished" },
+  { name: "MYKA", domain: "myka.com", rating: "4.3", reviews: "73202", logo: "/brand/myka.jpg", note: "Reduced to 4.3 — less reviews for Theograce — OK" },
+  { name: "Israel Blessing", domain: "israelblessing.com", rating: "4.7", reviews: "919", logo: "/brand/israel-blessing.jpg", note: "From 4.6 to 4.7 — mission exceeded" }
 ];
 
 const brandKpis = [
@@ -50,12 +50,12 @@ const leakItems = [
 ];
 
 const systemExamples = [
-  { title: "Shipping Monitoring", text: "Unlimited actions and files generation." },
-  { title: "Product Configuration", text: "LMP with two flows: personalized and non-personalized." },
-  { title: "Drop Shipping Workflow", text: "A complete workflow must exist before scaling a partner." },
-  { title: "New Material Strategy", text: "Customer impact: reorder, future engraving and expectation management." },
-  { title: "Last Minute Comms", text: "Urgent communication and action flows during peak event pressure." },
-  { title: "Peak Support Layer", text: "IT assistance during peak, week-end and live Trustpilot moderation." }
+  { title: "Shipping Monitoring", text: "Unlimited actions and files generation.", color: "green" },
+  { title: "Product Configuration", text: "LMP with two flows: personalized and non-personalized.", color: "yellow" },
+  { title: "Drop Shipping Workflow", text: "A complete workflow must exist before scaling a partner.", color: "cyan" },
+  { title: "New Material Strategy", text: "Customer impact: reorder, future engraving and expectation management.", color: "red" },
+  { title: "Last Minute Comms", text: "Urgent communication and action flows during peak event pressure.", color: "red" },
+  { title: "Peak Support Layer", text: "IT assistance during peak, week-end and live Trustpilot moderation.", color: "cyan" }
 ];
 
 const costRows = [
@@ -143,7 +143,7 @@ function TrustCard({ b }) {
       <div>
         <b>{b.name}</b>
         <span>{b.domain}</span>
-        <em>★★★★★ {b.rating} ({b.reviews})</em>
+        <em>★★★★★ {b.rating} ({b.reviews})</em><small>{b.note}</small>
       </div>
     </div>
   );
@@ -285,7 +285,10 @@ function Slide2() {
 }
 
 function Slide3() {
+  const [activeTab, setActiveTab] = useState(0);
   const [showStrategy, setShowStrategy] = useState(false);
+  const activeItem = systemExamples[activeTab];
+
   return (
     <section className="slide longSlide">
       <div className="headline">
@@ -297,14 +300,28 @@ function Slide3() {
         <p>Our system is powerful, but every new brand, partner, product flow and peak-event rule adds one more operational layer.</p>
       </div>
 
-      <div className="systemClearGrid">
-        {systemExamples.map((item, index) => (
-          <div key={item.title} className={`systemCard sc${index}`}>
-            <span>0{index + 1}</span>
-            <b>{item.title}</b>
-            <p>{item.text}</p>
-          </div>
-        ))}
+      <div className="situationBand">
+        <div><b>TOO MANY MANUAL TASKS</b><span>Manual checks, files, exceptions and follow-ups.</span></div>
+        <div><b>COMPLEX WORKFLOWS</b><span>Multiple brands, partners, rules and systems.</span></div>
+        <div><b>HUMAN DEPENDENCIES</b><span>High risk when knowledge sits with individuals.</span></div>
+      </div>
+
+      <div className="tabsSystem">
+        <div className="tabRail">
+          {systemExamples.map((item, index) => (
+            <button key={item.title} onClick={() => setActiveTab(index)} className={activeTab === index ? `tabItem activeTab ${item.color}` : `tabItem ${item.color}`}>
+              <span>0{index + 1}</span>
+              <b>{item.title}</b>
+            </button>
+          ))}
+        </div>
+
+        <div className={`tabContent ${activeItem.color}`}>
+          <span>0{activeTab + 1}</span>
+          <h3>{activeItem.title}</h3>
+          <p>{activeItem.text}</p>
+          <em>Click another tab on the left to reveal the next layer.</em>
+        </div>
       </div>
 
       <button className={showStrategy ? "strategyReveal open" : "strategyReveal"} onClick={() => setShowStrategy(!showStrategy)}>
@@ -327,10 +344,23 @@ function Slide3() {
   );
 }
 
+function ImageModal({ src, title, onClose }) {
+  if (!src || src === "COST_TABLE") return null;
+  return (
+    <div className="imageModal" onClick={onClose}>
+      <button className="modalClose" onClick={onClose}>×</button>
+      <div className="modalInner" onClick={(e) => e.stopPropagation()}>
+        <div className="modalTitle">{title}</div>
+        <img src={src} alt={title} />
+      </div>
+    </div>
+  );
+}
 
 function Slide4() {
   const [work, setWork] = useState(false);
   const [improve, setImprove] = useState(false);
+  const [modal, setModal] = useState(null);
 
   return (
     <section className="slide longSlide">
@@ -364,25 +394,37 @@ function Slide4() {
           <b>NEEDS IMPROVEMENT</b>
           {improve ? (
             <div className="bigBulletList badList">
-              <div><span>01</span><p>Offer a more <b>Mother’s Day-oriented</b> compensation item.</p></div>
+              <div>
+                <span>01</span>
+                <p>Offer a more <b>Mother’s Day-oriented</b> compensation item.</p>
+                <img className="miniPreview" src="/debriefs/options.png" alt="Options preview" onClick={(e) => { e.stopPropagation(); setModal({ src: "/debriefs/options.png", title: "Mother’s Day oriented options" }); }} />
+              </div>
               <div><span>02</span><p>Find a more appealing product.</p></div>
-              <div><span>03</span><p>Compensation based on <b>order value</b> vs same gift for all.</p></div>
+              <div>
+                <span>03</span>
+                <p>Compensation based on <b>order value</b> vs same gift for all.</p>
+                <button className="tablePreviewBtn" onClick={(e) => { e.stopPropagation(); setModal({ src: "COST_TABLE", title: "Cost matrix by order value" }); }}>OPEN COST MATRIX</button>
+              </div>
               <div><span>04</span><p>First-time operation was complex and challenging — <b>use AI.</b></p></div>
             </div>
           ) : <em>CLICK TO REVEAL OPTIONS + COST MATRIX</em>}
         </button>
       </div>
 
-      {improve && (
-        <div className="improveVisuals">
-          <img src="/debriefs/options.png" alt="Options" />
-          <div className="costTable">
-            <div className="tableTitle">Count of Cost Without Shipping</div>
-            {costRows.map((r) => (
-              <div key={r.label} className={`costRow ${r.cls}`}>
-                <span>{r.label}</span><b>OAK {r.oak}</b><b>TGR US {r.tgr}</b><b>{r.total}</b>
-              </div>
-            ))}
+      <ImageModal src={modal?.src} title={modal?.title} onClose={() => setModal(null)} />
+      {modal?.src === "COST_TABLE" && (
+        <div className="imageModal" onClick={() => setModal(null)}>
+          <button className="modalClose" onClick={() => setModal(null)}>×</button>
+          <div className="modalInner tableModal" onClick={(e) => e.stopPropagation()}>
+            <div className="modalTitle">Cost matrix by order value</div>
+            <div className="costTable bigCostTable">
+              <div className="tableTitle">Count of Cost Without Shipping</div>
+              {costRows.map((r) => (
+                <div key={r.label} className={`costRow ${r.cls}`}>
+                  <span>{r.label}</span><b>OAK {r.oak}</b><b>TGR US {r.tgr}</b><b>{r.total}</b>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -416,6 +458,17 @@ function CurrentSlide({ current, setCurrent }) {
   return <Slide5 />;
 }
 
+function BottomNext({ current, setCurrent }) {
+  const isLast = current >= slides.length - 1;
+  return (
+    <div className="bottomNext">
+      <button onClick={() => goToSlide(isLast ? 0 : current + 1, setCurrent)}>
+        {isLast ? "BACK TO MENU" : "NEXT SLIDE →"}
+      </button>
+    </div>
+  );
+}
+
 export default function Debriefs() {
   const [current, setCurrent] = useState(0);
   const timer = useCountdown();
@@ -427,6 +480,7 @@ export default function Debriefs() {
         <SideNav current={current} setCurrent={setCurrent} />
         <main className="main"><CurrentSlide current={current} setCurrent={setCurrent} /></main>
       </div>
+      <BottomNext current={current} setCurrent={setCurrent} />
       <footer><span>FOR EYES ONLY // MISSION SUCCESS</span><span>PAGE {String(current).padStart(2, "0")}/05</span></footer>
 
       <style jsx global>{`
@@ -489,7 +543,40 @@ export default function Debriefs() {
         .cteam{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}.cteam h2{font-size:128px}.cteam p{font-size:42px;border-left:7px solid #ffd700;padding-left:28px}.videoBox{min-height:620px;border:5px solid #ffd700;background:repeating-linear-gradient(45deg,#111 0,#111 22px,#1f1b10 22px,#1f1b10 44px);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#ffd700;text-decoration:none}.play{width:130px;height:130px;border:5px solid #ffd700;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:58px;padding-left:10px;margin-bottom:28px}.videoBox b{font-size:36px}.videoBox span{margin-top:14px;color:#999077;font-size:18px}
         footer{display:flex;justify-content:space-between;padding:16px 32px;border-top:4px solid #ffd700;color:#ffd700;font-weight:900;letter-spacing:.16em;font-size:16px}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
-        @media(max-width:1200px){.shell{grid-template-columns:1fr}.side{position:relative;top:0;min-height:0}.menuSlide,.partnerHeader,.compTop,.cteam,.improveVisuals{grid-template-columns:1fr}.slideCards,.brandKpiGrid,.revealGrid,.systemClearGrid{grid-template-columns:1fr 1fr}.yearRow{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:flex-start}.sideTitle{font-size:42px}.strategyPoints ul{grid-template-columns:1fr 1fr}}
+
+        .trustCard small{display:block;margin-top:6px;font-size:14px;line-height:1.25;color:#111;font-weight:900}
+        .situationBand{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
+        .situationBand div{background:#1f1b10;border-left:8px solid #ff5540;padding:22px}
+        .situationBand b{display:block;color:#ffd700;font-size:28px;margin-bottom:10px}
+        .situationBand span{font-size:24px;line-height:1.3;color:#eae2cf}
+        .tabsSystem{display:grid;grid-template-columns:380px 1fr;gap:24px;margin-top:28px}
+        .tabRail{display:grid;gap:12px}
+        .tabItem{text-align:left;min-height:86px;border:2px solid #4d4732;background:#110e05;color:#eae2cf;padding:14px 16px;cursor:pointer}
+        .tabItem span{display:block;color:#ff5540;font-size:22px;font-weight:900}
+        .tabItem b{font-size:21px;color:#fff6df}
+        .tabItem.green{border-left:12px solid #48d13a}.tabItem.yellow{border-left:12px solid #ffd700}.tabItem.cyan{border-left:12px solid #00dbe8}.tabItem.red{border-left:12px solid #ff5540}
+        .activeTab{background:#252014;border-color:#ffd700}
+        .tabContent{min-height:540px;background:#1f1b10;border:3px solid #ffd700;padding:40px;display:flex;flex-direction:column;justify-content:center}
+        .tabContent span{font-size:58px;font-weight:900;color:#ff5540}
+        .tabContent h3{font-size:76px;color:#ffd700;margin:14px 0}
+        .tabContent p{font-size:42px;color:#fff6df;line-height:1.25}
+        .tabContent em{font-size:22px;color:#999077;font-style:normal;font-weight:900}
+        .tabContent.green{border-color:#48d13a}.tabContent.yellow{border-color:#ffd700}.tabContent.cyan{border-color:#00dbe8}.tabContent.red{border-color:#ff5540}
+        .miniPreview{grid-column:2;width:260px;max-height:120px;object-fit:contain;background:#fff;border:3px solid #ffd700;padding:6px;cursor:zoom-in}
+        .tablePreviewBtn{grid-column:2;justify-self:start;background:#ffd700;color:#221b00;border:0;padding:14px 18px;font-size:18px;font-weight:900;cursor:pointer}
+        .imageModal{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:100;display:flex;align-items:center;justify-content:center;padding:40px}
+        .modalInner{max-width:92vw;max-height:90vh;background:#110e05;border:5px solid #ffd700;padding:22px}
+        .modalInner img{max-width:88vw;max-height:78vh;object-fit:contain;background:#fff}
+        .modalTitle{color:#ffd700;font-size:28px;font-weight:900;margin-bottom:14px}
+        .modalClose{position:fixed;right:34px;top:28px;width:58px;height:58px;border:3px solid #ffd700;background:#110e05;color:#ffd700;font-size:40px;cursor:pointer;z-index:101}
+        .tableModal{width:min(1050px,92vw)}
+        .bigCostTable{font-size:28px}
+        .bigCostTable .costRow{padding:14px}
+        .bigCostTable .tableTitle{font-size:32px;padding:16px}
+        .bottomNext{display:flex;justify-content:flex-end;padding:0 32px 26px;background:#070704}
+        .bottomNext button{background:#ffd700;color:#221b00;border:0;padding:22px 34px;font-size:24px;font-weight:900;letter-spacing:.12em;cursor:pointer}
+
+        @media(max-width:1200px){.shell{grid-template-columns:1fr}.side{position:relative;top:0;min-height:0}.menuSlide,.partnerHeader,.compTop,.cteam,.improveVisuals{grid-template-columns:1fr}.slideCards,.brandKpiGrid,.revealGrid,.systemClearGrid,.tabsSystem,.situationBand{grid-template-columns:1fr 1fr}.yearRow{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:flex-start}.sideTitle{font-size:42px}.strategyPoints ul{grid-template-columns:1fr 1fr}}
       `}</style>
     </div>
   );
