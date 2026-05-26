@@ -184,28 +184,28 @@ function Slide1() {
         <h2>[MISSION PERFORMANCE]</h2>
       </div>
 
-      <div className="yearGrid">
+      <div className="yearGrid simplifiedKpi">
         <div className="yearRow headerRow"><b>KPI</b><b>2025</b><b>2026</b><b>STATUS</b></div>
-        <div className="yearRow redLine"><b>SLA</b><strong>17.12 hours</strong><strong>19.54 hours</strong><span>YOY +14% · more short AI SLA</span></div>
-        <div className="yearRow redLine"><b>CSAT</b><strong>3.99</strong><strong>3.88</strong><span>YOY -3%</span></div>
-        <div className="yearRow greenLine"><b>NOTCH</b><strong>6,003 messages · 7%</strong><strong>15,018 messages · 18%</strong><span>Automation share increased</span></div>
-        <div className="yearRow neutralLine"><b>TOTAL MESSAGES</b><strong>81,673</strong><strong>82,400</strong><span>YOY +0%</span></div>
-        <div className="yearRow greenLine"><b>ORDER COST</b><strong>$0.41</strong><strong>$0.37</strong><span>-10%</span></div>
-      </div>
 
-      <div className="brandKpiPanel">
-        <div className="panelHead">KPI BY BRAND // CSAT + SLA 2026</div>
-        <div className="brandKpiGrid">
-          {brandKpis.map((b) => (
-            <div key={b.brand} className={`brandKpi ${b.tone}`}>
-              <img src={b.logo} alt={b.brand} />
-              <div>
-                <b>{b.brand}</b>
-                <p>SLA <strong>{b.sla}</strong></p>
-                <p>CSAT <strong>{b.csat}</strong></p>
-              </div>
-            </div>
-          ))}
+        <div className="yearRow greenLine">
+          <b>SLA AUTOMATION</b>
+          <strong>36%</strong>
+          <strong>39%</strong>
+          <span>39% get an answer in few minutes — 15K from Notch</span>
+        </div>
+
+        <div className="yearRow redLine">
+          <b>CSAT</b>
+          <strong>3.99</strong>
+          <strong>3.88</strong>
+          <span>YOY -3%</span>
+        </div>
+
+        <div className="yearRow greenLine">
+          <b>ORDER COST</b>
+          <strong>$0.41</strong>
+          <strong>$0.37</strong>
+          <span>-10%</span>
         </div>
       </div>
 
@@ -213,15 +213,16 @@ function Slide1() {
         <div className="goodBlock">
           <b>VERY GOOD</b>
           <ul>
-            <li>Notch really increased share of messages.</li>
+            <li>More automation coverage: 39% of customers get an answer in a few minutes.</li>
+            <li>15K messages handled by Notch.</li>
             <li>Big decrease of order cost.</li>
           </ul>
         </div>
         <div className="badBlock">
           <b>LESS GOOD</b>
           <ul>
-            <li>Longer SLA due to less agents.</li>
             <li>Lower CSAT: expectations and root cause must be debriefed deeper.</li>
+            <li>Need to protect quality while automation share increases.</li>
           </ul>
         </div>
       </div>
@@ -543,6 +544,12 @@ export default function Debriefs() {
         .cteam{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}.cteam h2{font-size:128px}.cteam p{font-size:42px;border-left:7px solid #ffd700;padding-left:28px}.videoBox{min-height:620px;border:5px solid #ffd700;background:repeating-linear-gradient(45deg,#111 0,#111 22px,#1f1b10 22px,#1f1b10 44px);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#ffd700;text-decoration:none}.play{width:130px;height:130px;border:5px solid #ffd700;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:58px;padding-left:10px;margin-bottom:28px}.videoBox b{font-size:36px}.videoBox span{margin-top:14px;color:#999077;font-size:18px}
         footer{display:flex;justify-content:space-between;padding:16px 32px;border-top:4px solid #ffd700;color:#ffd700;font-weight:900;letter-spacing:.16em;font-size:16px}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+
+        .simplifiedKpi .yearRow{grid-template-columns:1.1fr 1fr 1fr 2.4fr;min-height:120px}
+        .simplifiedKpi .yearRow b{font-size:34px}
+        .simplifiedKpi .yearRow strong{font-size:48px}
+        .simplifiedKpi .yearRow span{font-size:31px;line-height:1.25}
 
         .trustCard small{display:block;margin-top:6px;font-size:14px;line-height:1.25;color:#111;font-weight:900}
         .situationBand{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
