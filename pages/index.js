@@ -11,7 +11,6 @@ const MENU = [
   "Events",
   "CRM",
   "Logistics",
-  "Yves Rocher",
   "Social",
   "Debriefs",
   "Prod Issues",
@@ -140,22 +139,6 @@ const BRANDS = [
     ],
     tone:["Elegant","Accessible","European","Localized","No Nicky Hilton association"]
   },
-  {
-    id:"yves-rocher",
-    name:"Yves Rocher",
-    logo:"/brand/yves-rocher.jpg",
-    color:"#15803d",
-    accent:"#dcfce7",
-    short:"U.S. Shopify store for plant-based beauty products.",
-    full:[
-      "Yves Rocher USA is the official U.S. online store for Yves Rocher.",
-      "Core product categories: skincare, haircare, body care and fragrance.",
-      "Operational stack: Shopify, Gorgias, Notch/Taylor and Staci.",
-      "Tone should be botanical, helpful, accessible and beauty-focused."
-    ],
-    tone:["Botanical","Helpful","Accessible","Beauty-focused","Clear and practical"],
-    documents:[{label:"Open Yves Rocher full source", url:"/docs/yves-rocher-training.pdf"}, {label:"Open Yves Rocher Reporting", url:"/yves-rocher-reporting"}]
-  }
 ];
 
 const CASES = [
@@ -302,13 +285,6 @@ const LOGISTICS = [
   { id:"shipping", name:"Shipping logic", short:"ETA depends on product, factory, destination and carrier.", full:["Shipping method can improve transit speed but not production speed.","Carrier checks are needed for trackable shipments.","AfterShip and 17Track support tracking investigation."] }
 ];
 
-const YVES_ROCHER = [
-  { id:"reporting", name:"Yves Rocher Reporting", short:"Weekly/monthly dashboards, upload, finance and drivers.", full:["Open the dedicated Yves Rocher reporting module.","Upload Gorgias, Shopify/order count and finance inputs.","Review weekly KPIs, agent drilldown, CSAT, SLA, orders, productivity and drivers."], documents:[{label:"Open Yves Rocher Reporting", url:"/yves-rocher-reporting"}] },
-  { id:"overview", name:"Yves Rocher Overview", short:"U.S. Shopify store for plant-based beauty products.", full:["Official U.S. online store for Yves Rocher.","Core categories: skincare, haircare, body care and fragrance.","Operational stack: Shopify, Gorgias, Notch/Taylor and Staci."] },
-  { id:"shopify", name:"Shopify", short:"Order management, tags, refunds and history.", full:["Search by order ID, name or email.","Shopify tags explain operational actions.","Before BC number, some order edits may still be possible.","After BC / packing stage, edits or cancellation are usually not possible."] },
-  { id:"wismo", name:"Yves Rocher WISMO", short:"Wrong address, DNR, lost, returned to sender.", full:["Wrong address reship costs $19.","DNR: allow 7 business days even if status shows delivered.","Ask customer to sign Non-Receipt form.","Returned to sender: provide free reship and ask for different address."] },
-  { id:"returns", name:"Returns and Refunds", short:"30-day return process, labels and refund rules.", full:["Customers have 30 days to return items.","First offer a 100% coupon instead of refund.","If refused, issue return label.","Refund excludes $11.95 shipping fee."] }
-];
 
 const SOCIAL_POLICY = [
   { id:"comments", name:"Handling comments", short:"Sort, review, like and reply correctly.", full:["Sort comments by Newest.","Reply directly under customer comment.","Keep public responses friendly, polite, professional, short and natural."] },
@@ -378,7 +354,7 @@ function getText(item) {
 
 function assistantAnswer(input) {
   const q = input.toLowerCase().trim();
-  if (!q) return { title:"Ask the assistant", body:"Ask about late orders, damaged items, DNR, Red Event, Social, Yves Rocher, QA, OCy, ShineOn, tags or dispositions.", tags:[] };
+  if (!q) return { title:"Ask the assistant", body:"Ask about late orders, damaged items, DNR, Red Event, Social, QA, OCy, ShineOn, tags or dispositions.", tags:[] };
   if (q.includes("late") || q.includes("delay") || q.includes("coupon") || q.includes("refund")) return { title:"WISMO Late guidance", body:"Use WISMO Late Zoom → Agent decision tool. Verify ETA first. Under 3 business days late: apology + ETA, usually no compensation. Over 3 business days late: review gesture. No ETA / major delay: escalate.", tags:["WISMO","Late"] };
   if (q.includes("training") || q.includes("orientation")) return { title:"Training guidance", body:"Open Training for the 20-minute presentation.", tags:["Training"] };
   if (q.includes("trustpilot") || q.includes("review")) return { title:"Trustpilot guidance", body:"A good public review response should be empathetic, personal and solution-oriented. It should show ownership and provide a clear next step.", tags:["Trustpilot"] };
@@ -1770,8 +1746,6 @@ export default function Home() {
     Policies: POLICIES,
     CRM,
     Logistics: LOGISTICS,
-    "Yves Rocher": YVES_ROCHER,
-    
     "QA Team": QA_TEAM,
     "AI Agents": AI_AGENTS
   };
@@ -1850,7 +1824,7 @@ export default function Home() {
             <div style={{ color:"#2563eb", fontWeight:700, fontSize:18 }}>Welcome to</div>
             <div style={{ fontSize:54, fontWeight:900, marginTop:6 }}>TENENGROUP</div>
             <div style={{ fontSize:32, color:"#2563eb", marginTop:6 }}>Customer Care Hub</div>
-            <div style={{ marginTop:18, lineHeight:1.7, fontSize:18, color:"#374151" }}>Policies, event playbooks, CRM definitions, brand tone of voice, logistics, social handling, Yves Rocher training, QA, OCy / ShineOn and new employee orientation.</div>
+            <div style={{ marginTop:18, lineHeight:1.7, fontSize:18, color:"#374151" }}>Policies, event playbooks, CRM definitions, brand tone of voice, logistics, social handling, QA, OCy / ShineOn, TheoGrace projects and new employee orientation.</div>
           </div>
         </div>
 
@@ -1873,14 +1847,6 @@ export default function Home() {
           <SmallCard title="Social" text="NapoleonCat training and public comments" onClick={() => setPage("Social")} />
           <SmallCard title="Debriefs" text="Customer Service debrief decks" onClick={() => setPage("Debriefs")} />
           <SmallCard title="Prod Issues" text="Log production issues and search history" onClick={() => setPage("Prod Issues")} />
-
-<SmallCard
-  title="Yves Rocher Reporting"
-  text="CSV upload, weekly/monthly dashboards and drivers"
-  onClick={() => {
-    window.location.href = "/yves-rocher-reporting";
-  }}
-/>
 
 <SmallCard
   title="Theograce Weekly Reporting"
