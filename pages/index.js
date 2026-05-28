@@ -1844,6 +1844,13 @@ export default function Home() {
         <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:16, marginBottom:22 }}>
           <SmallCard title="Training" text="20-minute CS overview" onClick={() => setPage("Training")} />
 <SmallCard title="Brands" text="Logos, colors, tone of voice and brand reporting" onClick={() => setPage("Brands")} />
+          <SmallCard
+            title="TheoGrace Design Lab"
+            text="Product page redesign concepts and Brand Theme mockups"
+            onClick={() => {
+              window.location.href = "/theograce-design-lab";
+            }}
+          />
           <SmallCard title="Social" text="NapoleonCat training and public comments" onClick={() => setPage("Social")} />
           <SmallCard title="Debriefs" text="Customer Service debrief decks" onClick={() => setPage("Debriefs")} />
           <SmallCard title="Prod Issues" text="Log production issues and search history" onClick={() => setPage("Prod Issues")} />
